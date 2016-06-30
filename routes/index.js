@@ -1,6 +1,7 @@
-var usersRouter = require('./users');
+var express = require('express');
+var router = express.Router();
 
-var routes = {};
-routes.users = usersRouter;
+/* User-related routes */
+router.use('/users', require('./users'));
 
-module.exports = routes;
+module.exports = router;
