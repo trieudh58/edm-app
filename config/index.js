@@ -1,4 +1,7 @@
 module.exports = {
+    app: {
+        url: 'http://localhost:3001'
+    },
     mongodb: {
         host: 'mongodb://localhost:27017/edm-api'
     },

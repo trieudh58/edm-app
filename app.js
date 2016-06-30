@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var swagger = require('swagger-express');
+var config = require('./config');
 
 /* Import models */
 var models = require('./models');
@@ -31,12 +32,12 @@ app.use('/api/v1', routes);
 
 /* Swagger */
 app.use(swagger.init(app, {
-    apiVersion: '1.0',
-    swaggerVersion: '1.0',
+    apiVersion: '2.0',
+    swaggerVersion: '2.0',
     swaggerURL: '/swagger',
     swaggerJSON: '/swagger.json',
     swaggerUI: './public/swagger/',
-    basePath: 'http://localhost:3001',
+    basePath: config.app.url,
     info: {
         title: 'EDM API',
         description: 'EDM API'
