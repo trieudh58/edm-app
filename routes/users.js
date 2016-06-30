@@ -7,7 +7,7 @@ var authentication = require('../middleware/authentication');
 router.post('/authenticate', UserController.authenticate);
 
 /* Get data of current user */
-router.get('/get',authentication, UserController.get);
+router.get('/get', authentication, UserController.get);
 
 /* Create a user */
 router.post('/create', UserController.create);

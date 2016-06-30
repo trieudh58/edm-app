@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt');
+var config = require('../config');
 
 var UserSchema = new mongoose.Schema({
     email: {

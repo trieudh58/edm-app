@@ -5,5 +5,8 @@ module.exports = {
     jwt: {
         secret: '!@#@HRHQ12d21sa#$%@#%#@dsa2422234242dsf232@#',
         expiresTime: '24h'
+    },
+    bcrypt: {
+        saltRounds: 10
     }
 };
