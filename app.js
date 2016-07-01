@@ -51,6 +51,5 @@ app.use(swagger.init(app, {
 app.listen(app.get('port'), function () {
     /* Seed data to mongodb */
     require('./database/seed');
-
     console.log('Server is running on port ' + app.get('port'));
 });

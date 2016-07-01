@@ -7,6 +7,20 @@ var UserSchema = new mongoose.Schema({
     password: {
         type: String
     },
+    studentCode: {
+        type: String
+    },
+    personalInfo: {
+        gender: {
+            type: Boolean
+        },
+        DOB: {
+            type: Date
+        },
+        className: {
+            type: String
+        }
+    },
     isAdmin: {
         type: Boolean,
         default: false
