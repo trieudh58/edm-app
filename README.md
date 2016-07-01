@@ -1,1 +1,1 @@
-# edm-api
+# edm-app
