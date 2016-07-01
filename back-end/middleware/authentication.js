@@ -1,6 +1,6 @@
 var User = require('../models').User;
 var jwt = require('jsonwebtoken');
-var config = require('../config');
+var config = require('../config/index');
 
 module.exports = function (req, res, next) {
     /* Get access token from request */

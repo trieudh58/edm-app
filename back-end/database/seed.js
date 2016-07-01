@@ -1,5 +1,5 @@
 var seeder = require('mongoose-seed');
-var config = require('../config');
+var config = require('../config/index');
 var bcrypt = require('bcrypt');
 var csv = require('fast-csv');
 var fs = require('fs');
