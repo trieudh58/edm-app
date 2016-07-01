@@ -51,6 +51,12 @@ module.exports = {
                     message: 'Authentication failed.'
                 });
             }
+            else if (!user.isActive) {
+                res.json({
+                    success: false,
+                    message: 'Authentication failed.'
+                });
+            }
             else {
                 bcrypt.compare(req.body.password, user.password, function (err, result) {
                     if (result) {
@@ -165,5 +171,35 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/delete
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Delete a user (using email)
+     *      notes: Return result
+     *      nickname: Delete user
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: email
+     *          description: Your email
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: email
+     */
+    /* Delete a user. Admin permission required */
+    delete: function (req, res) {
+        res.json({
+            message: 'test'
+        })
     }
 };

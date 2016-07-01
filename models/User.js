@@ -1,6 +1,4 @@
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
-var config = require('../config');
 
 var UserSchema = new mongoose.Schema({
     email: {
@@ -21,4 +19,4 @@ var UserSchema = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = UserSchema;
+module.exports = mongoose.model('User', UserSchema);
