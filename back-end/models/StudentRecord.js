@@ -10,13 +10,14 @@ var StudentRecordSchema = new mongoose.Schema({
     record: [{
         _id: false,
         subjectCode: String,
-        score: String,
-        semester: String,
-        // Lan hoc thu may?
-        attempt: Number
+        attempt: [{
+            _id: false,
+            score: String,
+            semester: String
+        }]
     }]
 }, {
-    timestamps: true
+    timestamps: false
 });
 
 module.exports = mongoose.model('StudentRecord', StudentRecordSchema);
