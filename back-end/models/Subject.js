@@ -35,7 +35,8 @@ var SubjectSchema = new mongoose.Schema({
         },
         // Mon hoc tien quyet
         prerequisite: {
-            type: mongoose.Schema.Types.ObjectId
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subject'
         }
     }
 }, {

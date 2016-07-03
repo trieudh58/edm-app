@@ -7,14 +7,14 @@ var StudentRecordSchema = new mongoose.Schema({
         required: true
     },
     // Ban ghi ket qua hoc tap
-    record: [ new mongoose.Schema({
+    record: [{
+        _id: false,
         subjectCode: String,
-        score: Number,
+        score: String,
+        semester: String,
         // Lan hoc thu may?
         attempt: Number
-    }, {
-        _id: false
-    })]
+    }]
 }, {
     timestamps: true
 });
