@@ -204,18 +204,24 @@ module.exports = {
     /* Delete a user. Admin permission required */
     delete: function (req, res) {
         User.findOneAndRemove({
-            email: req.user.email
-        }, function (err, result) {
+            email: req.body.email
+        }, function (err, removedUser) {
             if (err) {
                 res.status(500).json({
                     success: false,
                     message: err
                 });
             }
+            else if (!removedUser) {
+                res.json({
+                    success: false,
+                    message: 'Email does not exist.'
+                });
+            }
             else {
                 res.json({
                     success: true,
-                    message: result
+                    message: 'User is deleted.'
                 });
             }
         });
