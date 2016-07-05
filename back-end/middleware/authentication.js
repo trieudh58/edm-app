@@ -19,6 +19,12 @@ module.exports = function (req, res, next) {
                     message: 'Failed to authenticate.'
                 });
             }
+            else if (!decoded.user.isActive) {
+                res.json({
+                    success: false,
+                    message: 'Authentication failed. The account is inactive.'
+                });
+            }
             else {
                 req.user = decoded.user;
                 next();

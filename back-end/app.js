@@ -43,13 +43,23 @@ app.use(swagger.init(app, {
         description: 'EDM API'
     },
     apis: [
-        './controllers/users.js'
+        './controllers/users.js',
+        './controllers/studentRecords.js'
     ]
 }));
 
 /* Server starts */
 app.listen(app.get('port'), function () {
-    /* Seed data to mongodb */
-    require('./database/seed');
+    /*
+    * Seed data to mongodb
+    * COMMENT "Line 2" if you had imported it before,
+    * Or COMMENT "Line 1" and UNCOMMENT "Line 2" then restart app.js to re-import.
+    * */
+
+    // Line 1
+    models.dbConnect();
+    // Line 2
+    //require('./database/seed');
+
     console.log('Server is running on port ' + app.get('port'));
 });

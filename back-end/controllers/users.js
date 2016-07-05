@@ -1,6 +1,6 @@
 var User = require('../models').User;
 var jwt = require('jsonwebtoken');
-var config = require('../config/index');
+var config = require('../config');
 var bcrypt = require('bcrypt');
 
 module.exports = {
@@ -54,7 +54,7 @@ module.exports = {
             else if (!user.isActive) {
                 res.json({
                     success: false,
-                    message: 'Authentication failed.'
+                    message: 'Authentication failed. The account is inactive.'
                 });
             }
             else {
@@ -117,6 +117,11 @@ module.exports = {
      *      consumes:
      *        - application/x-www-form-urlencoded
      *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
      *        - name: email
      *          description: Your email
      *          paramType: form
@@ -198,8 +203,21 @@ module.exports = {
      */
     /* Delete a user. Admin permission required */
     delete: function (req, res) {
-        res.json({
-            message: 'test'
-        })
+        User.findOneAndRemove({
+            email: req.user.email
+        }, function (err, result) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: result
+                });
+            }
+        });
     }
 };

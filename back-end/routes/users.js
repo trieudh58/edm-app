@@ -11,7 +11,7 @@ router.post('/authenticate', UserController.authenticate);
 router.get('/get', authentication, UserController.get);
 
 /* Create a user */
-router.post('/create', UserController.create);
+router.post('/create', authentication, adminPermission, UserController.create);
 
 /* Delete a user. Admin permission required */
 router.delete('/delete', authentication, adminPermission, UserController.delete);
