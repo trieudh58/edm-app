@@ -16,4 +16,7 @@ router.post('/create', authentication, adminPermission, UserController.create);
 /* Delete a user. Admin permission required */
 router.delete('/delete', authentication, adminPermission, UserController.delete);
 
+/* Register new account */
+router.post('/register', UserController.register);
+
 module.exports = router;

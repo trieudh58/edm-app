@@ -11,5 +11,11 @@ module.exports = {
     },
     bcrypt: {
         saltRounds: 10
+    },
+    mailer: {
+        service: 'Gmail',
+        user: 'mdn.edm.team@gmail.com',
+        pass: 'teamedm123!@#',
+        sender: 'MDN-EDM Team <mdn.edm.team@gmail.com>'
     }
 };

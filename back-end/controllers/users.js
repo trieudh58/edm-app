@@ -2,6 +2,7 @@ var User = require('../models').User;
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var bcrypt = require('bcrypt');
+var nodemailer = require('nodemailer');
 
 module.exports = {
     /**
@@ -222,6 +223,67 @@ module.exports = {
                 res.json({
                     success: true,
                     message: 'User is deleted.'
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/register
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: User register account with email and password
+     *      notes: Send a verify email to registered mail if success
+     *      nickname: Register user
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: email
+     *          description: Your email
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: email
+     *        - name: password
+     *          description: Your password
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: password
+     */
+    /* Register a new account */
+    register: function (req, res) {
+        var transporter = nodemailer.createTransport({
+            service: config.mailer.service,
+            auth: {
+                user: config.mailer.user,
+                pass: config.mailer.pass
+            }
+        });
+
+        // Hard-code for testing first
+        var receiver = 'dangtrieu25@gmail.com';
+        // In production
+        //var receiver = req.body.email;
+
+        var mailOptions = {
+            from: config.mailer.sender,
+            to: receiver,
+            subject: 'Activate your account',
+            text: 'Dear ' + req.body.email + '. This is just a test email :)'
+        };
+        transporter.sendMail(mailOptions, function (err, info) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    err: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Activation link sent.'
                 });
             }
         });
