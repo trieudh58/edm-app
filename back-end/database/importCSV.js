@@ -24,7 +24,7 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                 models.User.create({
                     email: studentRecords[i][0] + '@vnu.edu.vn',
                     password: bcrypt.hashSync('123456', 1),
-                    studentCode: parseInt(studentRecords[i][0]),
+                    studentCode: studentRecords[i][0],
                     personalInfo: {
                         gender: studentRecords[i][3],
                         DOB: date,

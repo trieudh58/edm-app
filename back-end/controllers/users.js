@@ -1,4 +1,5 @@
 var User = require('../models').User;
+var PendingUser = require('../models').PendingUser;
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var bcrypt = require('bcrypt');
@@ -254,36 +255,140 @@ module.exports = {
      */
     /* Register a new account */
     register: function (req, res) {
-        var transporter = nodemailer.createTransport({
-            service: config.mailer.service,
-            auth: {
-                user: config.mailer.user,
-                pass: config.mailer.pass
-            }
-        });
-
-        // Hard-code for testing first
-        var receiver = 'dangtrieu25@gmail.com';
-        // In production
-        //var receiver = req.body.email;
-
-        var mailOptions = {
-            from: config.mailer.sender,
-            to: receiver,
-            subject: 'Activate your account',
-            text: 'Dear ' + req.body.email + '. This is just a test email :)'
-        };
-        transporter.sendMail(mailOptions, function (err, info) {
+        User.findOne({
+            email: req.body.email
+        }, function (err, user) {
             if (err) {
                 res.status(500).json({
                     success: false,
-                    err: err
+                    message: err
+                });
+            }
+            else if (!user) {
+                res.json({
+                    success: false,
+                    message: 'Unacceptable email.'
+                });
+            }
+            else if (user && user.isActive) {
+                res.json({
+                    success: false,
+                    message: 'Email exists or account by this email is activated.'
                 });
             }
             else {
+                var rememberToken = jwt.sign({ email: req.body.email, password: req.body.password }, config.jwt.secret);
+                PendingUser.update({
+                    email: req.body.email
+                },{
+                    password: bcrypt.hashSync(req.body.password, config.bcrypt.saltRounds),
+                    rememberToken: rememberToken
+                }, {
+                    upsert: true
+                }, function (err, result) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else if (result.ok) {
+                        var transporter = nodemailer.createTransport({
+                            service: config.mailer.service,
+                            auth: {
+                                user: config.mailer.user,
+                                pass: config.mailer.pass
+                            }
+                        });
+
+                        var receiver = req.body.email;
+                        var activationLink = 'http://' + req.get('host') + '/api/v1/users/verify?email=' + req.body.email + '&token=' + rememberToken;
+                        console.log(activationLink);
+                        var mailOptions = {
+                            from: config.mailer.sender,
+                            to: receiver,
+                            subject: 'Activate your account',
+                            html: 'Dear ' + receiver + ',</br>Please activate your account here:' + activationLink
+                        };
+                        transporter.sendMail(mailOptions, function (err, info) {
+                            if (err) {
+                                res.status(500).json({
+                                    success: false,
+                                    err: err
+                                });
+                            }
+                            else {
+                                res.json({
+                                    success: true,
+                                    message: 'Activation link sent.'
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/verify
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Verify registered user with email and token provided
+     *      notes: Redirect to login page if success
+     *      nickname: Verify user
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: email
+     *          description: Your email
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: email
+     *        - name: token
+     *          description: Your token
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Verify pending user then redirect */
+    verify: function (req, res) {
+        var email = req.query.email || req.body.email;
+        var rememberToken = req.query.token || req.body.token;
+        PendingUser.findOneAndRemove({
+            email: email,
+            rememberToken: rememberToken
+        }, function (err, removedPendingUser) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!removedPendingUser) {
                 res.json({
-                    success: true,
-                    message: 'Activation link sent.'
+                    success: false,
+                    message: 'Email does not exist or invalid token.'
+                });
+            }
+            else {
+                User.update({
+                    email: removedPendingUser.email
+                }, {
+                    password: removedPendingUser.password,
+                    isActive: true
+                }, function (err, result) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else if (result.ok) {
+                        res.redirect('http://google.com');
+                    }
                 });
             }
         });

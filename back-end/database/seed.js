@@ -7,12 +7,14 @@ seeder.connect(config.mongodb.host, function () {
    /* Load mongoose models*/
     seeder.loadModels([
         'models/User.js',
+        'models/PendingUser.js',
         'models/Subject.js',
         'models/StudentRecord.js'
     ]);
     /* Clear models' data */
     seeder.clearModels([
         'User',
+        'PendingUser',
         'Subject',
         'StudentRecord'
     ], function () {
