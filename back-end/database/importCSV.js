@@ -80,6 +80,7 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                     else {
                         normalizedWhenString = whenRecords[i][j];
                         var splittedArray = normalizedWhenString.split('-');
+                        console.log(splittedArray)
                         if (splittedArray.length == 1) {
                             whenArray.push(normalizedWhenString);
                         }
