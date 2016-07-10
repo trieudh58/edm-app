@@ -102,6 +102,12 @@ module.exports = {
             success: true,
             data: {
                 email: req.user.email,
+                studentCode: req.user.studentCode,
+                personalInfo: {
+                    gender: req.user.personalInfo.gender ? 'Male' : 'Female',
+                    DOB: Date(req.user.personalInfo.DOB),
+                    className: req.user.personalInfo.className
+                },
                 isActive: req.user.isActive,
                 isAdmin: req.user.isAdmin
             }
