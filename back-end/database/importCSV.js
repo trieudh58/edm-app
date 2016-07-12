@@ -80,13 +80,12 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                     else {
                         normalizedWhenString = whenRecords[i][j];
                         var splittedArray = normalizedWhenString.split('-');
-                        console.log(splittedArray)
                         if (splittedArray.length == 1) {
                             whenArray.push(normalizedWhenString);
                         }
                         else {
                             for (var k = 0; k < splittedArray.length - 1; k++) {
-                                if (splittedArray[k].includes('.')) {
+                                if (splittedArray[k].indexOf('.') >= 0) {
                                     whenArray.push(splittedArray[k].concat('-' + splittedArray[k+1]));
                                 }
                             }
