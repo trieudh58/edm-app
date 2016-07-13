@@ -1,0 +1,21 @@
+{
+  "name": "front-end",
+  "homepage": "https://github.com/trieudh58/edm-app",
+  "authors": [
+    "trieudh <trieudh@icts.vn>"
+  ],
+  "description": "Front-end part of edm app",
+  "main": "app.js",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ngstorage": "^0.3.10"
+  }
+}
