@@ -58,6 +58,9 @@ app.listen(app.get('port'), function () {
 
     // Line 1
     models.dbConnect();
+
+    // Run npm run-script import to import data from database/dump/edm-api to mongodb
+
     // Line 2
     //require('./database/seed');
 
