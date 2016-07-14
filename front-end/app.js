@@ -37,7 +37,16 @@
                 resolve:{
                     loginRequired:loginRequired
                 }
+            })
+            .when('/profile',{
+                templateUrl: 'templates/profiles.html',
+                controller:ProfileController,
+                resolve:{
+                    //home page
+                    //logged in
+                }
             });
+
 			//.otherwise({ redirectTo: '/' });
 	});
 
@@ -104,7 +113,9 @@
             }
 	    }
 	});
-
+    App.controller('ProfileController', function($scope,$http,$localStorage){
+        
+    })
     function loginRequired($q, $location,$localStorage) {           ///////////window instead
       var deferred = $q.defer();
       if ($localStorage.access_token!==undefined) {
