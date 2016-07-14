@@ -8,27 +8,20 @@
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
 
     <!-- SPELLS -->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
-    <script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
-    <script src="https://code.angularjs.org/1.2.20/angular.js"></script>
-    <script src="https://code.angularjs.org/1.2.13/angular-cookies.js"></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
     <script src="/bower_components/ngstorage/ngStorage.js"></script>
     <script src="/bower_components/ngstorage/ngStorage.min.js"></script>
+    <script src="https://code.angularjs.org/1.2.13/angular-cookies.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    
     <script src="app.js"></script>
     <link href="styles/app.css" rel="stylesheet" />
 </head>
 <body>
-
-    <div class="jumbotron" ng-app="app">
-        <div class="container">
-            <div class="col-sm-8 col-sm-offset-2">
-                <!-- <div ng-class="{ 'alert': flash, 'alert-success': flash.type === 'success', 'alert-danger': flash.type === 'error' }" ng-if="flash" ng-bind="flash.message"></div> -->
-                <div ng-view></div>
-                <!-- <div ng-include="'login/login.view.html'"></div> -->
-            </div>
-        </div>
+    <div ng-app="app">
+        <div ng-view></div>
     </div>
-
 </body>
 </html>
