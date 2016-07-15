@@ -39,8 +39,8 @@
                 }
             })
             .when('/profile',{
-                templateUrl: 'templates/profiles.html',
-                controller:ProfileController,
+                templateUrl: 'templates/profile.html',
+                controller:'ProfileController',
                 resolve:{
                     //home page
                     //logged in
@@ -114,7 +114,7 @@
 	    }
 	});
     App.controller('ProfileController', function($scope,$http,$localStorage){
-        
+
     })
     function loginRequired($q, $location,$localStorage) {           ///////////window instead
       var deferred = $q.defer();
