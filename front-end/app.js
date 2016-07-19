@@ -32,7 +32,7 @@
                 }
 			})
             .when('/logout', { 
-                templateUrl: 'templates/login.view.html',
+                templateUrl: 'cover.html',
                 controller: 'LogoutController',
                 resolve:{
                     loginRequired:loginRequired

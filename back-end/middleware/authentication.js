@@ -1,4 +1,4 @@
-var User = require('../models').User;
+var BlackListToken = require('../models').BlackListToken;
 var jwt = require('jsonwebtoken');
 var config = require('../config/index');
 
@@ -12,22 +12,35 @@ module.exports = function (req, res, next) {
         });
     }
     else {
-        jwt.verify(token, config.jwt.secret, function (err, decoded) {
-            if (err) {
-                res.status(500).json({
-                    success: false,
-                    message: 'Failed to authenticate.'
-                });
-            }
-            else if (!decoded.user.isActive) {
+        // Find in black list token
+        BlackListToken.findOne({
+            token: token
+        }, function (err, isFound) {
+            if (isFound) {
                 res.json({
                     success: false,
-                    message: 'Authentication failed. The account is inactive.'
+                    message: 'Invalid token.'
                 });
             }
             else {
-                req.user = decoded.user;
-                next();
+                jwt.verify(token, config.jwt.secret, function (err, decoded) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: 'Failed to authenticate.'
+                        });
+                    }
+                    else if (!decoded.user.isActive) {
+                        res.json({
+                            success: false,
+                            message: 'Authentication failed. The account is inactive.'
+                        });
+                    }
+                    else {
+                        req.user = decoded.user;
+                        next();
+                    }
+                });
             }
         });
     }

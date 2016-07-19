@@ -14,6 +14,7 @@ models.User = require('./User');
 models.PendingUser = require('./PendingUser');
 models.Subject = require('./Subject');
 models.StudentRecord = require('./StudentRecord');
+models.BlackListToken = require('./BlackListToken');
 
 models.dbConnect = mongooseConnect;
 module.exports = models;
