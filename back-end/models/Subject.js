@@ -5,25 +5,24 @@ var SubjectSchema = new mongoose.Schema({
     code: {
         type: String,
         unique: true,
-        required: true,
+        required: true
     },
     // Ten mon hoc
     name: {
-        type: String,
-        required: true
+        vi: {
+            type: String,
+            required: true
+        },
+        en: {
+            type: String,
+            required: true
+        }
     },
     details: {
         // So luong tin chi
         credits: {
-            type: Number
-        },
-        // Chuyen nganh. VD: CNTT
-        major: {
-            type: String
-        },
-        // Loai mon hoc. VD: Khoi kien thuc chung
-        type: {
-            type: String
+            type: Number,
+            require: true
         },
         // So gio ly thuyet
         onClassHour: {
@@ -33,11 +32,14 @@ var SubjectSchema = new mongoose.Schema({
         practiceHour: {
             type: Number
         },
+        // So gio tu hoc
+        selfTrainHour: {
+            type: Number
+        },
         // Mon hoc tien quyet
-        prerequisite: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Subject'
-        }
+        prerequisites: [{
+            type: String
+        }]
     }
 }, {
     timestamps: true

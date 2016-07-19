@@ -8,21 +8,24 @@ seeder.connect(config.mongodb.host, function () {
     seeder.loadModels([
         'models/User.js',
         'models/PendingUser.js',
-        'models/Subject.js',
-        'models/StudentRecord.js'
+        'models/StudentRecord.js',
+        'models/Subject.js'
     ]);
     /* Clear models' data */
     seeder.clearModels([
         'User',
         'PendingUser',
-        'Subject',
-        'StudentRecord'
+        'StudentRecord',
+        'Subject'
     ], function () {
         console.log('Connected to mongodb.');
         seeder.populateModels(data);
 
-        /* Import data from csv files */
-        require('./importCSV');
+        /* Import user records from csv files */
+        //require('./importUserRecords');
+
+        /* Import subjects from csv files */
+        require('./importSubjects');
     });
 });
 
