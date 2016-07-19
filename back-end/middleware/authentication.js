@@ -38,6 +38,7 @@ module.exports = function (req, res, next) {
                     }
                     else {
                         req.user = decoded.user;
+                        req.validToken = token;
                         next();
                     }
                 });

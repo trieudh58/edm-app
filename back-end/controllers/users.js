@@ -1,5 +1,6 @@
 var User = require('../models').User;
 var PendingUser = require('../models').PendingUser;
+var BlackListToken = require('../models').BlackListToken;
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var bcrypt = require('bcrypt');
@@ -338,7 +339,7 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/users/verify
+     * path: /api/v1/users/verify-email
      * operations:
      *   -  httpMethod: GET
      *      summary: Verify registered user with email and token provided
@@ -360,7 +361,7 @@ module.exports = {
      *          dataType: string
      */
     /* Verify pending user then redirect */
-    verify: function (req, res) {
+    verifyEmail: function (req, res) {
         var email = req.query.email || req.body.email;
         var rememberToken = req.query.token || req.body.token;
         PendingUser.findOneAndRemove({
@@ -397,6 +398,41 @@ module.exports = {
                     }
                 });
             }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/logout
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: User logs out (move current token to blacklist)
+     *      notes: Require access token
+     *      nickname: Log out
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* User logs out. Return result message */
+    logOut: function (req, res) {
+        BlackListToken.create({
+            token: req.validToken
+        }, function (err, bannedToken) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            res.json({
+                success: true,
+                message: 'Token banned.'
+            });
         });
     }
 };

@@ -19,7 +19,10 @@ router.delete('/delete', authentication, adminPermission, UserController.delete)
 /* Register new account */
 router.post('/register', UserController.register);
 
-/* Verify account with remember token */
-router.get('/verify', UserController.verify);
+/* Verify email with remember token */
+router.get('/verify-email', UserController.verifyEmail);
+
+/* Log out user - add current token to black list */
+router.post('/logout', authentication, UserController.logOut);
 
 module.exports = router;
