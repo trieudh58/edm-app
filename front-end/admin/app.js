@@ -7,7 +7,7 @@
 
 			// route for the home page
 			.when('/home', {
-				templateUrl : 'templates/home.view.html',
+				templateUrl : 'templates/admin.view.html',
 				controller  : 'HomeController'
 			})
 

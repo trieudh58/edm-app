@@ -120,6 +120,7 @@
                     }
                 }, function myError(response) {
                     // $scope.myWelcome = response.statusText;
+                    console.log($localStorage.access_token);
                     $scope.message.error='request fail';
                     console.log('fail');
                 });
@@ -147,25 +148,6 @@
  //        }
  //    });
 
-	App.controller('RegisterController', function($scope,$http) {
-		// $scope.message = 'Everyone come and see how good I look! register';
-            $scope.message={}
-            $scope.register=function() {
-                $http({
-                    method : "POST",
-                    url : originPath+"/api/v1/users/register",
-                    data:{email:$scope.email,
-                        password:$scope.password}
-                }).then(function mySuccess(response) {
-                    $scope.myWelcome = response.data;
-                    if(!response.data.success)
-                        $scope.message.error=response.data.message;
-                }, function myError(response) {
-                    $scope.myWelcome = response.statusText;
-                    $scope.message.error='request fail';
-                });
-            }
-	});
   App.controller('ProfileController', function($scope,$http,$localStorage){
 
   })
