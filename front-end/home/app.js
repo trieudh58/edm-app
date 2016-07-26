@@ -44,8 +44,13 @@
           }
       })
       .when('/studentscore',{
-          controller:'LineCtrl',
+          // controller:'LineCtrl',
+          // controller:'studentscore',
           templateUrl:'../templates/student.score.html'
+      })
+      .when('/subjects',{
+        controller:'subjects',
+        templateUrl:'../templates/subject.view.html'
       })
       .when('/tem',{
           // controller:'LineCtrl',
@@ -113,13 +118,11 @@
                     url : originPath+"/api/v1/users/logout",
                     data:{token:$localStorage.access_token}
                 }).then(function mySuccess(response) {
-                    // $scope.myWelcome = response.data;
                     if(response.data.success){
                         $localStorage.access_token=undefined;
                         $window.open('/', "_self");
                     }
                 }, function myError(response) {
-                    // $scope.myWelcome = response.statusText;
                     console.log($localStorage.access_token);
                     $scope.message.error='request fail';
                     console.log('fail');
@@ -173,28 +176,50 @@
 
 
 
-App.controller("tem",function($scope,$http,$localStorage){
-    // $http({
-    //     method : "GET",
-    //     url : 'http://localhost:3001'+"/api/v1/student-records/get",
-    //     // headers:{
-    //     //     'x-access-token':$localStorage.access_token
-    //     // }
-    //     params:{
-    //         'token':$localStorage.access_token
-    //     }
-    // }).then(function mySuccess(response) {
-    //     // $scope.myWelcome = response.data;
-    //     if(response.data.success){
-    //         $scope.recodes=response.data
-    //         // console.log(response)
-    //     }
-    // }, function myError(response) {
-    //     // $scope.myWelcome = response.statusText;
-    //     $scope.message.error='request fail';
-    //     // console.log('fail');
-    //     // console.log(response.data)
-    // });
+App.controller("studentscore",function($scope,$http,$localStorage){
+    $http({
+        method : "GET",
+        url : 'http://localhost:3001'+"/api/v1/student-records/get",
+        params:{
+            'token':$localStorage.access_token
+        }
+    }).then(function mySuccess(response) {
+        if(response.data.success){
+            $scope.records=studentRecordInSenmester(response.data.data.record);
+            // line chart data
+            console.log($scope.records);
+            $scope.linelabels = listSemester($scope.records);
+            $scope.lineseries = ['Trung binh tich luy'];
+            $scope.linedata = diemtichluycacky($scope.records);
+
+        }
+    }, function myError(response) {
+        $scope.message.error='request fail';
+    });
+    $http({
+        method : "GET",
+        url : 'http://localhost:3001'+"/api/v1/subjects/get-names",
+        params:{
+            'token':$localStorage.access_token
+        }
+    }).then(function mySuccess(response) {
+        if(response.data.success){
+            $scope.subjectsNameDictViet=subjectDictViet(response.data.subjects);
+            // $scope.subjectsNameDictEng=subjectDictEng(response.data.subjects);
+        }
+    }, function myError(response) {
+        $scope.message.error='request fail';
+    });
+});
+
+App.controller('subjects',function($scope,$http){
+  $http({
+
+  }).then(function(response){
+
+  },function(response){
+
+  });
 });
 // App.controller("LineCtrl",function ($scope, $timeout,$http,$localStorage) {
 //     console.log($localStorage.access_token);
@@ -236,12 +261,12 @@ App.controller("tem",function($scope,$http,$localStorage){
 
   // Simulate async data update
   App.controller('LineCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
-    $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    $scope.series = ['Series A', 'Series B'];
-    $scope.data = [
-      [65, 59, 80, 81, 56, 55, 40],
-      [28, 48, 40, 19, 86, 27, 90]
-    ];
+    // $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    // $scope.series = ['Series A', 'Series B'];
+    // $scope.data = [
+    //   [65, 59, 80, 81, 56, 55, 40],
+    //   [28, 48, 40, 19, 86, 27, 90]
+    // ];
     $scope.onClick = function (points, evt) {
       console.log(points, evt);
     };
@@ -253,14 +278,14 @@ App.controller("tem",function($scope,$http,$localStorage){
       }
     };
 
-    $timeout(function () {
-      $scope.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-      $scope.data = [
-        [28, 48, 40, 19, 86, 27, 90],
-        [65, 59, 80, 81, 56, 55, 40]
-      ];
-      $scope.series = ['Series C', 'Series D'];
-    }, 3000);
+    // $timeout(function () {
+    //   $scope.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    //   $scope.data = [
+    //     [28, 48, 40, 19, 86, 27, 90],
+    //     [65, 59, 80, 81, 56, 55, 40]
+    //   ];
+    //   $scope.series = ['Series C', 'Series D'];
+    // }, 3000);
   }]);
 
   // app.controller('BarCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
@@ -405,4 +430,97 @@ App.controller("tem",function($scope,$http,$localStorage){
     var l = data.length, previous = l ? data[l - 1] : 50;
     var y = previous + Math.random() * 10 - 5;
     return y < 0 ? 0 : y > 100 ? 100 : y;
+  }
+  function subjectDictViet(subjectJsonData){
+    result={}
+    for (i=0;i<subjectJsonData.length;i++){
+      result[subjectJsonData[i].code]=subjectJsonData[i].name.vi;
+    }
+    // console.log(result);
+    return result;
+  }
+  function subjectDictEng(subjectJsonData){
+    result={}
+    for (i=0;i<subjectJsonData.length;i++){
+      result[subjectJsonData[i].code]=subjectJsonData[i].name.en;
+    }
+    // console.log(result);
+    return result;
+  }
+  function studentRecordInSenmester(records){
+    result={};
+    for(i=0;i<records.length;i++){
+        var semester=records[i].attempt[records[i].attempt.length-1].semester;
+        if(semester in result){
+          result[semester].push({
+            subjectCode:records[i].subjectCode,
+            score:records[i].attempt[records[i].attempt.length-1].score,
+            score4:studentRecord4(records[i].attempt[records[i].attempt.length-1].score),
+            scoreChar:studentRecordChar(studentRecord4(records[i].attempt[records[i].attempt.length-1].score))
+            });
+        }
+        else{
+          result[semester]=[];
+          result[semester].push({subjectCode:records[i].subjectCode,
+                                score:records[i].attempt[records[i].attempt.length-1].score,
+                                score4:studentRecord4(records[i].attempt[records[i].attempt.length-1].score),
+                                scoreChar:studentRecordChar(studentRecord4(records[i].attempt[records[i].attempt.length-1].score))});
+        }
+    }
+    // console.log(result['1.2014-2015'][1]);
+    return result;
+  }
+  function diemtichluycacky(records){
+    // result=[];
+    // for(var key in records) {
+    //   records[key]
+    // }
+    return [3.4,3.2,3.3];
+  }
+  function listSemester(records){
+    var keys = []
+    for(var key in records) keys.push( key );
+    console.log(keys);
+    return keys;
+  }
+
+  function studentRecord4(score){
+    if(score>=9)
+      return 4.0;
+    if(score>=8.5)
+      return 3.7;
+    if(score>=8.0)
+      return 3.5;
+    if(score>=7.0)
+      return 3.0;
+    if(score>=6.5)
+      return 2.5;
+    if(score>=5.5)
+      return 2.0;
+    if(score>=5.0)
+      return 1.5;
+    if(score>=4.0)
+      return 1.0;
+    return 0
+  }
+  function studentRecordChar(score){
+    if(score==4.0)
+      return 'A+';
+    if(score==3.7)
+      return 'A';
+    if(score== 3.5)
+      return 'B+';
+    if(score==3.0)
+      return 'B';
+    if(score==2.5)
+      return'C+';
+    if(score==2.0)
+      return 'C';
+    if(score==1.5)
+      return 'D+';
+    if(score==1.0)
+      return 'D';
+    if(score== 0)
+      return 'F';
+
   }

@@ -24,11 +24,14 @@
                         password:$scope.password}
                 }).then(function mySuccess(response) {
                     $scope.myWelcome = response.data;
+                    console.log(response);
+                    console.log(response.data);
+                    console.log(response.data.success);
                     if(response.data.success){
                         $localStorage.access_token=response.data.token;
                         console.log($localStorage.access_token);
                         console.log('logged in');
-			             $window.open('/home', "_self");
+			            $window.open('/home', "_self");
                     }
                 }, function myError(response) {
                     $scope.myWelcome = response.statusText;
