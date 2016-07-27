@@ -9,12 +9,12 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/subjects/get-names
+     * path: /api/v1/subjects/get-names-and-credits
      * operations:
      *   -  httpMethod: GET
-     *      summary: Get subject name in list of subjects
-     *      notes: Return array of subjects' names
-     *      nickname: Get subject names
+     *      summary: Get subject name and credit in list of subjects
+     *      notes: Return array of subjects' names and credits
+     *      nickname: Get subject names and credits
      *      consumes:
      *        - text/html
      *      parameters:
@@ -24,9 +24,9 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Return subjects' names*/
-    getName: function (req, res) {
-        Subject.find({}, '-_id code name', function (err, subjects) {
+    /* Return subjects' names and credits */
+    getNameAndCredits: function (req, res) {
+        Subject.find({}, '-_id code name details.credits', function (err, subjects) {
             if (err) {
                 res.status(500).json({
                     sucess: false,
