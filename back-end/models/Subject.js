@@ -14,8 +14,7 @@ var SubjectSchema = new mongoose.Schema({
             required: true
         },
         en: {
-            type: String,
-            required: true
+            type: String
         }
     },
     details: {
