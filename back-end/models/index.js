@@ -15,6 +15,9 @@ models.PendingUser = require('./PendingUser');
 models.Subject = require('./Subject');
 models.StudentRecord = require('./StudentRecord');
 models.BlackListToken = require('./BlackListToken');
+models.KnowledgeUnit = require('./KnowledgeUnit');
+models.EducationProgram = require('./EducationProgram');
+models.EPDetail = require('./EPDetail');
 
 models.dbConnect = mongooseConnect;
 module.exports = models;
