@@ -79,6 +79,9 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                     }
                     else {
                         normalizedWhenString = whenRecords[i][j];
+                        if (typeof normalizedWhenString == 'undefined') {
+                            normalizedWhenString = '';
+                        }
                         var splittedArray = normalizedWhenString.split('-');
                         if (splittedArray.length == 1) {
                             whenArray.push(normalizedWhenString);
@@ -129,7 +132,7 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
         queue.push(updateScore);
         async.waterfall(queue, function (err) {
             if (!err) {
-                console.log('Finish!');
+                console.log('Completed!');
             }
         });
     });

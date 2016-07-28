@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"edm-api.epdetails"},{"v":1,"key":{"epCode":1},"name":"epCode_1","ns":"edm-api.epdetails","background":true}]}
