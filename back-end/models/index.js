@@ -18,6 +18,7 @@ models.BlackListToken = require('./BlackListToken');
 models.KnowledgeUnit = require('./KnowledgeUnit');
 models.EducationProgram = require('./EducationProgram');
 models.EPDetail = require('./EPDetail');
+models.Notification = require('./Notification');
 
 models.dbConnect = mongooseConnect;
 module.exports = models;

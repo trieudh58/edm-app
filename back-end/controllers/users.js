@@ -309,7 +309,7 @@ module.exports = {
                         });
 
                         var receiver = req.body.email;
-                        var activationLink = 'http://' + req.get('host') + '/api/v1/users/verify?email=' + req.body.email + '&token=' + rememberToken;
+                        var activationLink = 'http://' + req.get('host') + '/api/v1/users/verify-email?email=' + req.body.email + '&token=' + rememberToken;
                         console.log(activationLink);
                         var mailOptions = {
                             from: config.mailer.sender,

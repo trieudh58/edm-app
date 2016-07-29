@@ -21,6 +21,19 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                 // Parse String to Date type
                 var DOB = studentRecords[i][2].split('/');
                 var date = new Date(parseInt(DOB[2]), parseInt(DOB[1]) - 1, parseInt(DOB[0].substring(1)), 0, 0, 1);
+
+                var studentGroups = [];
+                studentGroups.push('All');
+                var startYear = (studentRecords[i][0].length == 7) ? parseInt(studentRecords[i][0].slice(0,1)) : parseInt(studentRecords[i][0].slice(0,2));
+                if (!isNaN(startYear)) {
+                    var groupBySchoolYear = 'K' + (45 + startYear).toString();
+                    studentGroups.push(groupBySchoolYear);
+                }
+                else if (studentRecords[i][0].indexOf('_') != -1) {
+                    var groupBySchoolYear = 'K' + studentRecords[i][0].split('_')[1];
+                    studentGroups.push(groupBySchoolYear);
+                }
+
                 models.User.create({
                     email: studentRecords[i][0] + '@vnu.edu.vn',
                     password: bcrypt.hashSync('123456', 1),
@@ -28,7 +41,8 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                     personalInfo: {
                         gender: studentRecords[i][3],
                         DOB: date,
-                        className: studentRecords[i][1]
+                        className: studentRecords[i][1],
+                        groups: studentGroups
                     },
                     isActive: false
                 }, function (err, user) {
