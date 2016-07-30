@@ -74,5 +74,51 @@ module.exports = {
                 });
             });
         }
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/get-all
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get all notifications created
+     *      notes: Return created notifications
+     *      nickname: Get all notifications
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return all notifications */
+    getAll: function (req, res) {
+        Notification.find({}, '-__v').populate('creator').exec(function (err, notifications) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            var dataToBeSent = [];
+            for (var i = 0; i < notifications.length; i++) {
+                var singleNoti = {};
+                singleNoti._id = notifications[i]._id;
+                singleNoti.createdAt = Date(notifications[i].createdAt);
+                singleNoti.updatedAt = Date(notifications[i].updatedAt);
+                singleNoti.title = notifications[i].title;
+                singleNoti.body = notifications[i].body;
+                singleNoti.creator = notifications[i].creator.email;
+                singleNoti.isSent = notifications[i].isSent;
+                singleNoti.targetGroups = notifications[i].targetGroups;
+                dataToBeSent.push(singleNoti);
+            }
+            res.json({
+                success: true,
+                data: dataToBeSent
+            });
+        });
     }
 };
