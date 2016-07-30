@@ -10,4 +10,7 @@ router.post('/create', authentication, adminPermission, NotificationController.c
 /* Get all notification created (admin permission required) */
 router.get('/get-all', authentication, adminPermission, NotificationController.getAll);
 
+/* Delete one notification by id (admin permission required) */
+router.delete('/delete-one-by-id', authentication, adminPermission, NotificationController.deleteOneById);
+
 module.exports = router;

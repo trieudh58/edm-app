@@ -69,6 +69,7 @@ module.exports = {
                         body: createdNotification.body,
                         creator: req.user.email,
                         createdAt: Date(createdNotification.createdAt),
+                        targetGroups: createdNotification.targetGroups,
                         isSent: createdNotification.isSent
                     }
                 });
@@ -81,9 +82,9 @@ module.exports = {
      * path: /api/v1/notifications/get-all
      * operations:
      *   -  httpMethod: GET
-     *      summary: Get all notifications created
-     *      notes: Return created notifications
-     *      nickname: Get all notifications
+     *      summary: Get all notifications (newest-to-oldest order)v
+     *      notes: Return created notifications (newest-to-oldest order)
+     *      nickname: Get all notifications (newest-to-oldest order)
      *      consumes:
      *        - text/html
      *      parameters:
@@ -93,9 +94,9 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Return all notifications */
+    /* Return all notifications (newest-to-oldest order) */
     getAll: function (req, res) {
-        Notification.find({}, '-__v').populate('creator').exec(function (err, notifications) {
+        Notification.find({}, '-__v').populate('creator').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
             if (err) {
                 res.status(500).json({
                     success: false,
@@ -119,6 +120,52 @@ module.exports = {
                 success: true,
                 data: dataToBeSent
             });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/delete-one-by-id
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Delete a notification by id
+     *      notes: Return deleted notification
+     *      nickname: Delete one notification
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: _id
+     *          description: Notification id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    deleteOneById: function (req, res) {
+        Notification.findByIdAndRemove(req.body._id, function (err, removedNotification) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!removedNotification) {
+                res.json({
+                    success: false,
+                    message: 'Notification does not exist.'
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Notification deleted.',
+                    data: removedNotification
+                });
+            }
         });
     }
 };
