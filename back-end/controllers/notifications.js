@@ -147,7 +147,10 @@ module.exports = {
      */
     /* Return selected notification */
     getOneById: function (req, res) {
-        Notification.findById(req.query.notificationId, '-__v').populate('creator').exec(function (err, selectedNotification) {
+        Notification.findById(req.query.notificationId, '-__v').populate({
+            path: 'creator',
+            select: 'email -_id'
+        }).exec(function (err, selectedNotification) {
             if (err) {
                 res.status(500).json({
                     success:false,
@@ -163,16 +166,7 @@ module.exports = {
             else {
                 res.json({
                     success: true,
-                    data: {
-                        _id : selectedNotification._id,
-                        createdAt : Date(selectedNotification.createdAt),
-                        updatedAt : Date(selectedNotification.updatedAt),
-                        title : selectedNotification.title,
-                        body : selectedNotification.body,
-                        creator : selectedNotification.creator.email,
-                        isSent : selectedNotification.isSent,
-                        targetGroups : selectedNotification.targetGroups
-                    }
+                    data: selectedNotification
                 });
             }
         });
