@@ -19,8 +19,28 @@ var UserSchema = new mongoose.Schema({
         },
         className: {
             type: String
-        }
+        },
+        groups: [{
+            type: String
+        }]
     },
+    notificationStack: [{
+        notificationId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Notification',
+            require: true
+        },
+        isRead: {
+            type: Boolean,
+            require: true,
+            default: false
+        },
+        isHidden: {
+            type: Boolean,
+            require: true,
+            default: false
+        }
+    }],
     isAdmin: {
         type: Boolean,
         default: false

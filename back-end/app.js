@@ -45,7 +45,8 @@ app.use(swagger.init(app, {
     apis: [
         './controllers/users.js',
         './controllers/studentRecords.js',
-        './controllers/subjects.js'
+        './controllers/subjects.js',
+        './controllers/notifications.js'
     ]
 }));
 
