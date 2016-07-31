@@ -68,7 +68,7 @@ module.exports = {
                         title: createdNotification.title,
                         body: createdNotification.body,
                         creator: req.user.email,
-                        createdAt: Date(createdNotification.createdAt),
+                        createdAt: createdNotification.createdAt,
                         targetGroups: createdNotification.targetGroups,
                         isSent: createdNotification.isSent
                     }
@@ -107,8 +107,8 @@ module.exports = {
             for (var i = 0; i < notifications.length; i++) {
                 var singleNoti = {};
                 singleNoti._id = notifications[i]._id;
-                singleNoti.createdAt = Date(notifications[i].createdAt);
-                singleNoti.updatedAt = Date(notifications[i].updatedAt);
+                singleNoti.createdAt = notifications[i].createdAt;
+                singleNoti.updatedAt = notifications[i].updatedAt;
                 singleNoti.title = notifications[i].title;
                 singleNoti.body = notifications[i].body;
                 singleNoti.creator = notifications[i].creator.email;
