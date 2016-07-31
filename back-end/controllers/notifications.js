@@ -82,7 +82,7 @@ module.exports = {
      * path: /api/v1/notifications/get-all
      * operations:
      *   -  httpMethod: GET
-     *      summary: Get all notifications (newest-to-oldest order)v
+     *      summary: Get all notifications (newest-to-oldest order)
      *      notes: Return created notifications (newest-to-oldest order)
      *      nickname: Get all notifications (newest-to-oldest order)
      *      consumes:
@@ -120,6 +120,61 @@ module.exports = {
                 success: true,
                 data: dataToBeSent
             });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/get-one-by-id
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get one notification by id
+     *      notes: Return selected notification
+     *      nickname: Get notification by id
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationId
+     *          description: Id of notification
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Return selected notification */
+    getOneById: function (req, res) {
+        Notification.findById(req.query.notificationId, '-__v').populate('creator').exec(function (err, selectedNotification) {
+            if (err) {
+                res.status(500).json({
+                    success:false,
+                    message: err
+                });
+            }
+            else if (!selectedNotification) {
+                res.json({
+                    success: false,
+                    message: 'Notification does not exist.'
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: {
+                        _id : selectedNotification._id,
+                        createdAt : Date(selectedNotification.createdAt),
+                        updatedAt : Date(selectedNotification.updatedAt),
+                        title : selectedNotification.title,
+                        body : selectedNotification.body,
+                        creator : selectedNotification.creator.email,
+                        isSent : selectedNotification.isSent,
+                        targetGroups : selectedNotification.targetGroups
+                    }
+                });
+            }
         });
     },
 
