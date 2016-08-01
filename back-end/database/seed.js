@@ -12,7 +12,8 @@ seeder.connect(config.mongodb.host, function () {
         'models/Subject.js',
         'models/KnowledgeUnit.js',
         'models/EducationProgram.js',
-        'models/EPDetail.js'
+        'models/EPDetail.js',
+        'models/StudentGroup.js'
     ]);
     /* Clear models' data */
     seeder.clearModels([
@@ -22,7 +23,8 @@ seeder.connect(config.mongodb.host, function () {
         'Subject',
         'KnowledgeUnit',
         'EducationProgram',
-        'EPDetail'
+        'EPDetail',
+        'StudentGroup'
     ], function () {
         console.log('Connected to mongodb.');
         seeder.populateModels(data);
@@ -37,10 +39,13 @@ seeder.connect(config.mongodb.host, function () {
         require('./importKnowledgeUnits');
 
         /* Import education programs from csv file */
-        require('./importEducationPrograms')
+        require('./importEducationPrograms');
 
         /* Import EP detail from csv file */
         require('./importEPDetail');
+
+        /* Create student groups */
+        require('./createStudentGroups.js');
     });
 });
 

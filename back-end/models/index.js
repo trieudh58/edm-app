@@ -19,6 +19,7 @@ models.KnowledgeUnit = require('./KnowledgeUnit');
 models.EducationProgram = require('./EducationProgram');
 models.EPDetail = require('./EPDetail');
 models.Notification = require('./Notification');
+models.StudentGroup = require('./StudentGroup');
 
 models.dbConnect = mongooseConnect;
 module.exports = models;

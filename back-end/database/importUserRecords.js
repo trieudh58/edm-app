@@ -4,12 +4,12 @@ var models = require('../models');
 var async = require('async');
 var bcrypt = require('bcrypt');
 
-var scoreStream = fs.createReadStream(__dirname + '/raw/out_Students_2012.csv');
+var scoreStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_2012.csv');
 var studentRecords = [];
 var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
     studentRecords.push(data);
 }).on('finish', function () {
-    var whenStream = fs.createReadStream(__dirname + '/raw/out_Students_When.csv');
+    var whenStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_When.csv');
     var whenRecords = [];
     var csvWhenRecord = csv.parse({delimiter: ','}).on('data', function (data) {
         whenRecords.push(data);
@@ -17,40 +17,53 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
         // Create user
         var createUser = function (studentRecords, whenRecords, callback) {
             console.log('Creating users....');
-            for (var i = 1; i < studentRecords.length; i++) {
-                // Parse String to Date type
-                var DOB = studentRecords[i][2].split('/');
-                var date = new Date(parseInt(DOB[2]), parseInt(DOB[1]) - 1, parseInt(DOB[0].substring(1)), 0, 0, 1);
-
-                var studentGroups = [];
-                studentGroups.push('All');
-                var startYear = (studentRecords[i][0].length == 7) ? parseInt(studentRecords[i][0].slice(0,1)) : parseInt(studentRecords[i][0].slice(0,2));
-                if (!isNaN(startYear)) {
-                    var groupBySchoolYear = 'K' + (45 + startYear).toString();
-                    studentGroups.push(groupBySchoolYear);
+            models.StudentGroup.find({}, '-__v', function (err, groups) {
+                if (err) {
+                    throw err;
                 }
-                else if (studentRecords[i][0].indexOf('_') != -1) {
-                    var groupBySchoolYear = 'K' + studentRecords[i][0].split('_')[1];
-                    studentGroups.push(groupBySchoolYear);
-                }
+                for (var i = 1; i < studentRecords.length; i++) {
+                    // Parse String to Date type
+                    var DOB = studentRecords[i][2].split('/');
+                    var date = new Date(parseInt(DOB[2]), parseInt(DOB[1]) - 1, parseInt(DOB[0].substring(1)), 0, 0, 1);
 
-                models.User.create({
-                    email: studentRecords[i][0] + '@vnu.edu.vn',
-                    password: bcrypt.hashSync('123456', 1),
-                    studentCode: studentRecords[i][0],
-                    personalInfo: {
-                        gender: studentRecords[i][3],
-                        DOB: date,
-                        className: studentRecords[i][1],
-                        groups: studentGroups
-                    },
-                    isActive: false
-                }, function (err, user) {
-                    if (err) {
-                        throw err;
+                    var studentGroups = [];
+                    var startYear = (studentRecords[i][0].length == 7) ? parseInt(studentRecords[i][0].slice(0,1)) : parseInt(studentRecords[i][0].slice(0,2));
+                    var groupBySchoolYear = '';
+                    if (!isNaN(startYear)) {
+                        groupBySchoolYear = 'K' + (45 + startYear).toString();
+                        for (var j = 0; j < groups.length; j++) {
+                            if (groups[j].name == groupBySchoolYear || groups[j].name == 'All') {
+                                studentGroups.push({group: groups[j]._id});
+                            }
+                        }
                     }
-                });
-            }
+                    else if (studentRecords[i][0].indexOf('_') != -1) {
+                        groupBySchoolYear = 'K' + studentRecords[i][0].split('_')[1];
+                        for (var j = 0; j < groups.length; j++) {
+                            if (groups[j].name == groupBySchoolYear || groups[j].name == 'All') {
+                                studentGroups.push({group: groups[j]._id});
+                            }
+                        }
+                    }
+
+                    models.User.create({
+                        email: studentRecords[i][0] + '@vnu.edu.vn',
+                        password: bcrypt.hashSync('123456', 1),
+                        studentCode: studentRecords[i][0],
+                        personalInfo: {
+                            gender: studentRecords[i][3],
+                            DOB: date,
+                            className: studentRecords[i][1],
+                            groups: studentGroups
+                        },
+                        isActive: false
+                    }, function (err, user) {
+                        if (err) {
+                            throw err;
+                        }
+                    });
+                }
+            });
             callback(null, studentRecords, whenRecords);
         };
         // Create student record

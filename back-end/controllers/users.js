@@ -99,20 +99,26 @@ module.exports = {
      */
     /* Return user data */
     get: function (req, res) {
-        res.json({
-            success: true,
-            data: {
-                email: req.user.email,
-                studentCode: req.user.studentCode,
-                personalInfo: {
-                    gender: req.user.personalInfo.gender ? 'Male' : 'Female',
-                    DOB: req.user.personalInfo.DOB,
-                    className: req.user.personalInfo.className
-                },
-                isActive: req.user.isActive,
-                isAdmin: req.user.isAdmin
-            }
+        User.findById(req.user._id, '-updatedAt -createdAt -password -__v').populate('personalInfo.groups.group', 'name').exec(function (err, result) {
+            res.json({
+                data: result
+            })
         });
+        //res.json({
+        //    success: true,
+        //    data: {
+        //        email: req.user.email,
+        //        studentCode: req.user.studentCode,
+        //        personalInfo: {
+        //            gender: req.user.personalInfo.gender ? 'Male' : 'Female',
+        //            DOB: req.user.personalInfo.DOB,
+        //            className: req.user.personalInfo.className
+        //        },
+        //        isActive: req.user.isActive,
+        //        isAdmin: req.user.isAdmin
+        //    },
+        //    user: req.user
+        //});
     },
 
     /**
