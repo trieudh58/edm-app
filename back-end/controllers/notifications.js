@@ -68,7 +68,7 @@ module.exports = {
                         title: createdNotification.title,
                         body: createdNotification.body,
                         creator: req.user.email,
-                        createdAt: Date(createdNotification.createdAt),
+                        createdAt: createdNotification.createdAt,
                         targetGroups: createdNotification.targetGroups,
                         isSent: createdNotification.isSent
                     }
@@ -82,7 +82,7 @@ module.exports = {
      * path: /api/v1/notifications/get-all
      * operations:
      *   -  httpMethod: GET
-     *      summary: Get all notifications (newest-to-oldest order)v
+     *      summary: Get all notifications (newest-to-oldest order)
      *      notes: Return created notifications (newest-to-oldest order)
      *      nickname: Get all notifications (newest-to-oldest order)
      *      consumes:
@@ -107,8 +107,8 @@ module.exports = {
             for (var i = 0; i < notifications.length; i++) {
                 var singleNoti = {};
                 singleNoti._id = notifications[i]._id;
-                singleNoti.createdAt = Date(notifications[i].createdAt);
-                singleNoti.updatedAt = Date(notifications[i].updatedAt);
+                singleNoti.createdAt = notifications[i].createdAt;
+                singleNoti.updatedAt = notifications[i].updatedAt;
                 singleNoti.title = notifications[i].title;
                 singleNoti.body = notifications[i].body;
                 singleNoti.creator = notifications[i].creator.email;
@@ -120,6 +120,55 @@ module.exports = {
                 success: true,
                 data: dataToBeSent
             });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/get-one-by-id
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get one notification by id
+     *      notes: Return selected notification
+     *      nickname: Get notification by id
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationId
+     *          description: Id of notification
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Return selected notification */
+    getOneById: function (req, res) {
+        Notification.findById(req.query.notificationId, '-__v').populate({
+            path: 'creator',
+            select: 'email -_id'
+        }).exec(function (err, selectedNotification) {
+            if (err) {
+                res.status(500).json({
+                    success:false,
+                    message: err
+                });
+            }
+            else if (!selectedNotification) {
+                res.json({
+                    success: false,
+                    message: 'Notification does not exist.'
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: selectedNotification
+                });
+            }
         });
     },
 
