@@ -29,7 +29,7 @@ var UserSchema = new mongoose.Schema({
         }]
     },
     notificationStack: [{
-        notificationId: {
+        notification: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Notification',
             require: true

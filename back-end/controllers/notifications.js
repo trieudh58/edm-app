@@ -1,4 +1,4 @@
-var Notification = require('../models').Notification;
+var models = require('../models');
 
 module.exports = {
     /**
@@ -33,23 +33,32 @@ module.exports = {
      *          paramType: form
      *          required: true
      *          dataType: string
-     *        - name: targetGroups
-     *          description: Target group
+     *        - name: targetGroupIds
+     *          description: Target group ids (separated by comma)
      *          paramType: form
      *          required: true
      *          dataType: string
      */
     /* Return created notification */
     create: function (req, res) {
-        if (!req.body.title || !req.body.body || !req.body.targetGroups) {
+        if (!req.body.title || !req.body.body || !req.body.targetGroupIds) {
             res.json({
                 success: false,
                 message: 'Missing required fields.'
             });
         }
         else {
-            var groups = req.body.targetGroups.split(',');
-            Notification.create({
+            // Remove all space in this query string.
+            req.body.targetGroupIds = req.body.targetGroupIds.replace(/\s+/g, '');
+
+            var parsedTargetGroups = req.body.targetGroupIds.split(',');
+            var groups = [];
+            for (var i = 0; i < parsedTargetGroups.length; i++) {
+                groups.push({
+                    group: parsedTargetGroups[i]
+                });
+            }
+            models.Notification.create({
                 title: req.body.title,
                 body: req.body.body,
                 creator: req.user._id,
@@ -79,6 +88,30 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/notifications/send-created-one
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Admins send a created notification
+     *      notes: Return sent notification
+     *      nickname: Send notification
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationId
+     *          description: Notification id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Return sent notification */
+
+    /**
+     * @swagger
      * path: /api/v1/notifications/get-all
      * operations:
      *   -  httpMethod: GET
@@ -96,29 +129,15 @@ module.exports = {
      */
     /* Return all notifications (newest-to-oldest order) */
     getAll: function (req, res) {
-        Notification.find({}, '-__v').populate('creator').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
+        models.Notification.find({}, '-__v -body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
             if (err) {
                 res.status(500).json({
                     success: false,
                     message: err
                 });
             }
-            var dataToBeSent = [];
-            for (var i = 0; i < notifications.length; i++) {
-                var singleNoti = {};
-                singleNoti._id = notifications[i]._id;
-                singleNoti.createdAt = notifications[i].createdAt;
-                singleNoti.updatedAt = notifications[i].updatedAt;
-                singleNoti.title = notifications[i].title;
-                singleNoti.body = notifications[i].body;
-                singleNoti.creator = notifications[i].creator.email;
-                singleNoti.isSent = notifications[i].isSent;
-                singleNoti.targetGroups = notifications[i].targetGroups;
-                dataToBeSent.push(singleNoti);
-            }
             res.json({
-                success: true,
-                data: dataToBeSent
+                data: notifications
             });
         });
     },
@@ -147,9 +166,12 @@ module.exports = {
      */
     /* Return selected notification */
     getOneById: function (req, res) {
-        Notification.findById(req.query.notificationId, '-__v').populate({
+        models.Notification.findById(req.query.notificationId, '-__v').populate({
             path: 'creator',
             select: 'email -_id'
+        }).populate({
+            path: 'targetGroups.group',
+            select: 'name'
         }).exec(function (err, selectedNotification) {
             if (err) {
                 res.status(500).json({
@@ -195,7 +217,7 @@ module.exports = {
      *          dataType: string
      */
     deleteOneById: function (req, res) {
-        Notification.findByIdAndRemove(req.body._id, function (err, removedNotification) {
+        models.Notification.findByIdAndRemove(req.body._id, function (err, removedNotification) {
             if (err) {
                 res.status(500).json({
                     success: false,
@@ -209,10 +231,21 @@ module.exports = {
                 });
             }
             else {
-                res.json({
-                    success: true,
-                    message: 'Notification deleted.',
-                    data: removedNotification
+                models.User.update({
+                    notificationStack: {
+                        notification: removedNotification._id
+                    }
+                }, {
+                    $pull: {
+                        notificationStack: {
+                            notification: removedNotification._id
+                        }
+                    }
+                }, function (err, result) {
+                    res.json({
+                        success: true,
+                        message: 'Notification deleted.'
+                    });
                 });
             }
         });

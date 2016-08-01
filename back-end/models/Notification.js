@@ -15,8 +15,11 @@ var NotificationSchema = new mongoose.Schema({
         require: true
     },
     targetGroups: [{
-        type: String,
-        ref: 'User'
+        _id: false,
+        group: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'StudentGroup'
+        }
     }],
     isSent: {
         type: Boolean,
