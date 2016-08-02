@@ -21,11 +21,15 @@ var UserSchema = new mongoose.Schema({
             type: String
         },
         groups: [{
-            type: String
+            _id: false,
+            group: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'StudentGroup'
+            }
         }]
     },
     notificationStack: [{
-        notificationId: {
+        notification: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Notification',
             require: true

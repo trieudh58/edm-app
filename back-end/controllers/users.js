@@ -99,19 +99,23 @@ module.exports = {
      */
     /* Return user data */
     get: function (req, res) {
-        res.json({
-            success: true,
-            data: {
-                email: req.user.email,
-                studentCode: req.user.studentCode,
-                personalInfo: {
-                    gender: req.user.personalInfo.gender ? 'Male' : 'Female',
-                    DOB: req.user.personalInfo.DOB,
-                    className: req.user.personalInfo.className
-                },
-                isActive: req.user.isActive,
-                isAdmin: req.user.isAdmin
+        User.findById(req.user._id, '-updatedAt -createdAt -password -__v').populate('personalInfo.groups.group', 'name').exec(function (err, result) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
             }
+            else if (!result) {
+                res.json({
+                    success: false,
+                    message: 'User does not exist.'
+                });
+            }
+            res.json({
+                success: true,
+                data: result
+            })
         });
     },
 
