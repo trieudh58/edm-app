@@ -31,7 +31,7 @@ body {
 }
 
 .headline h2 {
-    font-size: 77px;
+    font-size: 70px;
     /*background: #fff;
     background: rgba(255,255,255,0.9);*/
 }
@@ -69,7 +69,7 @@ footer {
     }
 
     .headline h2 {
-        font-size: 63px;
+        font-size: 57px;
     }
 
     .featurette-divider {
@@ -95,7 +95,7 @@ footer {
     }
 
     .headline h2 {
-        font-size: 50px;
+        font-size: 45px;
     }
 
     .featurette-divider {
@@ -139,7 +139,7 @@ footer {
     }
 
     .headline h2 {
-        font-size: 32px;
+        font-size: 28px;
     }
 
     .featurette-divider {
@@ -157,7 +157,7 @@ footer {
     }
 
     .headline h2 {
-        font-size: 30px;
+        font-size: 26px;
     }
 }
 
