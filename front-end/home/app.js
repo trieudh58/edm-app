@@ -1,36 +1,14 @@
 ﻿	// create the module and name it scotchApp
-	// var App = angular.module('app',['ngRoute','ngStorage','chart.js']);
-
     var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap']);
-    var originPath='http://127.0.0.1:3001';
+    // var originPath='http://127.0.0.1:3001';
+    var originPath='http://localhost:3001';
 	// configure our routes
-
-	// App.config(function($routeProvider,ChartJsProvider) {
     App.config(function($routeProvider,ChartJsProvider) {
 		$routeProvider
-
-			// route for the home page
-			.when('/home', {
-				templateUrl : '../templates/home.view.html',
-				controller  : 'HomeController',
-                resolve: {
-                    loginRequired: loginRequired
-                }
-			})
-
 			// route for the about page
 			.when('/login', {
 				templateUrl : '../templates/login.view.html',
 				controller  : 'LoginController',
-                resolve:{
-                    notLoginRequired:notLoginRequired
-                }
-			})
-
-			// route for the contact page
-			.when('/register', {
-				templateUrl : '../templates/register.view.html',
-				controller  : 'RegisterController',
                 resolve:{
                     notLoginRequired:notLoginRequired
                 }
@@ -56,62 +34,32 @@
           // controller:'LineCtrl',
           templateUrl:'../templates/tem.html'
       })
+      .when('/allnotifications',{
+        controller:'allnotifications',
+        templateUrl:'../templates/view.all.notifications.html'
+      })
+      .when('/notification',{
+        controller:'notification',
+        templateUrl:'../templates/notification.view.html'
+      })
+      .when('/courserequest',{
+        controller:'courserequest',
+        templateUrl:'../templates/courserequest.view.html'
+      })
       ;
             // $locationProvider.html5Mode(true);
-
-        // ChartJsProvider.setOptions({
-        //   colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
-        //   responsive: true
-        // });
-        // // Configure all doughnut charts
-        // ChartJsProvider.setOptions('Doughnut', {
-        //   animateScale: true
-        // });
 			//.otherwise({ redirectTo: '/' });
        ChartJsProvider.setOptions({
       colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
       responsive: true
-    });
-    // Configure all doughnut charts
-    ChartJsProvider.setOptions('Doughnut', {
-      animateScale: true
-    });
+      });
+      // Configure all doughnut charts
+      ChartJsProvider.setOptions('Doughnut', {
+        animateScale: true
+      });
 	});
-
-	// create the controller and inject Angular's $scope
-	App.controller('HomeController', function($scope,$localStorage) {
-		// create a message to display in our view
-		$scope.message={};
-        console.log($localStorage.access_token);
-	});
-
 	App.controller('LoginController', function($scope,$rootScope,$http,$location,$localStorage,$window) {
-		// $scope.message = 'Everyone come and see how good I look! login';
-        // console.log('localStorage'+ $localStorage);
-        // console.log('rootScope'+$rootScope);
-        // console.log($http);
-
         $scope.message={}
-        $scope.login =function() {
-                $http({
-                    method : "POST",
-                    url : originPath+"/api/v1/users/authenticate",
-                    data:{email:$scope.email,
-                        password:$scope.password}
-                }).then(function mySuccess(response) {
-                    $scope.myWelcome = response.data;
-                    if(response.data.success){
-                        $localStorage.access_token=response.data.token;
-                        console.log($localStorage.access_token);
-                        console.log('logged in');
-			             $window.open('/home', "_self");
-                    }
-                }, function myError(response) {
-                    $scope.myWelcome = response.statusText;
-                    $scope.message.error='request fail';
-                    console.log('fail');
-                });
-        };
         $rootScope.logout=function(){
             $http({
                     method : "POST",
@@ -130,30 +78,10 @@
             }
 	});
 
- //    App.controller('LogoutController',function($scope, $http,$location,$localStorage,$window){
-	// console.log('loged out');
- //        $scope.logout=function(){
- //        $http({
- //                method : "POST",
- //                url : originPath+"/api/v1/users/logout",
- //                data:{token:$localStorage.access_token}
- //            }).then(function mySuccess(response) {
- //                // $scope.myWelcome = response.data;
- //                if(response.data.success){
- //                    $localStorage.access_token=undefined;
- //                    $window.open('/cover.html', "_self");
- //                }
- //            }, function myError(response) {
- //                // $scope.myWelcome = response.statusText;
- //                $scope.message.error='request fail';
- //                console.log('fail');
- //            });
- //        }
- //    });
-
   App.controller('ProfileController', function($scope,$http,$localStorage){
+      //////profile
+  });
 
-  })
   function loginRequired($q, $location,$localStorage) {           ///////////window instead
     var deferred = $q.defer();
     if ($localStorage.access_token!==undefined) {
@@ -174,41 +102,96 @@
     return deferred.promise;
   }
 
-
-
-App.controller("studentscore",function($scope,$http,$localStorage){
-    $http({
+App.factory('getSubjectNameAndCredits',function($http,$localStorage){
+  return{
+    get:function(){
+      return $http({
         method : "GET",
-        url : 'http://localhost:3001'+"/api/v1/student-records/get",
+        url : originPath+"/api/v1/subjects/get-names-and-credits",
+        params:{
+            'token':$localStorage.access_token
+        }
+    }).then(function(response){
+      // console.log(response.data);
+      return response.data;
+    },
+     function myError(response) {
+        $scope.message.error='request fail';          //////////////////!
+    });
+    }
+  };
+})
+
+App.factory('getStudentRecord',function($http,$localStorage){
+  return{
+    get:function(){
+      return $http({
+        method : "GET",
+        url : originPath+"/api/v1/student-records/get",
         params:{
             'token':$localStorage.access_token
         }
     }).then(function mySuccess(response) {
-        if(response.data.success){
-            $scope.records=studentRecordInSenmester(response.data.data.record);
-            // line chart data
-            console.log($scope.records);
+        return response.data;
+    }, function myError(response) {
+        $scope.message.error='request fail'; ////////!
+    });
+    }
+  };
+})
+
+App.factory('getStudentInfor',function($http,$localStorage){
+  return{
+    get:function(){
+      return $http({
+        method:'GET',
+        url :originPath+'/api/v1/users/get',
+        params:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+        $scope.message.error='request fail'; /////////???!
+      });
+    }
+  };
+})
+
+App.factory('getNotifications',function($http,$localStorage){
+  return{
+    get:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'',      /////// lost
+        params:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+        //////////// fail
+      });
+    }
+  };
+})
+
+App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
+
+    var res=getSubjectNameAndCredits.get();
+    var studentRecordRequest=getStudentRecord.get();
+    res.then(function(response){
+      $scope.subjectCredits=subjectCredit(response.subjects);
+      $scope.subjectsNameDictViet=subjectDictViet(response.subjects);
+      studentRecordRequest.then(function(res){
+            $scope.records=studentRecordInSenmester(res.data.record);  // rootscope //////////// need to sort the semester !!!
+            //semester GPA line chart data
             $scope.linelabels = listSemester($scope.records);
             $scope.lineseries = ['Trung binh tich luy'];
-            $scope.linedata = diemtichluycacky($scope.records);
-
-        }
-    }, function myError(response) {
-        $scope.message.error='request fail';
-    });
-    $http({
-        method : "GET",
-        url : 'http://localhost:3001'+"/api/v1/subjects/get-names",
-        params:{
-            'token':$localStorage.access_token
-        }
-    }).then(function mySuccess(response) {
-        if(response.data.success){
-            $scope.subjectsNameDictViet=subjectDictViet(response.data.subjects);
-            // $scope.subjectsNameDictEng=subjectDictEng(response.data.subjects);
-        }
-    }, function myError(response) {
-        $scope.message.error='request fail';
+            $scope.linedata = GPASemesterList($scope.records,$scope.subjectCredits);
+            //A B C D percentage pie chart data
+            [$scope.ABCDPielabels,$scope.ABCDPiedata] = ABCDPieChartData($scope.records,$scope.subjectCredits);
+      });
     });
 });
 
@@ -221,44 +204,21 @@ App.controller('subjects',function($scope,$http){
 
   });
 });
-// App.controller("LineCtrl",function ($scope, $timeout,$http,$localStorage) {
-//     console.log($localStorage.access_token);
-//     $scope.message={}
-//     // $http.defaults.headers.common.Authorization = 'Basic YmVlcDpib29w';
-    
-//         $http({
-//         method : "GET",
-//         url : 'http://localhost:3001'+"/api/v1/student-records/get",
-//         // headers:{
-//         //     'x-access-token':$localStorage.access_token
-//         // }
-//         params:{
-//             'token':$localStorage.access_token
-//         }
-//     }).then(function mySuccess(response) {
-//         // $scope.myWelcome = response.data;
-//         if(response.data.success){
-//             $scope.recodes=response.data
-//             // console.log(response)
-//         }
-//     }, function myError(response) {
-//         // $scope.myWelcome = response.statusText;
-//         $scope.message.error='request fail';
-//         // console.log('fail');
-//         // console.log(response.data)
-//     });
 
-// });
-  // $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-  // $scope.series = ['Series A', 'Series B'];
-  // $scope.data = [
-  //   [65, 59, 80, 81, 56, 55, 40],
-  //   [28, 48, 40, 19, 86, 27, 90]
-  // ];
-  // $scope.onClick = function (points, evt) {
-  //   console.log(points, evt);
-  // };
+App.controller('allnotifications',function($scope){
+  // var request=getNotifications();
+  // request.then(function(response){
+  //   $scope.notifications=[]; ////////////////////////////////////!!!
+  // })
+});
 
+App.controller('notification',function($scope){
+
+});
+
+App.controller('courserequest',function($scope){
+
+});
   // Simulate async data update
   App.controller('LineCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
     // $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -267,6 +227,7 @@ App.controller('subjects',function($scope,$http){
     //   [65, 59, 80, 81, 56, 55, 40],
     //   [28, 48, 40, 19, 86, 27, 90]
     // ];
+ 
     $scope.onClick = function (points, evt) {
       console.log(points, evt);
     };
@@ -310,11 +271,6 @@ App.controller('subjects',function($scope,$http){
   //   }, 500);
   // }]);
 
-  // app.controller('PieCtrl', function ($scope) {
-  //   $scope.labels = ['Download Sales', 'In-Store Sales', 'Mail Sales'];
-  //   $scope.data = [300, 500, 100];
-  // });
-
   // app.controller('PolarAreaCtrl', function ($scope) {
   //   $scope.labels = ['Download Sales', 'In-Store Sales', 'Mail Sales', 'Telesales', 'Corporate Sales'];
   //   $scope.data = [300, 500, 100, 40, 120];
@@ -331,8 +287,8 @@ App.controller('subjects',function($scope,$http){
   // });
 
   App.controller('RadarCtrl', function ($scope) {
-    $scope.labels = ['Eating', 'Drinking', 'Sleeping', 'Designing', 'Coding', 'Cycling', 'Running'];
-
+    $scope.labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    
     $scope.data = [
       [65, 59, 90, 81, 56, 55, 40],
       [28, 48, 40, 19, 96, 27, 100]
@@ -447,6 +403,14 @@ App.controller('subjects',function($scope,$http){
     // console.log(result);
     return result;
   }
+  function subjectCredit(subjectJsonData){
+    result={}
+    for (i=0;i<subjectJsonData.length;i++){
+      result[subjectJsonData[i].code]=subjectJsonData[i].details.credits;
+    }
+    //console.log(result[0]);
+    return result;
+  }
   function studentRecordInSenmester(records){
     result={};
     for(i=0;i<records.length;i++){
@@ -470,20 +434,66 @@ App.controller('subjects',function($scope,$http){
     // console.log(result['1.2014-2015'][1]);
     return result;
   }
-  function diemtichluycacky(records){
-    // result=[];
-    // for(var key in records) {
-    //   records[key]
-    // }
-    return [3.4,3.2,3.3];
+  function GPASemesterList(records,credits){
+    result=[];
+    for(var key in records) {
+      result.push(semesterGPA(records[key],credits));
+    }
+    //result=[3.4,3.2,3.3]
+    // console.log(result);
+    result=[result];
+    // console.log(result);
+    return result;
+  }
+  function semesterGPA(records,credits){
+    var totalCredits=0.0;
+    var totalScore4=0.0;
+    var credit=0;
+    var score=0.0;
+    for(i=0;i<records.length;i++){
+      var score=records[i].score4;
+      var subjectCode=records[i].subjectCode;
+      if( subjectCode in credits && score !==0){                       //if subjectCode exist
+        credit=credits[records[i].subjectCode];
+        totalCredits+= credit;
+        totalScore4+=score*credit;
+      }
+    }
+    var result=totalScore4/totalCredits;
+    return Number(Math.round(result+'e2')+'e-2');
+    // return 0;
   }
   function listSemester(records){
     var keys = []
     for(var key in records) keys.push( key );
-    console.log(keys);
+    //console.log(keys);
     return keys;
   }
 
+  function ABCDPieChartData(records,credits){
+    var rattingDistinct=[];
+    var ratingCount=[];
+    var numberRattingType=0;
+    var subjectCode;
+    var charRatting;
+    for(var key in records){
+      for(i=0;i<records[key].length;i++){
+        charRatting=records[key][i].scoreChar;
+        subjectCode=records[key][i].subjectCode;
+        if(subjectCode in credits && charRatting!='F'){
+          if(rattingDistinct.indexOf(records[key][i].scoreChar)>-1){
+              ratingCount[numberRattingType-1]+=credits[subjectCode];
+          }
+          else{
+            rattingDistinct.push(records[key][i].scoreChar);
+            ratingCount.push(credits[subjectCode]);
+            numberRattingType++;
+          }
+        }
+      }
+    } 
+    return[rattingDistinct,ratingCount];
+  }
   function studentRecord4(score){
     if(score>=9)
       return 4.0;

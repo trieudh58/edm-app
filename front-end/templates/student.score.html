@@ -38,11 +38,22 @@
                 <div class="panel-heading">Radar Chart</div>
                 <div class="panel-body">
                   <canvas id="area" class="chart chart-radar" chart-data="data"
-                          chart-labels="labels" chart-click="onClick"></canvas>
+                          chart-labels="labels" chart-series="series" chart-click="onClick"></canvas>
                 </div>
               </div>
             </div>
       </div>
+
+      <div class="col-lg-6 col-sm-12" id="pie-chart">
+          <div class="panel panel-default">
+            <div class="panel-heading">Pie Chart</div>
+            <div class="panel-body">
+              <canvas id="pie" class="chart chart-pie chart-xs" chart-data="ABCDPiedata" chart-labels="ABCDPielabels"></canvas>
+            </div>
+          </div>
+        </div>
+
+
       <table class="table table-bordered table-background">
         <thead>
           <tr>
@@ -61,7 +72,7 @@
             <th scope="row">1</th>
             <td>{{item.subjectCode}}</td>
             <td>{{subjectsNameDictViet[item.subjectCode]}}</td>
-            <td>N/A</td>
+            <td>{{subjectCredits[item.subjectCode]}}</td>
             <td>{{item.score}}</td>
             <td>{{item.scoreChar}}</td>
             <td>{{item.score4}}</td>
