@@ -40,7 +40,7 @@ module.exports = {
      *          dataType: string
      */
     /* Return created notification */
-    create: function (req, res) {
+    createNew: function (req, res) {
         if (!req.body.title || !req.body.body || !req.body.targetGroupIds) {
             res.json({
                 success: false,
@@ -88,9 +88,9 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/notifications/send-created-one
+     * path: /api/v1/notifications/send-created
      * operations:
-     *   -  httpMethod: POST
+     *   -  httpMethod: PUT
      *      summary: Admins send a created notification
      *      notes: Return sent notification
      *      nickname: Send notification
@@ -109,6 +109,74 @@ module.exports = {
      *          dataType: string
      */
     /* Return sent notification */
+    sendCreated: function (req, res) {
+        models.Notification.findById(req.body.notificationId, 'targetGroups', function (err, notification) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!notification) {
+                res.json({
+                    success: false,
+                    message: 'Notification does not exist.'
+                });
+            }
+            else if (notification.isSent) {
+                res.json({
+                    success: false,
+                    message: 'Notification is already sent.'
+                });
+            }
+            else {
+                var targetGroups = [];
+                for (var i = 0; i < notification.targetGroups.length; i++) {
+                    targetGroups.push(notification.targetGroups[i].group.toString());
+                }
+                models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
+                    for (var i = 0; i< users.length; i++) {
+                        if (users[i].personalInfo.groups.length) {
+                            for (var j = 0; j < users[i].personalInfo.groups.length; j++) {
+                                if (targetGroups.indexOf(users[i].personalInfo.groups[j].group.toString()) != -1) {
+                                    users[i].update({
+                                        $push: {
+                                            notificationStack: {
+                                                notification: notification._id
+                                            }
+                                        }
+                                    }, function (err) {
+                                        if (err) {
+                                            res.status(500).json({
+                                                success: false,
+                                                message: err
+                                            });
+                                        }
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    notification.update({
+                        isSent: true
+                    }).exec(function (err) {
+                        if (err) {
+                            res.status(500).json({
+                                success: false,
+                                message: err
+                            });
+                        }
+                        res.json({
+                            success: true,
+                            message: 'Notification is sent.'
+                        });
+                    });
+                });
+            }
+
+        });
+    },
 
     /**
      * @swagger
@@ -210,41 +278,75 @@ module.exports = {
      *          paramType: header
      *          required: true
      *          dataType: string
-     *        - name: _id
+     *        - name: notificationId
      *          description: Notification id
      *          paramType: form
      *          required: true
      *          dataType: string
      */
     deleteOneById: function (req, res) {
-        models.Notification.findByIdAndRemove(req.body._id, function (err, removedNotification) {
+        models.Notification.findById(req.body.notificationId, 'isSent', function (err, notification) {
             if (err) {
                 res.status(500).json({
                     success: false,
                     message: err
                 });
             }
-            else if (!removedNotification) {
+            else if (!notification) {
                 res.json({
                     success: false,
                     message: 'Notification does not exist.'
                 });
             }
-            else {
-                models.User.update({
-                    notificationStack: {
-                        notification: removedNotification._id
+            else if (!notification.isSent) {
+                notification.remove(function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
                     }
-                }, {
-                    $pull: {
-                        notificationStack: {
-                            notification: removedNotification._id
-                        }
-                    }
-                }, function (err, result) {
                     res.json({
                         success: true,
                         message: 'Notification deleted.'
+                    });
+                });
+            }
+            else {
+                models.User.find({
+                    notificationStack: {
+                        $elemMatch: {
+                            notification: notification._id
+                        }
+                    }
+                }, function (err, users) {
+                    for (var i = 0; i < users.length; i++) {
+                        users[i].update({
+                            $pull: {
+                                notificationStack: {
+                                    notification: notification._id
+                                }
+                            }
+                        }).exec(function (err) {
+                            if (err) {
+                                res.status(500).json({
+                                    success: false,
+                                    message: err
+                                });
+                            }
+                        });
+                    }
+                    notification.remove(function (err) {
+                        if (err) {
+                            res.status(500).json({
+                                success: false,
+                                message: err
+                            });
+                        }
+                        res.json({
+                            success: true,
+                            message: 'Notification deleted.'
+                        });
                     });
                 });
             }

@@ -29,6 +29,7 @@ var UserSchema = new mongoose.Schema({
         }]
     },
     notificationStack: [{
+        _id: false,
         notification: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Notification',
