@@ -17,6 +17,8 @@ router.use('/student-records', require('./studentRecords'));
 /* Subject-related routes */
 router.use('/subjects', require('./subjects'));
 
+/* Notification-related routes */
+router.use('/notifications', require('./notifications'));
 
 /*
 * Admin permission required routes

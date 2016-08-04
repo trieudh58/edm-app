@@ -70,18 +70,21 @@ module.exports = {
                         message: err
                     });
                 }
-                res.json({
-                    success: true,
-                    message: 'Notification created.',
-                    data: {
-                        title: createdNotification.title,
-                        body: createdNotification.body,
-                        creator: req.user.email,
-                        createdAt: createdNotification.createdAt,
-                        targetGroups: createdNotification.targetGroups,
-                        isSent: createdNotification.isSent
-                    }
-                });
+                else {
+                    res.json({
+                        success: true,
+                        message: 'Notification created.',
+                        data: {
+                            _id: createdNotification._id,
+                            title: createdNotification.title,
+                            body: createdNotification.body,
+                            creator: req.user.email,
+                            createdAt: createdNotification.createdAt,
+                            targetGroups: createdNotification.targetGroups,
+                            isSent: createdNotification.isSent
+                        }
+                    });
+                }
             });
         }
     },

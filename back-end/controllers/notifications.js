@@ -1,4 +1,4 @@
-var models = require('../models/index');
+var models = require('../models');
 
 module.exports = {
     /**
@@ -9,12 +9,12 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/notifications/get-notification-stack
+     * path: /api/v1/notifications/get-owned-notification-titles
      * operations:
      *   -  httpMethod: GET
-     *      summary: Get notification stack
-     *      notes: Return notification stack of request user
-     *      nickname: Get notification stack
+     *      summary: Get notification titles owned by current user
+     *      notes: Return notification titles owned by current user
+     *      nickname: Get owned notification titles
      *      consumes:
      *        - text/html
      *      parameters:
@@ -24,8 +24,21 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Return notification stack */
-    getNotificationStack: function (req, res) {
-
+    /* Return notification titles owned by current user */
+    getOwnedNotificationTitles: function (req, res) {
+        models.User.findById(req.user._id, '-_id notificationStack').populate('notificationStack.notification', 'createdAt updatedAt title isHidden isRead').exec(function (err, stack) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: stack
+                });
+            }
+        });
     }
 };
