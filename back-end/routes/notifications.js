@@ -3,7 +3,10 @@ var router = express.Router();
 var NotificationController = require('../controllers/notifications');
 var authentication = require('../middleware/authentication');
 
-/* Get notifications owned by current (request) user */
-router.get('/get-owned-notification-titles', authentication, NotificationController.getOwnedNotificationTitles);
+/* Get notification title owned by current (request) user */
+router.get('/get-titles', authentication, NotificationController.getTitles);
+
+/* Get specific notification by id */
+router.get('/get-by-id', authentication, NotificationController.getById);
 
 module.exports = router;
