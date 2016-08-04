@@ -101,5 +101,42 @@ module.exports = {
                 }
             });
         }
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/get-5-latest-titles
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get 5 latest notification titles owned by current user
+     *      notes: Return 5 latest notification titles owned by current user
+     *      nickname: Get 5 latest notification titles
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return 5 latest notification titles owned by current user */
+    get5Latest: function(req, res) {
+        models.User.findById(req.user._id, '-_id notificationStack').populate('notificationStack.notification', 'createdAt updatedAt title isHidden isRead').sort({
+            createdAt: 'desc'
+        }).limit(5).exec(function (err, stack) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: stack
+                });
+            }
+        });
     }
 };

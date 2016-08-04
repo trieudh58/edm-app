@@ -9,4 +9,7 @@ router.get('/get-titles', authentication, NotificationController.getTitles);
 /* Get specific notification by id */
 router.get('/get-by-id', authentication, NotificationController.getById);
 
+/* Get 5 latest notification titles */
+router.get('/get-5-latest-titles', authentication, NotificationController.get5Latest);
+
 module.exports = router;
