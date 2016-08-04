@@ -42,7 +42,6 @@ module.exports = {
         });
     },
 
-
     /**
      * @swagger
      * path: /api/v1/notifications/get-by-id
@@ -67,25 +66,40 @@ module.exports = {
      */
     /* Return notification by id owned by current user */
     getById: function (req, res) {
-        models.Notification.findById(req.query.notificationId, '-__v').populate('creator', '-_id email').populate('targetGroups.group', '-_id name').exec(function (err, notification) {
-            if (err) {
-                res.status(500).json({
-                    success: false,
-                    message: err
-                });
+        var flag = false;
+        for (var i = 0; i < req.user.notificationStack.length; i++) {
+            if (req.query.notificationId == req.user.notificationStack[i].notification) {
+                flag = true;
+                break;
             }
-            else if (!notification || !notification.isSent) {
-                res.json({
-                    success: false,
-                    message: 'Notification does not exist.'
-                });
-            }
-            else {
-                res.json({
-                    success: true,
-                    data: notification
-                });
-            }
-        });
+        }
+        if (!flag) {
+            res.json({
+                success: false,
+                message: 'Notification does not exist or access denied.'
+            });
+        }
+        else {
+            models.Notification.findById(req.query.notificationId, '-__v').populate('creator', '-_id email').populate('targetGroups.group', '-_id name').exec(function (err, notification) {
+                if (err) {
+                    res.status(500).json({
+                        success: false,
+                        message: err
+                    });
+                }
+                else if (!notification || !notification.isSent) {
+                    res.json({
+                        success: false,
+                        message: 'Notification does not exist.'
+                    });
+                }
+                else {
+                    res.json({
+                        success: true,
+                        data: notification
+                    });
+                }
+            });
+        }
     }
 };
