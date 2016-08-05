@@ -12,4 +12,7 @@ router.get('/get-by-id', authentication, NotificationController.getById);
 /* Get 5 latest notification titles */
 router.get('/get-5-latest-titles', authentication, NotificationController.get5Latest);
 
+/* Mark all notifications as read */
+router.put('/mark-all-as-read', authentication, NotificationController.markAllAsRead);
+
 module.exports = router;

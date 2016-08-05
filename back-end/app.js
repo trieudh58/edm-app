@@ -50,7 +50,8 @@ app.use(swagger.init(app, {
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
-        './controllers/admin/notifications.js'
+        './controllers/admin/notifications.js',
+        './controllers/admin/studentGroups.js'
     ]
 }));
 

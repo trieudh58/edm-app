@@ -138,5 +138,38 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/mark-all-as-read
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Mark all notifications as read
+     *      notes: Return result
+     *      nickname: Mark all notifications as read
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Mark all notifications as read */
+    markAllAsRead: function (req, res) {
+        models.User.findById(req.user._id, function (err, user) {
+            user.update({
+                '$set': {
+                    'notificationStack.$.isRead': true
+                }
+            }).exec(function (err, result) {
+                console.log(result);
+            });
+        });
+        res.json({
+            message: 'ok'
+        });
     }
 };
