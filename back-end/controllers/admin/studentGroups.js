@@ -26,7 +26,9 @@ module.exports = {
      */
     /* Return student groups */
     getAll: function (req, res) {
-        models.StudentGroup.find({}, '-__v', function (err, groups) {
+        models.StudentGroup.find({}, '-__v').sort({
+            name: 'asc'
+        }).exec(function (err, groups) {
             if (err) {
                 res.status(500).json({
                     success: false,
@@ -37,6 +39,66 @@ module.exports = {
                 res.json({
                     success: true,
                     data: groups
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/student-groups/create
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Create new student group
+     *      notes: Return created group
+     *      nickname: Create student groups
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: groupName
+     *          description: Student group
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Return created student group */
+    create: function (req, res) {
+        models.StudentGroup.findOne({
+            name: req.body.groupName
+        }, function (err, group) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (group) {
+                res.json({
+                    success: false,
+                    message: 'Group existed.'
+                });
+            }
+            else {
+                models.StudentGroup.create({
+                    name: req.body.groupName
+                }, function (err, createdGroup) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Group created: ' + createdGroup.name
+                        });
+                    }
                 });
             }
         });

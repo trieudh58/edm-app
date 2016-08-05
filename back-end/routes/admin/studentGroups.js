@@ -1,9 +1,13 @@
 var express = require('express');
-var router = express.Router();
+var adminRouter = express.Router();
 var StudentGroupController = require('../../controllers/admin/studentGroups');
 var authentication = require('../../middleware/authentication');
+var adminPermission = require('../../middleware/adminPermission');
 
 /* Get all groups */
-router.get('/get-all', authentication, StudentGroupController.getAll);
+adminRouter.get('/get-all', authentication, adminPermission, StudentGroupController.getAll);
 
-module.exports = router;
+/* Create new group */
+adminRouter.post('/create', authentication, adminPermission, StudentGroupController.create);
+
+module.exports = adminRouter;
