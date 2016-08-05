@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title>admin</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+    <link href="styles/admin.home.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../../home/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+   <link rel="stylesheet" href="../../plugins/select2/select2.min.css">
+</head>
+
+<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-toggle"></span>
+      </button>
+      <a class="navbar-brand" href="">EDM Adminstrator</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        
+        <li class="dropdown">
+          <a class="dropdown-toggle" role="button" data-toggle="dropdown">
+            <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
+          <ul id="g-account-menu" class="dropdown-menu" role="menu">
+            <!-- <li><a href="">My Profile</a></li> -->
+            <li><a href="" ng-click="logout()"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  
+  <!-- upper section -->
+  <div class="row" ng-switch on="ngSwitch">
+	<div class="col-sm-3">
+      <!-- left -->
+      <h3><i class="glyphicon glyphicon-briefcase"></i> Toolbox</h3>
+      <hr>
+      
+      <ul class="nav nav-stacked">
+        <li><a href="" target="ext" ng-click="switchView('studentManage')"><i class="glyphicon glyphicon-flash"></i>Sinh viên</a></li>
+        <li><a href="" target="ext" ng-click="switchView('courseRequest')"><i class="glyphicon glyphicon-link"></i>Yêu cầu mở lớp</a></li>
+        <li class="treeview">
+          <a href=""><i class="fa fa-link glyphicon glyphicon-list-alt"></i> <span>Thông báo</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="" ng-click="switchView('createNotification')">Viết thông báo</a></li>
+            <li><a href="" ng-click="switchView('sendNotification')">Đã gửi</a></li>
+            <li><a href="" ng-click="switchView('draftNotification')">Nháp</a></li>
+          </ul>
+        </li>
+        <li><a href="" target="ext" ng-click="switchView('subjectManage')"><i class="glyphicon glyphicon-book"></i> Quản lý môn học</a></li>
+      </ul>
+      
+      <hr>
+      
+  	</div>
+    <div class="col-sm-9" >
+      <!-- create notification -->
+        <div ng-if='switchView=="createNotification"'>
+          <div>
+<!--         <ng-include src=''></ng-include> -->
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title">Viết thông báo</h3>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <div class="form-group">
+                  <select class="form-control select2" multiple="multiple" data-placeholder="Select some Group" style="width: 100%;">
+                    <option>K40</option>
+                    <option>K41</option>
+                    <option>K42</option>
+                    <option>K43</option>
+                    <option>K44</option>
+                    <option>K45</option>
+                    <option>k46</option>
+                    <option>k47</option>
+                    <option>k48</option>
+                    <option>k49</option>
+                    <option>K50</option>
+                    <option>K51</option>
+                    <option>K52</option>
+                    <option>K53</option>
+                    <option>K54</option>
+                    <option>K55</option>
+                    <option>k56</option>
+                    <option>k57</option>
+                    <option>k58</option>
+                    <option>k59</option>
+                    <option>k60</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Subject:">
+                </div>
+                <div class="form-group">
+                      <textarea id="compose-textarea" class="form-control" style="height: 300px">
+
+                      </textarea>
+                </div>
+                <div class="form-group">
+                  <div class="btn btn-default btn-file">
+                    <i class="fa fa-paperclip"></i> Dính kèm
+                    <input type="file" name="attachment">
+                  </div>
+                  <p class="help-block">Max. 32MB</p>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <div class="pull-right">
+                  <button type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Nháp</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Gửi</button>
+                </div>
+                <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Hủy</button>
+              </div>
+            </div>
+       </div>
+       </div>
+
+
+ 
+  </div><!--/row-->
+  </div><!--/container-->
+
+<!-- /Main -->
+<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="../../bootstrap/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+<script src="../../bower_components/ngstorage/ngStorage.min.js"></script>
+<script src="https://code.angularjs.org/1.2.13/angular-cookies.js"></script>
+<script src="app.js"></script>
+<script src="../../plugins/select2/select2.full.min.js"></script>
+<script src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="../../home/dist/js/app.min.js"></script>
+<script>
+  $(function () {
+    //Add text editor
+    $("compose-textarea").wysihtml5();
+    $(".select2").select2();
+  });
+</script>

@@ -15,18 +15,21 @@
 			.when('/', {
 				templateUrl : 'templates/login.view.html',
 				controller  : 'LoginController'
-			})
-			.otherwise({ redirectTo: '/' });
+			});
+			// .otherwise({ redirectTo: '/' });
 	});
 
 	// create the controller and inject Angular's $scope
 	App.controller('HomeController', function($scope) {
-		// create a message to display in our view
-		$scope.message={};
+        $scope.ngSwitch='default';
+        $scope.switchView=  function(param){
+                $scope.ngSwitch=param;
+                console.log($scope.ngSwitch);
+            }
 	});
 
 	App.controller('LoginController', function($scope,$http,$rootScope,$location,$localStorage) {
-        $scope.message={}
+        $scope.message={};
         $scope.login =function() {
                 $http({
                     method : "POST",
@@ -54,7 +57,7 @@
                 }).then(function mySuccess(response) {
                     if(response.data.success){
                         $localStorage.access_token=undefined;
-                        $location.path('/admin/home');
+                        $location.path('/admin');
                     }
                 }, function myError(response) {
                     console.log($localStorage.access_token);
