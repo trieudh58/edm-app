@@ -13,7 +13,9 @@ seeder.connect(config.mongodb.host, function () {
         'models/KnowledgeUnit.js',
         'models/EducationProgram.js',
         'models/EPDetail.js',
-        'models/StudentGroup.js'
+        'models/StudentGroup.js',
+        'models/BlackListToken.js',
+        'models/Notification.js'
     ]);
     /* Clear models' data */
     seeder.clearModels([
@@ -24,7 +26,9 @@ seeder.connect(config.mongodb.host, function () {
         'KnowledgeUnit',
         'EducationProgram',
         'EPDetail',
-        'StudentGroup'
+        'StudentGroup',
+        'Notification',
+        'BlackListToken'
     ], function () {
         console.log('Connected to mongodb.');
         seeder.populateModels(data);
