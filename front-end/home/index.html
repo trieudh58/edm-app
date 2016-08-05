@@ -61,7 +61,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition skin-blue sidebar-mini fixed">
+<body class="hold-transition skin-blue sidebar-mini"> 
 <div class="wrapper" ng-app="app">
 
   <!-- Main Header -->
@@ -125,16 +125,16 @@ desired effect
             <!-- Menu toggle button -->
             <a  class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-danger">1</span>
+              <span class="label label-danger">4</span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">Bạn có 1 thông báo mới</li>
+              <li class="header">Bạn có 4 thông báo mới</li>
               <li>
                 <!-- Inner Menu: contains the notifications -->
                 <ul class="menu">
-                  <li><!-- start notification -->
-                    <a href="#/notification">
-                      <i class="fa fa-users text-aqua"></i><b>Triều Đặng</b> Đề nghị mở lớp học
+                  <li ng-repeat="feed in newFeeds"><!-- start notification -->
+                    <a href="#/notification/{{feed.notification._id}}">
+                      <i class="fa fa-users text-aqua"></i><b>Admin</b> Đã gửi {{feed.notification.title}}
                     </a>
                   </li>
                   <!-- end notification -->
@@ -268,7 +268,21 @@ desired effect
         <!-- Optionally, you can add icons to the links -->
         <li class="active"><a href="/home"><i class="fa fa-link"></i> <span>Home</span></a></li>
         <li><a href="#/studentscore"><i class="fa fa-link"></i> <span>Kết quả học tập</span></a></li>
-        <li><a href="#/courserequest"><i class="fa fa-link"></i> <span>Xin Mở Lớp</span></a></li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-link"></i> <span>Gợi ý môn học</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#">Gợi ý lộ trình</a></li>
+            <li><a href="#">Gợi ý khóa luận,NCKH</a></li>
+            <li><a href="#/courserequest">Xin Mở Lớp</a></li>
+            <li><a href="#">#</a></li>
+            <li><a href="#">#</a></li>
+            <li><a href="#">#</a></li>
+          </ul>
+        </li>
 <!--         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>????</span>
             <span class="pull-right-container">
@@ -396,7 +410,7 @@ desired effect
 <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <!-- home angularjs code -->
 <script src="app.js"></script>
-
+<!-- <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script> -->
 <script src="dist/js/app.min.js"></script>
 
 <!-- Optionally, you can add Slimscroll and FastClick plugins.

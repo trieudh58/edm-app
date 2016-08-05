@@ -68,7 +68,7 @@ app.listen(app.get('port'), function () {
     // Run npm run-script import to import data from database/dump/edm-api to mongodb
 
     // Line 2
-    //require('./database/seed');
+    // require('./database/seed');
 
     console.log('Server is running on port ' + app.get('port'));
 });

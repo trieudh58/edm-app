@@ -135,7 +135,7 @@ module.exports = {
             else {
                 var targetGroups = [];
                 for (var i = 0; i < notification.targetGroups.length; i++) {
-                    targetGroups.push(notification.targetGroups[i].group.toString());
+                    if (typeof notification.targetGroups[i].group != 'undefined') {targetGroups.push(notification.targetGroups[i].group.toString());}
                 }
                 models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
                     for (var i = 0; i< users.length; i++) {

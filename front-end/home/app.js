@@ -6,13 +6,13 @@
     App.config(function($routeProvider,ChartJsProvider) {
 		$routeProvider
 			// route for the about page
-			.when('/login', {
-				templateUrl : '../templates/login.view.html',
-				controller  : 'LoginController',
-                resolve:{
-                    notLoginRequired:notLoginRequired
-                }
-			})
+			// .when('/login', {
+			// 	templateUrl : '../templates/login.view.html',
+			// 	controller  : 'LoginController',
+   //              resolve:{
+   //                  notLoginRequired:notLoginRequired
+   //              }
+			// })
       .when('/profile',{
           templateUrl: '../templates/profile.html',
           controller:'ProfileController',
@@ -30,15 +30,15 @@
         controller:'subjects',
         templateUrl:'../templates/subject.view.html'
       })
-      .when('/tem',{
-          // controller:'LineCtrl',
-          templateUrl:'../templates/tem.html'
-      })
+      // .when('/tem',{
+      //     // controller:'LineCtrl',
+      //     templateUrl:'../templates/tem.html'
+      // })
       .when('/allnotifications',{
         controller:'allnotifications',
         templateUrl:'../templates/view.all.notifications.html'
       })
-      .when('/notification',{
+      .when('/notification/:id',{
         controller:'notification',
         templateUrl:'../templates/notification.view.html'
       })
@@ -58,7 +58,7 @@
         animateScale: true
       });
 	});
-	App.controller('LoginController', function($scope,$rootScope,$http,$location,$localStorage,$window) {
+	App.controller('LoginController', function($scope,$rootScope,$http,$localStorage,$window,getSomeNewNotifications) {
         $scope.message={}
         $rootScope.logout=function(){
             $http({
@@ -76,6 +76,11 @@
                     console.log('fail');
                 });
             }
+        var newFeeds=getSomeNewNotifications.get();
+        newFeeds.then(function(res){
+          $rootScope.newFeeds=res.data.notificationStack;
+          // console.log($rootScope.newFeeds);
+        });
 	});
 
   App.controller('ProfileController', function($scope,$http,$localStorage){
@@ -158,23 +163,6 @@ App.factory('getStudentInfor',function($http,$localStorage){
   };
 })
 
-App.factory('getNotifications',function($http,$localStorage){
-  return{
-    get:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'',      /////// lost
-        params:{
-          token:$localStorage.access_token
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-        //////////// fail
-      });
-    }
-  };
-})
 
 App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
 
@@ -205,15 +193,75 @@ App.controller('subjects',function($scope,$http){
   });
 });
 
-App.controller('allnotifications',function($scope){
-  // var request=getNotifications();
-  // request.then(function(response){
-  //   $scope.notifications=[]; ////////////////////////////////////!!!
-  // })
+
+
+App.factory('getSomeNewNotifications',function($http,$localStorage){
+  return{
+    get: function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/notifications/get-5-latest-titles',
+        params:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+      });
+    }
+  };
+})
+
+App.factory('getAllNotifications',function($http,$localStorage){
+  return{
+    get:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/notifications/get-titles',      /////// lost
+        params:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+        //////////// fail
+      });
+    }
+  };
+})
+App.controller('allnotifications',function($scope,getAllNotifications){
+  var request=getAllNotifications.get();
+  request.then(function(response){
+    $scope.notifications=response.data.notificationStack; 
+  });
 });
 
-App.controller('notification',function($scope){
 
+App.factory('getNotifications',function($http,$localStorage){
+  return{
+    get:function(ID){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/notifications/get-by-id',      /////// lost
+        params:{
+          token:$localStorage.access_token,
+          notificationId:ID
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+        //////////// fail
+      });
+    }
+  };
+})
+
+App.controller('notification',function($scope,getNotifications,$routeParams){
+  console.log($routeParams.id);
+  var request=getNotifications.get($routeParams.id);
+  request.then(function(res){
+    $scope.notification=res.data;
+  })
 });
 
 App.controller('courserequest',function($scope){
