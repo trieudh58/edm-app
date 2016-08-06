@@ -314,7 +314,7 @@ module.exports = {
 
                         var receiver = req.body.email;
                         var frontEndFullURL = config.frontEnd.url + ':' + config.frontEnd.port;
-                        var activationLink = frontEndFullURL + '/home/verify/' + rememberToken;
+                        var activationLink = frontEndFullURL + '/home/#/verify/?email=' + receiver + '&token=' + rememberToken;
                         console.log(activationLink);
                         var mailOptions = {
                             from: config.mailer.sender,
