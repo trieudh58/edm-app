@@ -133,54 +133,188 @@ module.exports = {
                 });
             }
             else {
-                var targetGroups = [];
-                for (var i = 0; i < notification.targetGroups.length; i++) {
-                    if (typeof notification.targetGroups[i].group != 'undefined') {
-                        targetGroups.push(notification.targetGroups[i].group.toString());
-                    }
-                }
                 models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
-                    for (var i = 0; i< users.length; i++) {
-                        if (users[i].personalInfo.groups.length) {
-                            for (var j = 0; j < users[i].personalInfo.groups.length; j++) {
-                                if (targetGroups.indexOf(users[i].personalInfo.groups[j].group.toString()) != -1) {
-                                    users[i].update({
-                                        $push: {
-                                            notificationStack: {
-                                                notification: notification._id
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        var targetGroups = [];
+                        for (var k = 0; k < notification.targetGroups.length; k++) {
+                            if (typeof notification.targetGroups[k].group != 'undefined') {
+                                targetGroups.push(notification.targetGroups[k].group.toString());
+                            }
+                        }
+                        for (var i = 0; i< users.length; i++) {
+                            if (users[i].personalInfo.groups.length) {
+                                for (var j = 0; j < users[i].personalInfo.groups.length; j++) {
+                                    if (targetGroups.indexOf(users[i].personalInfo.groups[j].group.toString()) != -1) {
+                                        users[i].update({
+                                            $push: {
+                                                notificationStack: {
+                                                    notification: notification._id
+                                                }
                                             }
-                                        }
-                                    }, function (err) {
-                                        if (err) {
-                                            res.status(500).json({
-                                                success: false,
-                                                message: err
-                                            });
-                                        }
-                                    });
-                                    break;
+                                        }, function (err) {
+                                            if (err) {
+                                                res.status(500).json({
+                                                    success: false,
+                                                    message: err
+                                                });
+                                            }
+                                        });
+                                        break;
+                                    }
                                 }
                             }
                         }
+                        notification.update({
+                            isSent: true
+                        }).exec(function (err) {
+                            if (err) {
+                                res.status(500).json({
+                                    success: false,
+                                    message: err
+                                });
+                            }
+                            else {
+                                res.json({
+                                    success: true,
+                                    message: 'Notification is sent.'
+                                });
+                            }
+                        });
                     }
-                    notification.update({
-                        isSent: true
-                    }).exec(function (err) {
+                });
+            }
+
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/notifications/create-and-send
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Admins create and send a new notification
+     *      notes: Return sent notification
+     *      nickname: Create and send notification
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: title
+     *          description: Notification title
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *        - name: body
+     *          description: Notification body
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *        - name: targetGroupIds
+     *          description: Target group ids (separated by comma)
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Return sent notification */
+    createAndSend: function (req, res) {
+        if (!req.body.title || !req.body.body || !req.body.targetGroupIds) {
+            res.json({
+                success: false,
+                message: 'Missing required fields.'
+            });
+        }
+        else {
+            // Remove all space in this query string.
+            req.body.targetGroupIds = req.body.targetGroupIds.replace(/\s+/g, '');
+
+            var parsedTargetGroups = req.body.targetGroupIds.split(',');
+            var groups = [];
+            for (var i = 0; i < parsedTargetGroups.length; i++) {
+                groups.push({
+                    group: parsedTargetGroups[i]
+                });
+            }
+            models.Notification.create({
+                title: req.body.title,
+                body: req.body.body,
+                creator: req.user._id,
+                targetGroups: groups
+            }, function (err, createdNotification) {
+                if (err) {
+                    res.status(500).json({
+                        success: false,
+                        message: err
+                    });
+                }
+                else {
+                    models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
                         if (err) {
                             res.status(500).json({
                                 success: false,
                                 message: err
                             });
                         }
-                        res.json({
-                            success: true,
-                            message: 'Notification is sent.'
-                        });
+                        else {
+                            var targetGroups = [];
+                            for (var i = 0; i < createdNotification.targetGroups.length; i++) {
+                                if (typeof createdNotification.targetGroups[i].group != 'undefined') {
+                                    targetGroups.push(createdNotification.targetGroups[i].group.toString());
+                                }
+                            }
+                            for (var k = 0; k< users.length; k++) {
+                                if (users[k].personalInfo.groups.length) {
+                                    for (var j = 0; j < users[k].personalInfo.groups.length; j++) {
+                                        if (targetGroups.indexOf(users[k].personalInfo.groups[j].group.toString()) != -1) {
+                                            users[k].update({
+                                                $push: {
+                                                    notificationStack: {
+                                                        notification: createdNotification._id
+                                                    }
+                                                }
+                                            }, function (err) {
+                                                if (err) {
+                                                    res.status(500).json({
+                                                        success: false,
+                                                        message: err
+                                                    });
+                                                }
+                                            });
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            createdNotification.update({
+                                isSent: true
+                            }).exec(function (err) {
+                                if (err) {
+                                    res.status(500).json({
+                                        success: false,
+                                        message: err
+                                    });
+                                }
+                                else {
+                                    res.json({
+                                        success: true,
+                                        message: 'Notification is sent.'
+                                    });
+                                }
+                            });
+                        }
                     });
-                });
-            }
-
-        });
+                }
+            });
+        }
     },
 
     /**
@@ -210,6 +344,7 @@ module.exports = {
                 });
             }
             res.json({
+                success: true,
                 data: notifications
             });
         });

@@ -10,6 +10,9 @@ adminRouter.post('/create', authentication, adminPermission, AdminNotificationCo
 /* Send a created notification */
 adminRouter.put('/send-created', authentication, adminPermission, AdminNotificationController.sendCreated);
 
+/* Create and send notification */
+adminRouter.post('/create-and-send', authentication, adminPermission, AdminNotificationController.createAndSend);
+
 /* Get all notification created (admin permission required) */
 adminRouter.get('/get-all', authentication, adminPermission, AdminNotificationController.getAll);
 
