@@ -15,4 +15,7 @@ router.get('/get-5-latest-titles', authentication, NotificationController.get5La
 /* Mark all notifications as read */
 router.put('/mark-all-as-read', authentication, NotificationController.markAllAsRead);
 
+/* Mark one notification as read */
+router.put('/mark-one-as-read', authentication, NotificationController.markOneAsRead);
+
 module.exports = router;

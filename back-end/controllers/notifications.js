@@ -236,6 +236,31 @@ module.exports = {
      */
     /* Mark one notification as read (by id) */
     markOneAsRead: function (req, res) {
-
+        models.User.findOneAndUpdate({
+            _id: req.user._id,
+            notificationStack: {
+                $elemMatch: {
+                    notification: req.body.notificationId,
+                    isRead: false
+                }
+            }
+        }, {
+            $set: {
+                'notificationStack.$.isRead': true
+            }
+        }).exec(function (err) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Notification marked as read.'
+                });
+            }
+        });
     }
 };
