@@ -210,5 +210,32 @@ module.exports = {
                 message: err
             });
         }
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/mark-one-as-read
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Mark one notification as read
+     *      notes: Return result
+     *      nickname: Mark one notification as read
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationId
+     *          description: Notification id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Mark one notification as read (by id) */
+    markOneAsRead: function (req, res) {
+
     }
 };
