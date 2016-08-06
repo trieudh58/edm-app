@@ -26,7 +26,15 @@ module.exports = {
      */
     /* Return notification titles owned by current user */
     getTitles: function (req, res) {
-        models.User.findById(req.user._id, '-_id notificationStack').populate('notificationStack.notification', 'createdAt updatedAt title isHidden isRead').exec(function (err, stack) {
+        models.User.findById(req.user._id, '-_id notificationStack').populate({
+            path: 'notificationStack.notification',
+            select: 'createdAt updatedAt title isHidden isRead',
+            options: {
+                sort: {
+                    createdAt: 'desc'
+                }
+            }
+        }).exec(function (err, stack) {
             if (err) {
                 res.status(500).json({
                     success: false,
@@ -36,7 +44,7 @@ module.exports = {
             else {
                 res.json({
                     success: true,
-                    data: stack
+                    data: stack.notificationStack
                 });
             }
         });
@@ -122,9 +130,15 @@ module.exports = {
      */
     /* Return 5 latest notification titles owned by current user */
     get5Latest: function(req, res) {
-        models.User.findById(req.user._id, '-_id notificationStack').populate('notificationStack.notification', 'createdAt updatedAt title isHidden isRead').sort({
-            createdAt: 'desc'
-        }).limit(5).exec(function (err, stack) {
+        models.User.findById(req.user._id, '-_id notificationStack').populate({
+            path: 'notificationStack.notification',
+            select: 'createdAt updatedAt title isHidden isRead',
+            options: {
+                sort: {
+                    createdAt: 'desc'
+                }
+            }
+        }).exec(function (err, stack) {
             if (err) {
                 res.status(500).json({
                     success: false,
@@ -132,9 +146,13 @@ module.exports = {
                 });
             }
             else {
+                var arr = [];
+                for (var i = 0; i < 5; i++) {
+                    arr.push(stack.notificationStack[i]);
+                }
                 res.json({
                     success: true,
-                    data: stack
+                    data: arr
                 });
             }
         });
