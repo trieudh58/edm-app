@@ -135,7 +135,9 @@ module.exports = {
             else {
                 var targetGroups = [];
                 for (var i = 0; i < notification.targetGroups.length; i++) {
-                    if (typeof notification.targetGroups[i].group != 'undefined') {targetGroups.push(notification.targetGroups[i].group.toString());}
+                    if (typeof notification.targetGroups[i].group != 'undefined') {
+                        targetGroups.push(notification.targetGroups[i].group.toString());
+                    }
                 }
                 models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
                     for (var i = 0; i< users.length; i++) {
@@ -309,10 +311,12 @@ module.exports = {
                             message: err
                         });
                     }
-                    res.json({
-                        success: true,
-                        message: 'Notification deleted.'
-                    });
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Notification deleted.'
+                        });
+                    }
                 });
             }
             else {
@@ -346,10 +350,12 @@ module.exports = {
                                 message: err
                             });
                         }
-                        res.json({
-                            success: true,
-                            message: 'Notification deleted.'
-                        });
+                        else {
+                            res.json({
+                                success: true,
+                                message: 'Notification deleted.'
+                            });
+                        }
                     });
                 });
             }
