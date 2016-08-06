@@ -40,10 +40,15 @@ var UserSchema = new mongoose.Schema({
             require: true,
             default: false
         },
-        isHidden: {
+        isImportant: {
             type: Boolean,
             require: true,
             default: false
+        },
+        createdAt: {
+            type: Date,
+            require: true,
+            default: Date.now
         }
     }],
     isAdmin: {
