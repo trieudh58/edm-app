@@ -10,7 +10,10 @@ adminRouter.get('/get-all', authentication, adminPermission, StudentGroupControl
 /* Create new group */
 adminRouter.post('/create', authentication, adminPermission, StudentGroupController.create);
 
-/* Delete a group */
+/* Delete a group by id */
 adminRouter.delete('/delete-by-id', authentication, adminPermission, StudentGroupController.deleteById);
+
+/* Delete a group by name */
+adminRouter.delete('/delete-by-name', authentication, adminPermission, StudentGroupController.deleteByName);
 
 module.exports = adminRouter;
