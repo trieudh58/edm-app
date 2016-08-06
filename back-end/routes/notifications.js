@@ -18,4 +18,7 @@ router.put('/mark-all-as-read', authentication, NotificationController.markAllAs
 /* Mark one notification as read */
 router.put('/mark-one-as-read', authentication, NotificationController.markOneAsRead);
 
+/* Mark one notification as unread */
+router.put('/mark-one-as-unread', authentication, NotificationController.markOneAsUnread);
+
 module.exports = router;

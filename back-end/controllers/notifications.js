@@ -262,5 +262,57 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/mark-one-as-unread
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Mark one notification as unread
+     *      notes: Return result
+     *      nickname: Mark one notification as unread
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationId
+     *          description: Notification id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Mark one notification as unread (by id) */
+    markOneAsUnread: function (req, res) {
+        models.User.findOneAndUpdate({
+            _id: req.user._id,
+            notificationStack: {
+                $elemMatch: {
+                    notification: req.body.notificationId,
+                    isRead: true
+                }
+            }
+        }, {
+            $set: {
+                'notificationStack.$.isRead': false
+            }
+        }).exec(function (err) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Notification marked as unread.'
+                });
+            }
+        });
     }
 };
