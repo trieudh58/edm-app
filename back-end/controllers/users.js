@@ -313,7 +313,8 @@ module.exports = {
                         });
 
                         var receiver = req.body.email;
-                        var activationLink = 'http://' + req.get('host') + '/api/v1/users/verify-email?email=' + req.body.email + '&token=' + rememberToken;
+                        var frontEndFullURL = config.frontEnd.url + ':' + config.frontEnd.port;
+                        var activationLink = frontEndFullURL + '/home/verify/' + rememberToken;
                         console.log(activationLink);
                         var mailOptions = {
                             from: config.mailer.sender,
@@ -345,9 +346,9 @@ module.exports = {
      * @swagger
      * path: /api/v1/users/verify-email
      * operations:
-     *   -  httpMethod: GET
+     *   -  httpMethod: PUT
      *      summary: Verify registered user with email and token provided
-     *      notes: Redirect to login page if success
+     *      notes: Return result
      *      nickname: Verify user
      *      consumes:
      *        - application/x-www-form-urlencoded
@@ -364,13 +365,11 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Verify pending user then redirect */
+    /* Verify pending user */
     verifyEmail: function (req, res) {
-        var email = req.query.email || req.body.email;
-        var rememberToken = req.query.token || req.body.token;
         PendingUser.findOneAndRemove({
-            email: email,
-            rememberToken: rememberToken
+            email: req.body.email,
+            rememberToken: req.body.token
         }, function (err, removedPendingUser) {
             if (err) {
                 res.status(500).json({
@@ -398,7 +397,10 @@ module.exports = {
                         });
                     }
                     else if (result.ok) {
-                        res.redirect('http://google.com');
+                        res.json({
+                            success: true,
+                            message: 'Account activated.'
+                        });
                     }
                 });
             }

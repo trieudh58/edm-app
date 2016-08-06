@@ -13,7 +13,7 @@ router.get('/get', authentication, UserController.get);
 router.post('/register', UserController.register);
 
 /* Verify email with remember token */
-router.get('/verify-email', UserController.verifyEmail);
+router.put('/verify-email', UserController.verifyEmail);
 
 /* Log out user - add current token to black list */
 router.post('/logout', authentication, UserController.logOut);

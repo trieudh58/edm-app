@@ -2,6 +2,10 @@ module.exports = {
     app: {
         url: 'http://localhost:3001'
     },
+    frontEnd: {
+        url: 'http://localhost',
+        port: '9999'
+    },
     mongodb: {
         host: 'mongodb://localhost:27017/edm-api'
     },
