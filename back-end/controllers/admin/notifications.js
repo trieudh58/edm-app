@@ -238,18 +238,8 @@ module.exports = {
             req.body.targetGroupIds = req.body.targetGroupIds.replace(/\s+/g, '');
 
             var parsedTargetGroups = req.body.targetGroupIds.split(',');
-            var groups = [];
-            for (var i = 0; i < parsedTargetGroups.length; i++) {
-                groups.push({
-                    group: parsedTargetGroups[i]
-                });
-            }
-            models.Notification.create({
-                title: req.body.title,
-                body: req.body.body,
-                creator: req.user._id,
-                targetGroups: groups
-            }, function (err, createdNotification) {
+            var validGroups = [];
+            models.StudentGroup.find({}, '_id', function (err, groups) {
                 if (err) {
                     res.status(500).json({
                         success: false,
@@ -257,61 +247,92 @@ module.exports = {
                     });
                 }
                 else {
-                    models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
-                        if (err) {
-                            res.status(500).json({
-                                success: false,
-                                message: err
-                            });
-                        }
-                        else {
-                            var targetGroups = [];
-                            for (var i = 0; i < createdNotification.targetGroups.length; i++) {
-                                if (typeof createdNotification.targetGroups[i].group != 'undefined') {
-                                    targetGroups.push(createdNotification.targetGroups[i].group.toString());
-                                }
-                            }
-                            for (var k = 0; k< users.length; k++) {
-                                if (users[k].personalInfo.groups.length) {
-                                    for (var j = 0; j < users[k].personalInfo.groups.length; j++) {
-                                        if (targetGroups.indexOf(users[k].personalInfo.groups[j].group.toString()) != -1) {
-                                            users[k].update({
-                                                $push: {
-                                                    notificationStack: {
-                                                        notification: createdNotification._id
-                                                    }
-                                                }
-                                            }, function (err) {
-                                                if (err) {
-                                                    res.status(500).json({
-                                                        success: false,
-                                                        message: err
-                                                    });
-                                                }
-                                            });
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            createdNotification.update({
-                                isSent: true
-                            }).exec(function (err) {
-                                if (err) {
-                                    res.status(500).json({
-                                        success: false,
-                                        message: err
-                                    });
-                                }
-                                else {
-                                    res.json({
-                                        success: true,
-                                        message: 'Notification is sent.'
-                                    });
-                                }
+                    groups.forEach(function (group) {
+                        var matchAt = parsedTargetGroups.indexOf(group._id.toString());
+                        if (matchAt != -1) {
+                            validGroups.push({
+                                group: parsedTargetGroups[matchAt]
                             });
                         }
                     });
+                    if (validGroups.length == 0) {
+                        res.json({
+                            success: false,
+                            message: 'Invalid group id(s).'
+                        });
+                    }
+                    else {
+                        models.Notification.create({
+                            title: req.body.title,
+                            body: req.body.body,
+                            creator: req.user._id,
+                            targetGroups: validGroups
+                        }, function (err, createdNotification) {
+                            if (err) {
+                                res.status(500).json({
+                                    success: false,
+                                    message: err
+                                });
+                            }
+                            else {
+                                models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
+                                    if (err) {
+                                        res.status(500).json({
+                                            success: false,
+                                            message: err
+                                        });
+                                    }
+                                    else {
+                                        var targetGroups = [];
+                                        for (var i = 0; i < createdNotification.targetGroups.length; i++) {
+                                            if (typeof createdNotification.targetGroups[i].group != 'undefined') {
+                                                targetGroups.push(createdNotification.targetGroups[i].group.toString());
+                                            }
+                                        }
+                                        for (var k = 0; k< users.length; k++) {
+                                            if (users[k].personalInfo.groups.length) {
+                                                for (var j = 0; j < users[k].personalInfo.groups.length; j++) {
+                                                    if (targetGroups.indexOf(users[k].personalInfo.groups[j].group.toString()) != -1) {
+                                                        users[k].update({
+                                                            $push: {
+                                                                notificationStack: {
+                                                                    notification: createdNotification._id
+                                                                }
+                                                            }
+                                                        }, function (err) {
+                                                            if (err) {
+                                                                res.status(500).json({
+                                                                    success: false,
+                                                                    message: err
+                                                                });
+                                                            }
+                                                        });
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        createdNotification.update({
+                                            isSent: true
+                                        }).exec(function (err) {
+                                            if (err) {
+                                                res.status(500).json({
+                                                    success: false,
+                                                    message: err
+                                                });
+                                            }
+                                            else {
+                                                res.json({
+                                                    success: true,
+                                                    message: 'Notification is sent.'
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }
             });
         }
