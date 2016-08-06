@@ -159,17 +159,38 @@ module.exports = {
      */
     /* Mark all notifications as read */
     markAllAsRead: function (req, res) {
-        models.User.findById(req.user._id, function (err, user) {
-            user.update({
-                '$set': {
-                    'notificationStack.$.isRead': true
-                }
-            }).exec(function (err, result) {
-                console.log(result);
+        var count = 0;
+        for (var i = 0; i < req.user.notificationStack.length; i++) {
+            console.log(req.user.notificationStack[i]);
+            if (!req.user.notificationStack[i].isRead) {
+                count++;
+            }
+        }
+        try {
+            for (var j = 0; j < count; j++) {
+                models.User.findOneAndUpdate({
+                    _id: req.user._id,
+                    notificationStack: {
+                        $elemMatch: {
+                            isRead: false
+                        }
+                    }
+                }, {
+                    $set: {
+                        'notificationStack.$.isRead': true
+                    }
+                }).exec();
+            }
+            res.json({
+                success: true,
+                message: 'All notifications marked as read.'
             });
-        });
-        res.json({
-            message: 'ok'
-        });
+        }
+        catch (err) {
+            res.status(500).json({
+                success: false,
+                message: err
+            });
+        }
     }
 };
