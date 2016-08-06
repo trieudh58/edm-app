@@ -102,5 +102,51 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/student-groups/delete-by-id
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Delete a student group by id
+     *      notes: Return delete result
+     *      nickname: Delete student group
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: groupId
+     *          description: Student group id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Return delete result */
+    deleteById: function (req, res) {
+        models.StudentGroup.findByIdAndRemove(req.body.groupId, function(err, result) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!result) {
+                res.json({
+                    success: false,
+                    message: 'Group does not exist.'
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Group deleted.'
+                });
+            }
+        });
     }
 };
