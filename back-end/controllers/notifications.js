@@ -189,12 +189,7 @@ module.exports = {
     get5Latest: function(req, res) {
         models.User.findById(req.user._id, '-_id notificationStack').populate({
             path: 'notificationStack.notification',
-            select: 'createdAt updatedAt title isHidden isRead',
-            options: {
-                sort: {
-                    createdAt: 'desc'
-                }
-            }
+            select: 'createdAt updatedAt title'
         }).exec(function (err, stack) {
             if (err) {
                 res.status(500).json({
@@ -209,9 +204,12 @@ module.exports = {
                         arr.push(stack.notificationStack[i]);
                     }
                 }
+                var sortedStack = arr.sort(function(a, b) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                });
                 res.json({
                     success: true,
-                    data: arr
+                    data: sortedStack
                 });
             }
         });
