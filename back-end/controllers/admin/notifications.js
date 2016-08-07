@@ -373,6 +373,41 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/notifications/get-all-sent
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get all sent notifications (newest-to-oldest order)
+     *      notes: Return sent notifications (newest-to-oldest order)
+     *      nickname: Get all sent notifications (newest-to-oldest order)
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return all sent notifications (newest-to-oldest order) */
+    getAllSent: function (req, res) {
+        models.Notification.find({
+            isSent: true
+        }, '-__v -body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            res.json({
+                success: true,
+                data: notifications
+            });
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/notifications/get-one-by-id
      * operations:
      *   -  httpMethod: GET
