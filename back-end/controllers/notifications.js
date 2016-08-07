@@ -198,18 +198,30 @@ module.exports = {
                 });
             }
             else {
-                var arr = [];
-                for (var i = 0; i < 5; i++) {
-                    if (stack.notificationStack[i]) {
-                        arr.push(stack.notificationStack[i]);
+                var unread = 0;
+                for (var j = 0; j < stack.notificationStack.length; j++) {
+                    if (!stack.notificationStack[j].isRead) {
+                        unread++;
                     }
                 }
-                var sortedStack = arr.sort(function(a, b) {
+                var sortedStack = stack.notificationStack.sort(function(a, b) {
                     return new Date(b.createdAt) - new Date(a.createdAt);
                 });
+                var arrOf5Latest = [];
+                for (var i = 0; i < 5; i++) {
+                    if (sortedStack[i]) {
+                        arrOf5Latest.push(sortedStack[i]);
+                    }
+                    else {
+                        break;
+                    }
+                }
                 res.json({
                     success: true,
-                    data: sortedStack
+                    data: {
+                        latest: arrOf5Latest,
+                        unread: unread
+                    }
                 });
             }
         });
