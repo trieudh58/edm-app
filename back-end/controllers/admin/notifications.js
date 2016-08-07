@@ -364,10 +364,12 @@ module.exports = {
                     message: err
                 });
             }
-            res.json({
-                success: true,
-                data: notifications
-            });
+            else {
+                res.json({
+                    success: true,
+                    data: notifications
+                });
+            }
         });
     },
 
@@ -399,10 +401,49 @@ module.exports = {
                     message: err
                 });
             }
-            res.json({
-                success: true,
-                data: notifications
-            });
+            else {
+                res.json({
+                    success: true,
+                    data: notifications
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/notifications/get-all-unsent
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get all unsent notifications (newest-to-oldest order)
+     *      notes: Return unsent notifications (newest-to-oldest order)
+     *      nickname: Get all unsent notifications (newest-to-oldest order)
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return all unsent notifications (newest-to-oldest order) */
+    getAllUnsent: function (req, res) {
+        models.Notification.find({
+            isSent: false
+        }, '-__v -body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: notifications
+                });
+            }
         });
     },
 

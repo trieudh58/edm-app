@@ -19,6 +19,9 @@ adminRouter.get('/get-all', authentication, adminPermission, AdminNotificationCo
 /* Get all sent notification */
 adminRouter.get('/get-all-sent', authentication, adminPermission, AdminNotificationController.getAllSent);
 
+/* Get all unsent notification */
+adminRouter.get('/get-all-unsent', authentication, adminPermission, AdminNotificationController.getAllUnsent);
+
 /* Get a specific notification by id */
 adminRouter.get('/get-one-by-id', authentication, adminPermission, AdminNotificationController.getOneById);
 
