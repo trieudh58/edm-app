@@ -21,4 +21,10 @@ router.put('/mark-one-as-read', authentication, NotificationController.markOneAs
 /* Mark one notification as unread */
 router.put('/mark-one-as-unread', authentication, NotificationController.markOneAsUnread);
 
+/* Mark one notification as important */
+router.put('/mark-one-as-important', authentication, NotificationController.markOneAsImportant);
+
+/* Mark one notification as unimportant */
+router.put('/mark-one-as-unimportant', authentication, NotificationController.markOneAsUnimportant);
+
 module.exports = router;

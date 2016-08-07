@@ -318,5 +318,109 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/mark-one-as-important
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Mark one notification as important
+     *      notes: Return result
+     *      nickname: Mark one notification as important
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationId
+     *          description: Notification id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Mark one notification as important (by id) */
+    markOneAsImportant: function (req, res) {
+        models.User.findOneAndUpdate({
+            _id: req.user._id,
+            notificationStack: {
+                $elemMatch: {
+                    notification: req.body.notificationId,
+                    isImportant: false
+                }
+            }
+        }, {
+            $set: {
+                'notificationStack.$.isImportant': true
+            }
+        }).exec(function (err) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Notification marked as important.'
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/mark-one-as-unimportant
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Mark one notification as unimportant
+     *      notes: Return result
+     *      nickname: Mark one notification as unimportant
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationId
+     *          description: Notification id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Mark one notification as unimportant (by id) */
+    markOneAsUnimportant: function (req, res) {
+        models.User.findOneAndUpdate({
+            _id: req.user._id,
+            notificationStack: {
+                $elemMatch: {
+                    notification: req.body.notificationId,
+                    isImportant: true
+                }
+            }
+        }, {
+            $set: {
+                'notificationStack.$.isImportant': false
+            }
+        }).exec(function (err) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Notification marked as unimportant.'
+                });
+            }
+        });
     }
 };
