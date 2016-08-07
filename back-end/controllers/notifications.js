@@ -205,7 +205,9 @@ module.exports = {
             else {
                 var arr = [];
                 for (var i = 0; i < 5; i++) {
-                    arr.push(stack.notificationStack[i]);
+                    if (stack.notificationStack[i]) {
+                        arr.push(stack.notificationStack[i]);
+                    }
                 }
                 res.json({
                     success: true,
