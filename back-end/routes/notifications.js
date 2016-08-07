@@ -30,4 +30,7 @@ router.put('/mark-one-as-important', authentication, NotificationController.mark
 /* Mark one notification as unimportant */
 router.put('/mark-one-as-unimportant', authentication, NotificationController.markOneAsUnimportant);
 
+/* Delete notifications */
+router.delete('/delete', authentication, NotificationController.deleteNotifications);
+
 module.exports = router;

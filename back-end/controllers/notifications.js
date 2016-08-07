@@ -475,5 +475,55 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/notifications/delete
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Delete one/many notification(s)
+     *      notes: Return result
+     *      nickname: Delete notification(s)
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationIds
+     *          description: Notification ids (separated by comma)
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Delete notification(s) by ids */
+    deleteNotifications: function (req, res) {
+        req.body.notificationIds = req.body.notificationIds.replace(/\s+/g, '');
+        var parsedNotificationIds = req.body.notificationIds.split(',');
+        models.User.findByIdAndUpdate(req.user._id, {
+            $pull: {
+                notificationStack: {
+                    notification: {
+                        $in: parsedNotificationIds
+                    }
+                }
+            }
+        }, function (err) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    message: 'Notifications deleted.'
+                });
+            }
+        });
     }
 };
