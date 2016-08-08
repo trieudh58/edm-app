@@ -48,6 +48,7 @@ app.use(swagger.init(app, {
         './controllers/studentRecords.js',
         './controllers/subjects.js',
         './controllers/notifications.js',
+        './controllers/courseRequests.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',

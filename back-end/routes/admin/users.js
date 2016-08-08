@@ -1,13 +1,13 @@
 var express = require('express');
 var adminRouter = express.Router();
-var UserController = require('../../controllers/users');
+var AdminUserController = require('../../controllers/admin/users');
 var authentication = require('../../middleware/authentication');
 var adminPermission = require('../../middleware/adminPermission');
 
 /* Create a user */
-adminRouter.post('/create', authentication, adminPermission, UserController.create);
+adminRouter.post('/create', authentication, adminPermission, AdminUserController.create);
 
 /* Delete a user. Admin permission required */
-adminRouter.delete('/delete', authentication, adminPermission, UserController.delete);
+adminRouter.delete('/delete', authentication, adminPermission, AdminUserController.delete);
 
 module.exports = adminRouter;
