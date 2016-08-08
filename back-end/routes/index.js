@@ -20,6 +20,9 @@ router.use('/subjects', require('./subjects'));
 /* Notification-related routes */
 router.use('/notifications', require('./notifications'));
 
+/* CourseRequest-related routes */
+router.use('/course-requests', require('./courseRequests'));
+
 /*
 * Admin permission required routes
 * ----------
