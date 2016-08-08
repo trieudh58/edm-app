@@ -193,55 +193,6 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/users/delete
-     * operations:
-     *   -  httpMethod: DELETE
-     *      summary: Delete a user (using email)
-     *      notes: Return result
-     *      nickname: Delete user
-     *      consumes:
-     *        - application/x-www-form-urlencoded
-     *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
-     *          paramType: header
-     *          required: true
-     *          dataType: string
-     *        - name: email
-     *          description: Your email
-     *          paramType: form
-     *          required: true
-     *          dataType: string
-     *          format: email
-     */
-    /* Delete a user. Admin permission required */
-    delete: function (req, res) {
-        User.findOneAndRemove({
-            email: req.body.email
-        }, function (err, removedUser) {
-            if (err) {
-                res.status(500).json({
-                    success: false,
-                    message: err
-                });
-            }
-            else if (!removedUser) {
-                res.json({
-                    success: false,
-                    message: 'Email does not exist.'
-                });
-            }
-            else {
-                res.json({
-                    success: true,
-                    message: 'User is deleted.'
-                });
-            }
-        });
-    },
-
-    /**
-     * @swagger
      * path: /api/v1/users/register
      * operations:
      *   -  httpMethod: POST
