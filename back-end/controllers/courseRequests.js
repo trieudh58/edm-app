@@ -70,11 +70,66 @@ module.exports = {
                         });
                     }
                     else {
-                        res.json({
-                            success: true,
-                            message: 'Course request created.'
+                        courseRequest.update({
+                            $push: {
+                                joiners: {
+                                    joiner: req.user._id
+                                }
+                            }
+                        }, function (err) {
+                            if (err) {
+                                res.status(500).json({
+                                    success: false,
+                                    message: err
+                                });
+                            }
+                            else {
+                                res.json({
+                                    success: true,
+                                    message: 'Course request created.'
+                                });
+                            }
                         });
                     }
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/get-created
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get created Course requests
+     *      notes: Return created Course requests (by current user only)
+     *      nickname: Get created Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return created Course request (by current user) */
+    getCreatedCRs: function (req, res) {
+        models.CourseRequest.find({
+            creator: req.user._id
+        }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
+            updatedAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
                 });
             }
         });
