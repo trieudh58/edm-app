@@ -26,10 +26,10 @@ module.exports = {
      */
     /* Return subjects' names and credits */
     getNamesAndCredits: function (req, res) {
-        Subject.find({}, '-_id code name details.credits', function (err, subjects) {
+        Subject.find({}, 'code name details.credits', function (err, subjects) {
             if (err) {
                 res.status(500).json({
-                    sucess: false,
+                    success: false,
                     message: err
                 });
             }
@@ -88,7 +88,7 @@ module.exports = {
                 });
             }
             else if (!subj) {
-                prerequisitesArr = req.body.subjectPrerequisites.split(',');
+                var prerequisitesArr = req.body.subjectPrerequisites.split(',');
                 Subject.create({
                     code: req.body.subjectCode,
                     name: {
