@@ -1,21 +1,45 @@
 var mongoose = require('mongoose');
 
-var PendingUserSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        require: true,
-        unique: true
-    },
-    password: {
-        type: String,
+var CourseRequestSchema = new mongoose.Schema({
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         require: true
     },
-    rememberToken: {
+    joiners: [{
+        _id: false,
+        joiner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            require: true
+        },
+        createdAt: {
+            type: Date,
+            require: true,
+            default: Date.now
+        }
+    }],
+    courseInfo: {
+        subject: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Subject',
+            require: true
+        },
+        maximumSlots: {
+            type: Number,
+            require: true
+        },
+        semester: {
+            type: String,
+            require: true
+        }
+    },
+    status: {
         type: String,
-        require: true
+        enum: ['Pending', 'Public', 'Denied']
     }
 }, {
     timestamps: true
 });
 
-module.exports = mongoose.model('PendingUser', PendingUserSchema);
+module.exports = mongoose.model('CourseRequest', CourseRequestSchema);

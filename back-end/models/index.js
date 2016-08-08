@@ -20,6 +20,7 @@ models.EducationProgram = require('./EducationProgram');
 models.EPDetail = require('./EPDetail');
 models.Notification = require('./Notification');
 models.StudentGroup = require('./StudentGroup');
+models.CourseRequest = require('./CourseRequest');
 
 models.dbConnect = mongooseConnect;
 module.exports = models;
