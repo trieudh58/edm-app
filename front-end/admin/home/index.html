@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title>admin</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+
+    <link href="styles/admin.home.css" rel="stylesheet" />
+</head>
+<body>
+	<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+	  <div class="container">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	          <span class="icon-toggle"></span>
+	      </button>
+	      <a class="navbar-brand" href="">EDM Adminstrator</a>
+	    </div>
+	    <div class="navbar-collapse collapse">
+	      <ul class="nav navbar-nav navbar-right">
+	        
+	        <li class="dropdown">
+	          <a class="dropdown-toggle" role="button" data-toggle="dropdown">
+	            <i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
+	          <ul id="g-account-menu" class="dropdown-menu" role="menu">
+	            <!-- <li><a href="">My Profile</a></li> -->
+	            <li><a href="" ng-click="logout()"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+	          </ul>
+	        </li>
+	      </ul>
+	    </div>
+	  </div>
+	</div>
+	<div class="container">
+  
+	<div class="col-sm-3">
+      <!-- left -->
+      <h3><i class="glyphicon glyphicon-briefcase"></i> Toolbox</h3>
+      <hr>
+      
+      <ul class="nav nav-stacked">
+        <li><a href="#/studentmanage" target="ext" ><i class="glyphicon glyphicon-flash"></i>Sinh viên</a></li>
+        <li><a href="" target="ext"><i class="glyphicon glyphicon-link"></i>Yêu cầu mở lớp</a></li>
+        <li class="treeview">
+          <a href=""><i class="fa fa-link glyphicon glyphicon-list-alt"></i> <span>Thông báo</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="" >Viết thông báo</a></li>
+            <li><a href="" >Đã gửi</a></li>
+            <li><a href="" >Nháp</a></li>
+          </ul>
+        </li>
+        <li><a href="" target="ext" ><i class="glyphicon glyphicon-book"></i> Quản lý môn học</a></li>
+      </ul>
+      
+      <hr>
+      
+  	</div>
+   
+    <div ng-view></div>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-2.0.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+<script src="../bower_components/ngstorage/ngStorage.min.js"></script>
+<script src="https://code.angularjs.org/1.2.13/angular-cookies.js"></script>
+<script src="app.js"></script>
+
+</html>

@@ -46,7 +46,7 @@
 	                  <tr ng-repeat='notification in notifications'>
 	                    <td><input type="checkbox" value='{{notification.notification._id}}' class="notificationCheckbox"></td>
 	                    <td class="mailbox-star" ng-click="starClickToggle($event,notification.notification._id,notification.isImportant)"><a href="#"><i ng-class="{true: 'fa fa-star text-yellow', false: 'fa fa-star-o text-yellow'}[notification.isImportant==true]"></i></a></td>
-	                    <td class="mailbox-name"  ng-click="redirect('notification/'+notification.notification._id)">Admin</td>
+	                    <td class="mailbox-name"  ng-click="redirect('notification/'+notification.notification._id)">{{emailTrim(notification.notification.creator.email)}}</td>
 	                    <td class="mailbox-subject" ng-click="redirect('notification/'+notification.notification._id)" ng-cloak>{{notification.notification.title}}
 	                    </td>
 	                    <!-- <td class="mailbox-attachment"><i class="fa fa-paperclip"></i></td> -->

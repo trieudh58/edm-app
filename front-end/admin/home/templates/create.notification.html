@@ -1,0 +1,90 @@
+  <link rel="stylesheet" href="../home/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
+  <link rel="stylesheet" href="../plugins/select2/select2.min.css">
+ <div class="col-sm-9" >
+    <!-- default -->
+        <div ng-switch-when="default" >
+<!--         <ng-include src=''></ng-include> -->
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title">default</h3>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                
+              </div>
+
+            </div>
+       </div>
+    <!-- create notification -->
+        <div ng-switch-when="createNotification">
+          <div>
+<!--         <ng-include src=''></ng-include> -->
+            <div class="box box-primary">
+              <div class="box-header with-border">
+                <h3 class="box-title">Viết thông báo</h3>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body">
+                <div class="form-group">
+                  <select class="form-control select2" multiple="multiple" data-placeholder="Select some Group" style="width: 100%;">
+                    <option>K40</option>
+                    <option>K41</option>
+                    <option>K42</option>
+                    <option>K43</option>
+                    <option>K44</option>
+                    <option>K45</option>
+                    <option>k46</option>
+                    <option>k47</option>
+                    <option>k48</option>
+                    <option>k49</option>
+                    <option>K50</option>
+                    <option>K51</option>
+                    <option>K52</option>
+                    <option>K53</option>
+                    <option>K54</option>
+                    <option>K55</option>
+                    <option>k56</option>
+                    <option>k57</option>
+                    <option>k58</option>
+                    <option>k59</option>
+                    <option>k60</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <input class="form-control" placeholder="Subject:">
+                </div>
+                <div class="form-group">
+                      <textarea id="compose-textarea" class="form-control" style="height: 300px">
+
+                      </textarea>
+                </div>
+                <div class="form-group">
+                  <div class="btn btn-default btn-file">
+                    <i class="fa fa-paperclip"></i> Dính kèm
+                    <input type="file" name="attachment">
+                  </div>
+                  <p class="help-block">Max. 32MB</p>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <div class="pull-right">
+                  <button type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Nháp</button>
+                  <button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Gửi</button>
+                </div>
+                <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Hủy</button>
+              </div>
+            </div>
+       </div>
+       </div>
+
+<script src="../plugins/select2/select2.full.min.js"></script>
+<script src="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script>
+  $(function () {
+    //Add text editor
+    $("compose-textarea").wysihtml5();
+    $(".select2").select2();
+  });
+</script>

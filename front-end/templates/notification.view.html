@@ -14,7 +14,7 @@
     <section class="content" style="height:100%;">
         <div class="box box-default">
           <div class="box-header with-border">
-            <h3 class="box-title">Thông báo từ <b>{{notification.creator.email}}</b></h3>
+            <h3 class="box-title">Thông báo từ <b>{{emailTrim(notification.creator.email)}}</b></h3>
 
             <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -24,7 +24,7 @@
           <div class="box-body no-padding">
             <div class="mailbox-read-info">
               <h3>{{notification.title}}</h3>
-                <span class="mailbox-read-time pull-right">4 Aug. 2016 11:03 PM</span></h5>
+                <span class="mailbox-read-time pull-right">{{timeConvert(notification.createdAt)}}</span></h5>
             </div>
             <div class="mailbox-read-message">
               <p>{{notification.body}}</p>

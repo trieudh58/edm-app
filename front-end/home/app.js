@@ -62,7 +62,32 @@
         animateScale: true
       });
 	});
+  App.run(function($rootScope,getStudentInfor){
+    $rootScope.emailTrim =function(email){
+      return email.split('@')[0];
+    }
 
+    $rootScope.timeConvert=function(inputdate){
+    var datecurrent=new Date($.now());
+    var date= new Date(inputdate);
+    var seconds= (datecurrent-date)/1000;
+    var outtime=''
+    if(seconds<60)
+        outtime='vài giây trước';
+    else if(seconds<3600)
+        outtime= Math.round(seconds/60) + ' phút trước';
+    else if(seconds<86400)
+        outtime= Math.round(seconds/3600)+ ' giờ trước';
+    else if(seconds<86400*6)
+        outtime=Math.round(seconds/86400)+' ngày trước';
+    else
+        outtime=date.toISOString().slice(0,10);
+    return outtime;
+  }
+  getStudentInfor.get().then(function(response){
+    $rootScope.userInfor=response.data;
+  })
+  })
   App.controller('verify',function($http,$scope,$routeParams,$location){
      var qs = $location.search();
      console.log(qs);
@@ -97,6 +122,7 @@
                     console.log('fail');
                 });
             }
+
         var newFeeds=getSomeNewNotifications.get();
         newFeeds.then(function(res){
           $rootScope.newFeeds=res.data.latest;
@@ -231,7 +257,7 @@ App.factory('getSomeNewNotifications',function($http,$localStorage){
       });
     }
   };
-})
+});
 
 App.factory('getAllNotifications',function($http,$localStorage){
   return{
@@ -250,6 +276,7 @@ App.factory('getAllNotifications',function($http,$localStorage){
     }
   };
 });
+
 App.factory('markNotificationAsImportant',function($http,$localStorage){
   return{
     put:function(id){
@@ -268,6 +295,7 @@ App.factory('markNotificationAsImportant',function($http,$localStorage){
     }
   }
 });
+
 App.factory('deleteNotification',function($http,$localStorage){
   return{
     delete:function(IDs){
@@ -277,8 +305,9 @@ App.factory('deleteNotification',function($http,$localStorage){
         headers:{
           'x-access-token':$localStorage.access_token
         },
-        data:{
-          notificationIds:IDs
+        params:{
+          notificationIds:IDs,
+          // token:$localStorage.access_token
         }
       }).then(function(response){
         return response.data;
@@ -288,6 +317,7 @@ App.factory('deleteNotification',function($http,$localStorage){
     }
   }
 });
+
 App.factory('markNotificationAsUnImportant',function($http,$localStorage){
   return{
     put:function(id){
@@ -323,7 +353,8 @@ App.factory('getImportantNotifications',function($http,$localStorage){
       });
     }
   }
-})
+});
+
 App.controller('allnotifications',function($scope,$route,getAllNotifications,getImportantNotifications,deleteNotification,markNotificationAsImportant,markNotificationAsUnImportant,$location){
   var request=getAllNotifications.get();
   request.then(function(response){
@@ -387,26 +418,10 @@ App.controller('allnotifications',function($scope,$route,getAllNotifications,get
     var idList=angular.element('.notificationCheckbox:checked').map(function() {
     return this.value;
     }).get();
-    angular.element('.notificationCheckbox:checked').parent().parent().hide();
+    angular.element('.notificationCheckbox:checked').attr('checked',false).parent().parent().hide();
     deleteNotification.delete(idList.join(','));
   }
-  $scope.timeConvert=function(inputdate){
-    var datecurrent=new Date($.now());
-    var date= new Date(inputdate);
-    var seconds= (datecurrent-date)/1000;
-    var outtime=''
-    if(seconds<60)
-        outtime='vài giây trước';
-    else if(seconds<3600)
-        outtime= Math.round(seconds/60) + ' phút trước';
-    else if(seconds<86400)
-        outtime= Math.round(seconds/3600)+ ' giờ trước';
-    else if(seconds<86400*6)
-        outtime=Math.round(seconds/86400)+' ngày trước';
-    else
-        outtime=date.toISOString().slice(0,10);
-    return outtime;
-  }
+
 });
 
 

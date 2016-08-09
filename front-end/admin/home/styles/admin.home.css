@@ -29,3 +29,9 @@ footer {
   -o-border-radius: 10px;
   border-radius: 10px;
 }
+[ng-click]{
+  cursor: pointer;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+    display: none !important;
+}
