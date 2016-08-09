@@ -99,7 +99,7 @@ module.exports = {
      */
     /* Return user data */
     get: function (req, res) {
-        User.findById(req.user._id, '-updatedAt -createdAt -password -__v').populate('personalInfo.groups.group', 'name').exec(function (err, result) {
+        User.findById(req.user._id, '-updatedAt -createdAt -password -__v -notificationStack').populate('personalInfo.groups.group', 'name').exec(function (err, result) {
             if (err) {
                 res.status(500).json({
                     success: false,
