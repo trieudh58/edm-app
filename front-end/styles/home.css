@@ -6,3 +6,18 @@
 .table-background{
 	background-color: white;
 }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+    display: none !important;
+}
+
+.isread-label{
+	color: red;
+}
+.isread{
+	background-color:#feefef;
+}
+
+[ng-click]{
+	cursor: pointer;
+}

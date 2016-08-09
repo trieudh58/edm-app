@@ -1,4 +1,3 @@
-	 <link rel="stylesheet" href="../plugins/iCheck/flat/blue.css">
     <section class="content-header">
       <h1>
         Xem tất cả
@@ -29,15 +28,14 @@
 	            <div class="box-body no-padding">
 	              <div class="mailbox-controls">
 	                <!-- Check all button -->
-	                <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
+	                <button type="button" class="btn btn-default btn-sm checkbox-toggle" ng-click='clickAll($event)'><i class="fa fa-square-o"></i>
 	                </button>
-	                <div class="btn-group">
-	                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-
-	                </div>
+	                  <button type="button" class="btn btn-default btn-sm" ng-click="deleteNotifications()"><i class="fa fa-trash-o"></i></button>
 	                <!-- /.btn-group -->
-	                <button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-	                  </div>
+	                <button type="button" class="btn btn-default btn-sm" ng-click='refresh()'><i class="fa fa-refresh"></i></button>
+
+	                 <button type="button" class="btn btn-default btn-sm" ng-click='showimportant()'><i class="fa fa-star"></i></button>
+	                	</div>
 	                  <!-- /.btn-group -->
 	                </div>
 	                <!-- /.pull-right -->
@@ -46,22 +44,14 @@
 	                <table class="table table-hover table-striped">
 	                  <tbody>
 	                  <tr ng-repeat='notification in notifications'>
-	                    <td><input type="checkbox"></td>
-	                    <td class="mailbox-star"><a href=""><i class="fa fa-star text-yellow"></i></a></td>
-	                    <td class="mailbox-name"><a href="#/notification/{{notification.notification._id}}">Admin</a></td>
-	                    <td class="mailbox-subject">{{notification.notification.title}}
-	                    </td>
-	                    <!-- <td class="mailbox-attachment"></td> -->
-	                    <td class="mailbox-date">5 mins ago</td>
-	                  </tr>
-	                  <tr>
-	                    <td><input type="checkbox"></td>
-	                    <td class="mailbox-star"><a href="#"><i class="fa fa-star-o text-yellow"></i></a></td>
-	                    <td class="mailbox-name"><a href="read-mail.html">Triều Đặng</a></td>
-	                    <td class="mailbox-subject"><b>Triều Đặng</b> - Đề nghị mở lớp học ...
+	                    <td><input type="checkbox" value='{{notification.notification._id}}' class="notificationCheckbox"></td>
+	                    <td class="mailbox-star" ng-click="starClickToggle($event,notification.notification._id,notification.isImportant)"><a href="#"><i ng-class="{true: 'fa fa-star text-yellow', false: 'fa fa-star-o text-yellow'}[notification.isImportant==true]"></i></a></td>
+	                    <td class="mailbox-name"  ng-click="redirect('notification/'+notification.notification._id)">Admin</td>
+	                    <td class="mailbox-subject" ng-click="redirect('notification/'+notification.notification._id)" ng-cloak>{{notification.notification.title}}
 	                    </td>
 	                    <!-- <td class="mailbox-attachment"><i class="fa fa-paperclip"></i></td> -->
-	                    <td class="mailbox-date">28 mins ago</td>
+	                    <td class="mailbox-date"  ng-click="redirect('notification/'+notification.notification._id)">{{timeConvert(notification.notification.createdAt)}}</td>
+
 	                  </tr>
 	                  </tbody>
 	                </table>
@@ -74,49 +64,3 @@
 	      </div>
 	      <!-- /.row -->
 	    </section>
-<script src="../plugins/iCheck/icheck.min.js"></script>
-<script>
-  $(function () {
-    //Enable iCheck plugin for checkboxes
-    //iCheck for checkbox and radio inputs
-    $('.mailbox-messages input[type="checkbox"]').iCheck({
-      checkboxClass: 'icheckbox_flat-blue',
-      radioClass: 'iradio_flat-blue'
-    });
-
-    //Enable check and uncheck all functionality
-    $(".checkbox-toggle").click(function () {
-      var clicks = $(this).data('clicks');
-      if (clicks) {
-        //Uncheck all checkboxes
-        $(".mailbox-messages input[type='checkbox']").iCheck("uncheck");
-        $(".fa", this).removeClass("fa-check-square-o").addClass('fa-square-o');
-      } else {
-        //Check all checkboxes
-        $(".mailbox-messages input[type='checkbox']").iCheck("check");
-        $(".fa", this).removeClass("fa-square-o").addClass('fa-check-square-o');
-      }
-      $(this).data("clicks", !clicks);
-    });
-
-    //Handle starring for glyphicon and font awesome
-    $(".mailbox-star").click(function (e) {
-      e.preventDefault();
-      //detect type
-      var $this = $(this).find("a > i");
-      var glyph = $this.hasClass("glyphicon");
-      var fa = $this.hasClass("fa");
-
-      //Switch states
-      if (glyph) {
-        $this.toggleClass("glyphicon-star");
-        $this.toggleClass("glyphicon-star-empty");
-      }
-
-      if (fa) {
-        $this.toggleClass("fa-star");
-        $this.toggleClass("fa-star-o");
-      }
-    });
-  });
-</script>

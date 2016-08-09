@@ -7,6 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- <base href="/" > -->
   <title>EDM</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -23,9 +24,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- advanced form-->
 
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
-        page. However, you can choose any other skin. Make sure you
-        apply the skin class to the body tag so the changes take effect.-->
   <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
   <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
   <link rel="stylesheet" type="text/css" href="../styles/home.css">
@@ -61,7 +59,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition skin-blue sidebar-mini"> 
+<body class="hold-transition skin-blue sidebar-mini" > 
 <div class="wrapper" ng-app="app">
 
   <!-- Main Header -->
@@ -84,57 +82,25 @@ desired effect
       <!-- Navbar Right Menu -->
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-          <!-- Messages: style can be found in dropdown.less-->
-          <li class="dropdown messages-menu">
-            <!-- Menu toggle button -->
-            <a  class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-envelope-o"></i>
-              <span class="label label-success">4</span>
-            </a>
-            <ul class="dropdown-menu">
-              <li class="header">You have 4 messages</li>
-              <li>
-                <!-- inner menu: contains the messages -->
-                <ul class="menu">
-                  <li><!-- start message -->
-                    <a >
-                      <div class="pull-left">
-                        <!-- User Image -->
-                        <img src="dist/img/nobody_m.original.jpg" class="img-circle" alt="User Image">
-                      </div>
-                      <!-- Message title and timestamp -->
-                      <h4>
-                        Support Team
-                        <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                      </h4>
-                      <!-- The message -->
-                      <p>Why not buy a new awesome theme?</p>
-                    </a>
-                  </li>
-                  <!-- end message -->
-                </ul>
-                <!-- /.menu -->
-              </li>
-              <li class="footer"><a href="#">See All Messages</a></li>
-            </ul>
-          </li>
-          <!-- /.messages-menu -->
-
           <!-- Notifications Menu -->
           <li class="dropdown notifications-menu">
             <!-- Menu toggle button -->
             <a  class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-danger">4</span>
+              <span class="label label-danger" ng-cloak>{{unReadFeads}}</span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">Bạn có 4 thông báo mới</li>
+              <li class="header" ng-cloak>Bạn có {{unReadFeads}} thông báo mới</li>
               <li>
                 <!-- Inner Menu: contains the notifications -->
                 <ul class="menu">
                   <li ng-repeat="feed in newFeeds"><!-- start notification -->
-                    <a href="#/notification/{{feed.notification._id}}">
-                      <i class="fa fa-users text-aqua"></i><b>Admin</b> Đã gửi {{feed.notification.title}}
+                    <a href="#/notification/{{feed.notification._id}}" ng-class="{true: 'isread', false: ''}[feed.isRead==false]">
+                      <i class="fa fa-user text-red"></i>
+                      <b>Admin</b> Đã gửi {{feed.notification.title}} 
+<!--                       <h4>
+                        <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                      </h4> -->
                     </a>
                   </li>
                   <!-- end notification -->
@@ -413,9 +379,5 @@ desired effect
 <!-- <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script> -->
 <script src="dist/js/app.min.js"></script>
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. Slimscroll is required when using the
-     fixed layout. -->
 </body>
 </html>
