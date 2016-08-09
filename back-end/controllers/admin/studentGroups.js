@@ -122,13 +122,13 @@ module.exports = {
      *          dataType: string
      *        - name: groupId
      *          description: Student group id
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Return delete result */
     deleteById: function (req, res) {
-        models.StudentGroup.findByIdAndRemove(req.body.groupId, function(err, result) {
+        models.StudentGroup.findByIdAndRemove(req.query.groupId, function(err, result) {
             if (err) {
                 res.status(500).json({
                     success: false,
@@ -168,14 +168,14 @@ module.exports = {
      *          dataType: string
      *        - name: groupName
      *          description: Student group name
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Return delete result */
     deleteByName: function (req, res) {
         models.StudentGroup.findOneAndRemove({
-            name: req.body.groupName
+            name: req.query.groupName
         }, function(err, result) {
             if (err) {
                 res.status(500).json({

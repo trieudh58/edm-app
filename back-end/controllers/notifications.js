@@ -507,14 +507,14 @@ module.exports = {
      *          dataType: string
      *        - name: notificationIds
      *          description: Notification ids (separated by comma)
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Delete notification(s) by ids */
     deleteNotifications: function (req, res) {
-        req.body.notificationIds = req.body.notificationIds.replace(/\s+/g, '');
-        var parsedNotificationIds = req.body.notificationIds.split(',');
+        req.query.notificationIds = req.query.notificationIds.replace(/\s+/g, '');
+        var parsedNotificationIds = req.query.notificationIds.split(',');
         models.User.findByIdAndUpdate(req.user._id, {
             $pull: {
                 notificationStack: {
