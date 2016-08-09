@@ -28,4 +28,7 @@ adminRouter.get('/get-one-by-id', authentication, adminPermission, AdminNotifica
 /* Delete one notification by id */
 adminRouter.delete('/delete-one-by-id', authentication, adminPermission, AdminNotificationController.deleteOneById);
 
+/* Delete one/many notifications by id */
+adminRouter.delete('/delete-by-ids', authentication, adminPermission, AdminNotificationController.deleteByIds);
+
 module.exports = adminRouter;

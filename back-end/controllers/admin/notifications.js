@@ -517,12 +517,12 @@ module.exports = {
      *          dataType: string
      *        - name: notificationId
      *          description: Notification id
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     deleteOneById: function (req, res) {
-        models.Notification.findById(req.body.notificationId, 'isSent', function (err, notification) {
+        models.Notification.findById(req.query.notificationId, 'isSent', function (err, notification) {
             if (err) {
                 res.status(500).json({
                     success: false,
@@ -592,5 +592,103 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/notifications/delete-by-ids
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Delete one or many notification by ids
+     *      notes: Return result
+     *      nickname: Delete notifications
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: notificationIds
+     *          description: Notification ids (separated by comma)
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    deleteByIds: function (req, res) {
+        var idArr = req.query.notificationIds.replace(/\s+/g, '').split(',');
+        try {
+            for (var i = 0; i < idArr.length; i++) {
+                models.Notification.findById(idArr[i], 'isSent', function (err, notification) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else if (!notification) {
+                        res.json({
+                            success: false,
+                            message: 'Notification does not exist.'
+                        });
+                    }
+                    else if (!notification.isSent) {
+                        notification.remove(function (err) {
+                            if (err) {
+                                res.status(500).json({
+                                    success: false,
+                                    message: err
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        models.User.find({
+                            notificationStack: {
+                                $elemMatch: {
+                                    notification: notification._id
+                                }
+                            }
+                        }, function (err, users) {
+                            for (var i = 0; i < users.length; i++) {
+                                users[i].update({
+                                    $pull: {
+                                        notificationStack: {
+                                            notification: notification._id
+                                        }
+                                    }
+                                }).exec(function (err) {
+                                    if (err) {
+                                        res.status(500).json({
+                                            success: false,
+                                            message: err
+                                        });
+                                    }
+                                });
+                            }
+                            notification.remove(function (err) {
+                                if (err) {
+                                    res.status(500).json({
+                                        success: false,
+                                        message: err
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+            }
+            res.json({
+                success: true,
+                message: 'Notifications deleted.'
+            });
+        }
+        catch (err) {
+            res.status(500).json({
+                success: false,
+                message: err
+            });
+        }
     }
 };
