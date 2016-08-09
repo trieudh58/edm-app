@@ -25,9 +25,6 @@ var CourseRequestSchema = new mongoose.Schema({
             ref: 'Subject',
             require: true
         },
-        maximumSlots: {
-            type: Number
-        },
         semester: {
             type: String,
             require: true

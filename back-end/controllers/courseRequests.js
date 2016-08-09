@@ -133,5 +133,44 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/get-public
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get public Course requests
+     *      notes: Return public Course requests
+     *      nickname: Get public Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return created Course request (by current user) */
+    getPublicCRs: function (req, res) {
+        models.CourseRequest.find({
+            status: 'Public'
+        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+            updatedAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
     }
 };

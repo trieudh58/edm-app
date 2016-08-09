@@ -9,4 +9,7 @@ router.post('/create', authentication, CourseRequestController.create);
 /* Get created Course requests */
 router.get('/get-created', authentication, CourseRequestController.getCreatedCRs);
 
+/* Get created Course requests */
+router.get('/get-public', authentication, CourseRequestController.getPublicCRs);
+
 module.exports = router;
