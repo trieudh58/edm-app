@@ -32,6 +32,10 @@ var CourseRequestSchema = new mongoose.Schema({
         semester: {
             type: String,
             require: true
+        },
+        expectedTime: {
+            type: String,
+            enum: ['Morning', 'Afternoon', 'Evening']
         }
     },
     status: {

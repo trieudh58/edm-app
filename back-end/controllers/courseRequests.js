@@ -28,6 +28,11 @@ module.exports = {
      *          paramType: form
      *          required: true
      *          dataType: string
+     *        - name: expectedTime
+     *          description: Expected time
+     *          paramType: form
+     *          required: true
+     *          dataType: string
      *        - name: reason
      *          description: Reason for request course
      *          paramType: form
@@ -65,7 +70,8 @@ module.exports = {
                     reason: req.body.reason,
                     courseInfo: {
                         subject: req.body.subjectId,
-                        semester: semester
+                        semester: semester,
+                        expectedTime: req.body.expectedTime
                     },
                     status: 'Pending'
                 }, function (err, courseRequest) {
