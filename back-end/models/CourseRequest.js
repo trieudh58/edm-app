@@ -6,6 +6,10 @@ var CourseRequestSchema = new mongoose.Schema({
         ref: 'User',
         require: true
     },
+    reason: {
+        type: String,
+        require: true
+    },
     joiners: [{
         _id: false,
         joiner: {

@@ -28,6 +28,11 @@ module.exports = {
      *          paramType: form
      *          required: true
      *          dataType: string
+     *        - name: reason
+     *          description: Reason for request course
+     *          paramType: form
+     *          required: true
+     *          dataType: string
      */
     /* Return created Course request */
     create: function (req, res) {
@@ -57,6 +62,7 @@ module.exports = {
                 }
                 models.CourseRequest.create({
                     creator: req.user._id,
+                    reason: req.body.reason,
                     courseInfo: {
                         subject: req.body.subjectId,
                         semester: semester
