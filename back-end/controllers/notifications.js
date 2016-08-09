@@ -56,6 +56,59 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/notifications/get-unread-titles
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get unread notification titles owned by current user
+     *      notes: Return unread notification titles owned by current user
+     *      nickname: Get owned unread notification titles
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return unread notification titles owned by current user */
+    getUnreadTitles: function (req, res) {
+        models.User.findById(req.user._id, '-_id notificationStack').populate({
+            path: 'notificationStack.notification',
+            select: 'createdAt updatedAt title'
+        }).exec(function (err, stack) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!stack) {
+                res.json({
+                    success: false,
+                    message: 'Important notification stack is empty.'
+                });
+            }
+            else {
+                var importantStack = [];
+                for (var i = 0; i < stack.notificationStack.length; i++) {
+                    if (!stack.notificationStack[i].isRead) {
+                        importantStack.push(stack.notificationStack[i]);
+                    }
+                }
+                var sortedUnreadStack = importantStack.sort(function(a, b) {
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                });
+                res.json({
+                    success: true,
+                    data: sortedUnreadStack
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/notifications/get-important-titles
      * operations:
      *   -  httpMethod: GET
