@@ -7,9 +7,12 @@ var authentication = require('../middleware/authentication');
 router.post('/create', authentication, CourseRequestController.create);
 
 /* Get created Course requests */
-router.get('/get-created', authentication, CourseRequestController.getCreatedCRs);
+router.get('/get-own-created', authentication, CourseRequestController.getOwnCreatedCRs);
 
-/* Get created Course requests */
-router.get('/get-public', authentication, CourseRequestController.getPublicCRs);
+/* Get public Course requests */
+router.get('/get-own-public', authentication, CourseRequestController.getOwnPublicCRs);
+
+/* Get pending Course requests */
+router.get('/get-own-pending', authentication, CourseRequestController.getOwnPendingCRs);
 
 module.exports = router;

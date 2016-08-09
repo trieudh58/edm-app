@@ -98,7 +98,7 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/course-requests/get-created
+     * path: /api/v1/course-requests/get-own-created
      * operations:
      *   -  httpMethod: GET
      *      summary: Get created Course requests
@@ -114,7 +114,7 @@ module.exports = {
      *          dataType: string
      */
     /* Return created Course request (by current user) */
-    getCreatedCRs: function (req, res) {
+    getOwnCreatedCRs: function (req, res) {
         models.CourseRequest.find({
             creator: req.user._id
         }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
@@ -137,7 +137,7 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/course-requests/get-public
+     * path: /api/v1/course-requests/get-own-public
      * operations:
      *   -  httpMethod: GET
      *      summary: Get public Course requests
@@ -152,10 +152,51 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Return created Course request (by current user) */
-    getPublicCRs: function (req, res) {
+    /* Return public Course request (by current user) */
+    getOwnPublicCRs: function (req, res) {
         models.CourseRequest.find({
+            creator: req.user._id,
             status: 'Public'
+        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+            updatedAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/get-own-pending
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get pending Course requests
+     *      notes: Return pending Course requests
+     *      nickname: Get pending Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return pending Course request (by current user) */
+    getOwnPendingCRs: function (req, res) {
+        models.CourseRequest.find({
+            creator: req.user._id,
+            status: 'Pending'
         }, '-__v').populate('courseInfo.subject', 'code name').sort({
             updatedAt: 'desc'
         }).exec(function (err, crs) {
