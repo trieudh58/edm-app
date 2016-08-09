@@ -79,7 +79,7 @@ module.exports = {
     getUnreadTitles: function (req, res) {
         models.User.findById(req.user._id, '-_id notificationStack').populate({
             path: 'notificationStack.notification',
-            select: 'createdAt updatedAt title',
+            select: 'createdAt updatedAt title creator',
             populate: {
                 path: 'creator',
                 select: 'email'
@@ -136,7 +136,7 @@ module.exports = {
     getImportantTitles: function (req, res) {
         models.User.findById(req.user._id, '-_id notificationStack').populate({
             path: 'notificationStack.notification',
-            select: 'createdAt updatedAt title',
+            select: 'createdAt updatedAt title creator',
             populate: {
                 path: 'creator',
                 select: 'email'
@@ -254,7 +254,7 @@ module.exports = {
     get5Latest: function(req, res) {
         models.User.findById(req.user._id, '-_id notificationStack').populate({
             path: 'notificationStack.notification',
-            select: 'createdAt updatedAt title',
+            select: 'createdAt updatedAt title creator',
             populate: {
                 path: 'creator',
                 select: 'email'
