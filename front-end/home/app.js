@@ -1,166 +1,342 @@
-﻿	// create the module and name it scotchApp
-    var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap']);
-    // var originPath='http://127.0.0.1:3001';
-    var originPath='http://localhost:3001';
-	// configure our routes
-    App.config(function($routeProvider,ChartJsProvider) {
-		$routeProvider
-			// route for the about page
-			// .when('/login', {
-			// 	templateUrl : '../templates/login.view.html',
-			// 	controller  : 'LoginController',
-   //              resolve:{
-   //                  notLoginRequired:notLoginRequired
-   //              }
-			// })
-      .when('/verify',{
-        templateUrl:'../templates/verify.html',
-        controller:'verify'
-      })
-      .when('/profile',{
-          templateUrl: '../templates/profile.html',
-          controller:'ProfileController',
-          resolve:{
-              //home page
-              //logged in
-          }
-      })
-      .when('/studentscore',{
-          // controller:'LineCtrl',
-          // controller:'studentscore',
-          templateUrl:'../templates/student.score.html'
-      })
-      .when('/subjects',{
-        controller:'subjects',
-        templateUrl:'../templates/subject.view.html'
-      })
-      // .when('/tem',{
-      //     // controller:'LineCtrl',
-      //     templateUrl:'../templates/tem.html'
-      // })
-      .when('/allnotifications',{
-        controller:'allnotifications',
-        templateUrl:'../templates/view.all.notifications.html'
-      })
-      .when('/notification/:id',{
-        controller:'notification',
-        templateUrl:'../templates/notification.view.html'
-      })
-      .when('/courserequest',{
-        controller:'courserequest',
-        templateUrl:'../templates/courserequest.view.html'
-      })
-      ;
-            // #$locationProvider.html5Mode(true);
-			//.otherwise({ redirectTo: '/' });
-       ChartJsProvider.setOptions({
-      colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
-      responsive: true
-      });
-      // Configure all doughnut charts
-      ChartJsProvider.setOptions('Doughnut', {
-        animateScale: true
-      });
-	});
-  App.run(function($rootScope,getStudentInfor,getNotifications){
-    $rootScope.reloadHeadbarNotification = function (isread){
-        getNotifications.getSomeNewNotifications().then(function(res){
-          $rootScope.newNotifications=res.data.latest;
-          $rootScope.unReadNotification=res.data.unread;
-        });
-    } 
+﻿// create the module and name it scotchApp
+var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap']);
+// var originPath='http://127.0.0.1:3001';
+var originPath='http://localhost:3001';
+// configure our routes
+App.config(function($routeProvider,ChartJsProvider) {
+$routeProvider
 
-    $rootScope.reloadHeadbarNotification();
-    $rootScope.emailTrim =function(email){
-      if(email)
-      return email.split('@')[0];
-    }
+  .when('/verify',{
+    templateUrl:'templates/verify.html',
+    controller:'verify'
+  })
+  .when('/profile',{
+      templateUrl: 'templates/profile.html',
+      controller:'ProfileController',
+      resolve:{
+          //home page
+          //logged in
+      }
+  })
+  .when('/studentscore',{
+      templateUrl:'templates/student.score.html'
+  })
+  .when('/subjects',{
+    controller:'subjects',
+    templateUrl:'templates/subject.view.html'
+  })
+  .when('/allnotifications',{
+    controller:'allnotifications',
+    templateUrl:'templates/view.all.notifications.html'
+  })
+  .when('/notification/:id',{
+    controller:'notification',
+    templateUrl:'templates/notification.view.html'
+  })
+  .when('/courserequest',{
+    controller:'courserequest',
+    templateUrl:'templates/courserequest.view.html'
+  })
+  .when('courseRequestReview/:id',{
+    controller:'courseRequestReview',
+    templateUrl:'templates/create.courserequest.view.html'
+  });
+  // #$locationProvider.html5Mode(true);
+	//.otherwise({ redirectTo: '/' });
+  ChartJsProvider.setOptions({
+  colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+  responsive: true
+  });
+  // Configure all doughnut charts
+  ChartJsProvider.setOptions('Doughnut', {
+    animateScale: true
+  });
+});
+App.run(function($rootScope,getStudentInfor,getNotifications){
+  $rootScope.reloadHeadbarNotification = function (isread){
+      getNotifications.getSomeNewNotifications().then(function(res){
+        $rootScope.newNotifications=res.data.latest;
+        $rootScope.unReadNotification=res.data.unread;
+      });
+  } 
 
-    $rootScope.timeConvert=function(inputdate){
-    var datecurrent=new Date($.now());
-    var date= new Date(inputdate);
-    var seconds= (datecurrent-date)/1000;
-    var outtime=''
-    if(seconds<60)
-        outtime='vài giây trước';
-    else if(seconds<3600)
-        outtime= Math.round(seconds/60) + ' phút trước';
-    else if(seconds<86400)
-        outtime= Math.round(seconds/3600)+ ' giờ trước';
-    else if(seconds<86400*6)
-        outtime=Math.round(seconds/86400)+' ngày trước';
-    else
-        outtime=date.toISOString().slice(0,10);
-    return outtime;
+  $rootScope.reloadHeadbarNotification();
+  $rootScope.emailTrim =function(email){
+    if(email)
+    return email.split('@')[0];
   }
-    $rootScope.readNotification=function($index,isread){
-      if(!isread){
-        $rootScope.newNotifications[$index].isRead=true;
+
+  $rootScope.timeConvert=function(inputdate){
+  var datecurrent=new Date($.now());
+  var date= new Date(inputdate);
+  var seconds= (datecurrent-date)/1000;
+  var outtime=''
+  if(seconds<60)
+      outtime='vài giây trước';
+  else if(seconds<3600)
+      outtime= Math.round(seconds/60) + ' phút trước';
+  else if(seconds<86400)
+      outtime= Math.round(seconds/3600)+ ' giờ trước';
+  else if(seconds<86400*6)
+      outtime=Math.round(seconds/86400)+' ngày trước';
+  else
+      outtime=date.toISOString().slice(0,10);
+  return outtime;
+}
+  $rootScope.readNotification=function($index,isread){
+    if(!isread){
+      $rootScope.newNotifications[$index].isRead=true;
+      $rootScope.unReadNotification--;
+    }
+  }
+  getStudentInfor.get().then(function(response){
+    $rootScope.userInfor=response.data;
+})
+})
+App.controller('verify',function($http,$scope,$routeParams,$location){
+   var qs = $location.search();
+  $http({
+    method:'PUT',
+    url:originPath+'/api/v1/users/verify-email',
+    params:{
+          'token': qs.token,
+          'email':qs.email
+      }
+  }).then(function success(response){
+    $scope.response=response.data;
+  },function error(response){
+      $scope.response='request fail!';
+  });
+})
+App.controller('LoginController', function($scope,$rootScope,$http,$localStorage,$window) {
+      $scope.message={}
+      $rootScope.logout=function(){
+          $http({
+                  method : "POST",
+                  url : originPath+"/api/v1/users/logout",
+                  data:{token:$localStorage.access_token}
+              }).then(function mySuccess(response) {
+                  if(response.data.success){
+                      $localStorage.access_token=undefined;
+                      $window.open('/', "_self");
+                  }
+              }, function myError(response) {
+                  console.log($localStorage.access_token);
+                  $scope.message.error='request fail';
+                  console.log('fail');
+              });
+          }
+});
+
+App.controller('ProfileController', function($scope,$http,$localStorage){
+    //////profile
+});
+
+App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
+
+    var res=getSubjectNameAndCredits.get();
+    var studentRecordRequest=getStudentRecord.get();
+    res.then(function(response){
+      $scope.subjectCredits=subjectCredit(response.subjects);
+      $scope.subjectsNameDictViet=subjectDictViet(response.subjects);
+      studentRecordRequest.then(function(res){
+            $scope.records=studentRecordInSenmester(res.data.record);  // rootscope //////////// need to sort the semester !!!
+            //semester GPA line chart data
+            $scope.linelabels = listSemester($scope.records);
+            $scope.lineseries = ['Trung binh tich luy'];
+            $scope.linedata = GPASemesterList($scope.records,$scope.subjectCredits);
+            //A B C D percentage pie chart data
+            [$scope.ABCDPielabels,$scope.ABCDPiedata] = ABCDPieChartData($scope.records,$scope.subjectCredits);
+      });
+    });
+});
+
+App.controller('subjects',function($scope,$http){
+  $http({
+
+  }).then(function(response){
+
+  },function(response){
+
+  });
+});
+
+App.controller('allnotifications',function($scope,$rootScope,$route,$location,getNotifications,deleteNotification,notitificationStateChange){
+  var request=getNotifications.getAllNotifications();
+  request.then(function(response){
+    $scope.notifications=response.data; 
+  });
+  // $('.fa').attr('class','gg');
+  $scope.redirect= function(path){
+    $location.path(path);
+  };
+
+  $scope.refresh=function(){
+      $route.reload();
+  };
+
+  $scope.clickAll=function($event){
+    var element= angular.element($event.target);
+    var allChecker=element.children(0);
+    if(allChecker.hasClass('fa-square-o')){
+      angular.element('.notificationCheckbox').prop('checked', true);
+    }
+    else
+    angular.element('.notificationCheckbox').attr('checked',false);
+    allChecker.toggleClass('fa-square-o');
+    allChecker.toggleClass('fa-check-square-o');
+    
+  };
+
+  $scope.starClickToggle =function ($event,$index,notificationId,isImportant) {
+      $event.preventDefault();
+      //detect type
+      var element= angular.element($event.target);
+      // $event.target.children(0);
+      var glyph = element.hasClass("glyphicon");
+      var fa = element.hasClass("fa");
+
+      //Switch states
+      if (glyph) {
+        element.toggleClass("glyphicon-star");
+        element.toggleClass("glyphicon-star-empty");
+      }
+
+      if (fa) {
+        element.toggleClass("fa-star");
+        element.toggleClass("fa-star-o");
+      }
+      //deleteNotification.delete(notificationId);
+      if(isImportant){
+        notitificationStateChange.putMarkAsUnImportant(notificationId);
+        $scope.notifications[$index].isImportant=false;
+      }
+      else{
+        notitificationStateChange.putMarkAsImportant(notificationId);
+        $scope.notifications[$index].isImportant=true;
+      }
+    };
+  $scope.showimportant=function(){
+    getNotifications.getImportantNotification().then(function(response){
+      $scope.notifications=response.data;
+    })
+  }
+  $scope.showUnread=function(){
+    getNotifications.getUnread().then(function(response){
+            $scope.notifications=response.data;
+    })
+  }
+  $scope.isReadClickToggle=function($event,$index,notificationId,isRead){
+      $event.preventDefault();
+      //detect type
+      var element= angular.element($event.target);
+      // $event.target.children(0);
+      var fa = element.hasClass("fa");
+
+      if (fa) {
+        element.toggleClass("fa-eye-slash");
+        element.toggleClass("fa-eye");
+      }
+      //deleteNotification.delete(notificationId);
+      if(isRead){
+        notitificationStateChange.putMarkAsUnRead(notificationId);
+        try{
+          $rootScope.newNotifications[$index].isRead=false;
+        }
+        catch(e){
+          
+        }
+        $scope.notifications[$index].isRead=false;
+        $rootScope.unReadNotification++;
+      }
+      else{
+        notitificationStateChange.putMarkAsRead(notificationId);
+        try{
+          $rootScope.newNotifications[$index].isRead=true;
+        }
+        catch(e){
+
+        }
+        $scope.notifications[$index].isRead=true;
         $rootScope.unReadNotification--;
       }
-    }
-    getStudentInfor.get().then(function(response){
-      $rootScope.userInfor=response.data;
-  })
-  })
-  App.controller('verify',function($http,$scope,$routeParams,$location){
-     var qs = $location.search();
-    $http({
-      method:'PUT',
-      url:originPath+'/api/v1/users/verify-email',
-      params:{
-            'token': qs.token,
-            'email':qs.email
-        }
-    }).then(function success(response){
-      $scope.response=response.data;
-    },function error(response){
-        $scope.response='request fail!';
-    });
-  })
-	App.controller('LoginController', function($scope,$rootScope,$http,$localStorage,$window) {
-        $scope.message={}
-        $rootScope.logout=function(){
-            $http({
-                    method : "POST",
-                    url : originPath+"/api/v1/users/logout",
-                    data:{token:$localStorage.access_token}
-                }).then(function mySuccess(response) {
-                    if(response.data.success){
-                        $localStorage.access_token=undefined;
-                        $window.open('/', "_self");
-                    }
-                }, function myError(response) {
-                    console.log($localStorage.access_token);
-                    $scope.message.error='request fail';
-                    console.log('fail');
-                });
-            }
-	});
+  }
+  $scope.deleteNotifications=function(){
+    var idList=angular.element('.notificationCheckbox:checked').map(function() {
+    return this.value;
+    }).get();
+    angular.element('.notificationCheckbox:checked').attr('checked',false).parent().parent().hide();
+    deleteNotification.delete(idList.join(','));
+    $rootScope.reloadHeadbarNotification();
+  }
 
-  App.controller('ProfileController', function($scope,$http,$localStorage){
-      //////profile
+});
+
+App.controller('notification',function($scope,$rootScope,getNotification,$routeParams,markAsRead){
+  // console.log($routeParams.id);
+  var request=getNotification.get($routeParams.id);
+  request.then(function(res){
+    $rootScope.notification=res.data;
   });
+  markAsRead.put($routeParams.id);
+});
 
-  function loginRequired($q, $location,$localStorage) {           ///////////window instead
-    var deferred = $q.defer();
-    if ($localStorage.access_token!==undefined) {
-      deferred.resolve();
-    } else {
-      $location.path('/login');
+App.controller('courserequest',function($scope,courseRequest){
+    $scope.senCourseRequest=function(reason,subjectID,expectedtime){
+      courseRequest.createCourseRequest(reason,subjectID,expectedtime).then(function(res){
+        //
+      })
     }
-    return deferred.promise;
-  }
-  
-  function notLoginRequired($q, $location,$localStorage){
-    var deferred = $q.defer();
-    if ($localStorage.access_token==undefined) {
-      deferred.resolve();
+});
+
+App.controller('courseRequestReview',function($scope,$routeParams,courseRequest){
+    courseRequest.getCourseRequest($routeParams.id).then(function(res){
+      $scope.courseRequest=res.data;  /////////////////
+    });
+});
+
+// Simulate async data update
+App.controller('LineCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+  // $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  // $scope.series = ['Series A', 'Series B'];
+  // $scope.data = [
+  //   [65, 59, 80, 81, 56, 55, 40],
+  //   [28, 48, 40, 19, 86, 27, 90]
+  // ];
+
+  $scope.onClick = function (points, evt) {
+    console.log(points, evt);
+  };
+  $scope.onHover = function (points) {
+    if (points.length > 0) {
+      console.log('Point', points[0].value);
     } else {
-      $location.path('/home');    ///////////////////// home.html
-    }  
-    return deferred.promise;
-  }
+      console.log('No point');
+    }
+  };
+
+  // $timeout(function () {
+  //   $scope.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  //   $scope.data = [
+  //     [28, 48, 40, 19, 86, 27, 90],
+  //     [65, 59, 80, 81, 56, 55, 40]
+  //   ];
+  //   $scope.series = ['Series C', 'Series D'];
+  // }, 3000);
+}]);
+
+App.controller('RadarCtrl', function ($scope) {
+  $scope.labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  
+  $scope.data = [
+    [65, 59, 90, 81, 56, 55, 40],
+    [28, 48, 40, 19, 96, 27, 100]
+  ];
+
+  $scope.onClick = function (points, evt) {
+    console.log(points, evt);
+  };
+});
 
 App.factory('getSubjectNameAndCredits',function($http,$localStorage){
   return{
@@ -218,36 +394,6 @@ App.factory('getStudentInfor',function($http,$localStorage){
   };
 })
 
-
-App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
-
-    var res=getSubjectNameAndCredits.get();
-    var studentRecordRequest=getStudentRecord.get();
-    res.then(function(response){
-      $scope.subjectCredits=subjectCredit(response.subjects);
-      $scope.subjectsNameDictViet=subjectDictViet(response.subjects);
-      studentRecordRequest.then(function(res){
-            $scope.records=studentRecordInSenmester(res.data.record);  // rootscope //////////// need to sort the semester !!!
-            //semester GPA line chart data
-            $scope.linelabels = listSemester($scope.records);
-            $scope.lineseries = ['Trung binh tich luy'];
-            $scope.linedata = GPASemesterList($scope.records,$scope.subjectCredits);
-            //A B C D percentage pie chart data
-            [$scope.ABCDPielabels,$scope.ABCDPiedata] = ABCDPieChartData($scope.records,$scope.subjectCredits);
-      });
-    });
-});
-
-App.controller('subjects',function($scope,$http){
-  $http({
-
-  }).then(function(response){
-
-  },function(response){
-
-  });
-});
-
 App.factory('deleteNotification',function($http,$localStorage){
   return{
     delete:function(IDs){
@@ -269,7 +415,6 @@ App.factory('deleteNotification',function($http,$localStorage){
     }
   }
 });
-
 App.factory('notitificationStateChange',function($http,$localStorage){
   return{
     putMarkAsUnImportant:function(id){
@@ -400,117 +545,6 @@ App.factory('getNotifications',function($http,$localStorage){
   };
 });
 
-App.controller('allnotifications',function($scope,$rootScope,$route,$location,getNotifications,deleteNotification,notitificationStateChange){
-  var request=getNotifications.getAllNotifications();
-  request.then(function(response){
-    $scope.notifications=response.data; 
-  });
-  // $('.fa').attr('class','gg');
-  $scope.redirect= function(path){
-    $location.path(path);
-  };
-
-  $scope.refresh=function(){
-      $route.reload();
-  };
-
-  $scope.clickAll=function($event){
-    var element= angular.element($event.target);
-    var allChecker=element.children(0);
-    if(allChecker.hasClass('fa-square-o')){
-      angular.element('.notificationCheckbox').prop('checked', true);
-    }
-    else
-    angular.element('.notificationCheckbox').attr('checked',false);
-    allChecker.toggleClass('fa-square-o');
-    allChecker.toggleClass('fa-check-square-o');
-    
-  };
-
-  $scope.starClickToggle =function ($event,$index,notificationId,isImportant) {
-      $event.preventDefault();
-      //detect type
-      var element= angular.element($event.target);
-      // $event.target.children(0);
-      var glyph = element.hasClass("glyphicon");
-      var fa = element.hasClass("fa");
-
-      //Switch states
-      if (glyph) {
-        element.toggleClass("glyphicon-star");
-        element.toggleClass("glyphicon-star-empty");
-      }
-
-      if (fa) {
-        element.toggleClass("fa-star");
-        element.toggleClass("fa-star-o");
-      }
-      //deleteNotification.delete(notificationId);
-      if(isImportant){
-        notitificationStateChange.putMarkAsUnImportant(notificationId);
-        $scope.notifications[$index].isImportant=false;
-      }
-      else{
-        notitificationStateChange.putMarkAsImportant(notificationId);
-        $scope.notifications[$index].isImportant=true;
-      }
-    };
-  $scope.showimportant=function(){
-    getNotifications.getImportantNotification().then(function(response){
-      $scope.notifications=response.data;
-    })
-  }
-  $scope.showUnread=function(){
-    getNotifications.getUnread().then(function(response){
-            $scope.notifications=response.data;
-    })
-  }
-  $scope.isReadClickToggle=function($event,$index,notificationId,isRead){
-      $event.preventDefault();
-      //detect type
-      var element= angular.element($event.target);
-      // $event.target.children(0);
-      var fa = element.hasClass("fa");
-
-      if (fa) {
-        element.toggleClass("fa-eye-slash");
-        element.toggleClass("fa-eye");
-      }
-      //deleteNotification.delete(notificationId);
-      if(isRead){
-        notitificationStateChange.putMarkAsUnRead(notificationId);
-        try{
-          $rootScope.newNotifications[$index].isRead=false;
-        }
-        catch(e){
-          
-        }
-        $scope.notifications[$index].isRead=false;
-        $rootScope.unReadNotification++;
-      }
-      else{
-        notitificationStateChange.putMarkAsRead(notificationId);
-        try{
-          $rootScope.newNotifications[$index].isRead=true;
-        }
-        catch(e){
-
-        }
-        $scope.notifications[$index].isRead=true;
-        $rootScope.unReadNotification--;
-      }
-  }
-  $scope.deleteNotifications=function(){
-    var idList=angular.element('.notificationCheckbox:checked').map(function() {
-    return this.value;
-    }).get();
-    angular.element('.notificationCheckbox:checked').attr('checked',false).parent().parent().hide();
-    deleteNotification.delete(idList.join(','));
-    $rootScope.reloadHeadbarNotification();
-  }
-
-});
-
 
 App.factory('getNotification',function($http,$localStorage){
   return{
@@ -549,47 +583,33 @@ App.factory('markAsRead',function($http,$localStorage){
     }
   };
 })
-App.controller('notification',function($scope,$rootScope,getNotification,$routeParams,markAsRead){
-  // console.log($routeParams.id);
-  var request=getNotification.get($routeParams.id);
-  request.then(function(res){
-    $rootScope.notification=res.data;
-  });
-  markAsRead.put($routeParams.id);
-});
 
-App.controller('courserequest',function($scope){
+App.factory('courseRequest',function($http,$localStorage){
+  return{
+    createCourseRequest:function(reason,subjectID,expectedtime){
+      return $http({
+        method:'POST',
+        url:originPath+'/api/v1/course-requests/create',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        },
+        data:{
+          subjectId:subjectID,
+          expectedTime:expectedtime,
+          reason:reason
+          // token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
 
-});
-  // Simulate async data update
-  App.controller('LineCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
-    // $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-    // $scope.series = ['Series A', 'Series B'];
-    // $scope.data = [
-    //   [65, 59, 80, 81, 56, 55, 40],
-    //   [28, 48, 40, 19, 86, 27, 90]
-    // ];
- 
-    $scope.onClick = function (points, evt) {
-      console.log(points, evt);
-    };
-    $scope.onHover = function (points) {
-      if (points.length > 0) {
-        console.log('Point', points[0].value);
-      } else {
-        console.log('No point');
-      }
-    };
-
-    // $timeout(function () {
-    //   $scope.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    //   $scope.data = [
-    //     [28, 48, 40, 19, 86, 27, 90],
-    //     [65, 59, 80, 81, 56, 55, 40]
-    //   ];
-    //   $scope.series = ['Series C', 'Series D'];
-    // }, 3000);
-  }]);
+      });
+    },
+    getCourseRequest:function(id){
+      /////////////////////////////////////////////////////////////
+    }
+  }
+})
 
   // app.controller('BarCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   //   $scope.options = { scaleShowVerticalLines: false };
@@ -628,18 +648,6 @@ App.controller('courserequest',function($scope){
   //   };
   // });
 
-  App.controller('RadarCtrl', function ($scope) {
-    $scope.labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-    
-    $scope.data = [
-      [65, 59, 90, 81, 56, 55, 40],
-      [28, 48, 40, 19, 96, 27, 100]
-    ];
-
-    $scope.onClick = function (points, evt) {
-      console.log(points, evt);
-    };
-  });
 
   // app.controller('StackedBarCtrl', function ($scope) {
   //   $scope.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -724,13 +732,32 @@ App.controller('courserequest',function($scope){
   //   }
   // }]);
 
+function loginRequired($q, $location,$localStorage) {           ///////////window instead
+  var deferred = $q.defer();
+  if ($localStorage.access_token!==undefined) {
+    deferred.resolve();
+  } else {
+    $location.path('/login');
+  }
+  return deferred.promise;
+}
 
-  function getRandomValue (data) {
+function notLoginRequired($q, $location,$localStorage){
+  var deferred = $q.defer();
+  if ($localStorage.access_token==undefined) {
+    deferred.resolve();
+  } else {
+    $location.path('/home');    ///////////////////// home.html
+  }  
+  return deferred.promise;
+}
+
+function getRandomValue (data) {
     var l = data.length, previous = l ? data[l - 1] : 50;
     var y = previous + Math.random() * 10 - 5;
     return y < 0 ? 0 : y > 100 ? 100 : y;
   }
-  function subjectDictViet(subjectJsonData){
+function subjectDictViet(subjectJsonData){
     result={}
     for (i=0;i<subjectJsonData.length;i++){
       result[subjectJsonData[i].code]=subjectJsonData[i].name.vi;
@@ -738,7 +765,7 @@ App.controller('courserequest',function($scope){
     // console.log(result);
     return result;
   }
-  function subjectDictEng(subjectJsonData){
+function subjectDictEng(subjectJsonData){
     result={}
     for (i=0;i<subjectJsonData.length;i++){
       result[subjectJsonData[i].code]=subjectJsonData[i].name.en;
@@ -746,7 +773,7 @@ App.controller('courserequest',function($scope){
     // console.log(result);
     return result;
   }
-  function subjectCredit(subjectJsonData){
+function subjectCredit(subjectJsonData){
     result={}
     for (i=0;i<subjectJsonData.length;i++){
       result[subjectJsonData[i].code]=subjectJsonData[i].details.credits;
@@ -754,7 +781,7 @@ App.controller('courserequest',function($scope){
     //console.log(result[0]);
     return result;
   }
-  function studentRecordInSenmester(records){
+function studentRecordInSenmester(records){
     result={};
     for(i=0;i<records.length;i++){
         var semester=records[i].attempt[records[i].attempt.length-1].semester;
@@ -777,7 +804,7 @@ App.controller('courserequest',function($scope){
     // console.log(result['1.2014-2015'][1]);
     return result;
   }
-  function GPASemesterList(records,credits){
+function GPASemesterList(records,credits){
     result=[];
     for(var key in records) {
       result.push(semesterGPA(records[key],credits));
@@ -788,7 +815,7 @@ App.controller('courserequest',function($scope){
     // console.log(result);
     return result;
   }
-  function semesterGPA(records,credits){
+function semesterGPA(records,credits){
     var totalCredits=0.0;
     var totalScore4=0.0;
     var credit=0;
@@ -806,14 +833,14 @@ App.controller('courserequest',function($scope){
     return Number(Math.round(result+'e2')+'e-2');
     // return 0;
   }
-  function listSemester(records){
+function listSemester(records){
     var keys = []
     for(var key in records) keys.push( key );
     //console.log(keys);
     return keys;
   }
 
-  function ABCDPieChartData(records,credits){
+function ABCDPieChartData(records,credits){
     var rattingDistinct=[];
     var ratingCount=[];
     var numberRattingType=0;
@@ -837,7 +864,7 @@ App.controller('courserequest',function($scope){
     } 
     return[rattingDistinct,ratingCount];
   }
-  function studentRecord4(score){
+function studentRecord4(score){
     if(score>=9)
       return 4.0;
     if(score>=8.5)
@@ -856,7 +883,7 @@ App.controller('courserequest',function($scope){
       return 1.0;
     return 0
   }
-  function studentRecordChar(score){
+function studentRecordChar(score){
     if(score==4.0)
       return 'A+';
     if(score==3.7)

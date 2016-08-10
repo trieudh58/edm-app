@@ -38,7 +38,7 @@
             
         <div class="box box-default">
           <div class="box-header with-border">
-            <h3 class="box-title">Thông tin môn học</h3>
+            <h3 class="box-title">Thông tin</h3>
 
             <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -50,9 +50,9 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label>Tên</label>
+                  <label>Môn học</label>
                   <select class="form-control select2" style="width: 100%;">
-                        <option selected="selected">Những nguyên lý cơ bản của chủ nghĩa Mác – Lênin 1</option>
+                        <option>Những nguyên lý cơ bản của chủ nghĩa Mác – Lênin 1</option>
                         <option>Những nguyên lý cơ bản của chủ nghĩa Mác – Lênin 2</option>
                         <option>Tư tưởng Hồ Chí Minh</option>
                         <option>Đường lối cách mạng của Đảng Cộng sản Việt Nam</option>
@@ -69,18 +69,19 @@
                   </select>
                 </div>
                 <!-- /.form-group -->
-                <div class="bootstrap-timepicker">
-                  <div class="form-group">
-                    <label>Time </label>
-
-                    <div class="input-group">
-                      <input type="text" class="form-control timepicker">
-
-                      <div class="input-group-addon">
-                        <i class="fa fa-clock-o"></i>
+                </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Thời gian</label>
+                      <div class="input-group">
+                        <div id="radioBtn" class="btn-group">
+                          <a class="btn btn-primary btn-sm active" data-toggle="fun" data-title="Morning">Sáng</a>
+                          <a class="btn btn-primary btn-sm notActive" data-toggle="fun" data-title="Afternoon">Chiều</a>
+                          <a class="btn btn-primary btn-sm notActive" data-toggle="fun" data-title="Evening">Tối</a>
                       </div>
                     </div>
-                    <!-- /.input group -->
                   </div>
                   <!-- /.form group -->
                 </div>
@@ -92,15 +93,18 @@
               </div>
               <!-- /.col -->
             </div>
-            <!-- /.row -->
-          </div>
           <!-- /.box-body -->
           <div class="box-footer">
           </div>
         </div>
         <hr>
-        <button type="button" class="btn btn-block btn-primary btn-lg"> Gửi yêu cầu</button>
+        <button type="button" class="btn btn-block btn-primary btn-lg" ng-click='senCourseRequest()'> Gửi yêu cầu</button>
     </section>
+    <div class="container">
+    <div class="row">
+
+  </div>
+</div>
 <!-- advanced form js -->
 <!-- AdminLTE App -->
 <script src="../plugins/select2/select2.full.min.js"></script>
@@ -191,5 +195,13 @@
     // $(".timepicker").timepicker({
     //   showInputs: false
     // });
+    $('#radioBtn a').on('click', function(){
+    var sel = $(this).data('title');
+    var tog = $(this).data('toggle');
+    $('#'+tog).prop('value', sel);
+    
+    $('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
+    $('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
+    })
   });
 </script>
