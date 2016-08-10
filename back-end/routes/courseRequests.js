@@ -6,6 +6,9 @@ var authentication = require('../middleware/authentication');
 /* Create new Course request */
 router.post('/create', authentication, CourseRequestController.create);
 
+/* Join one Course request created by others */
+router.put('/join', authentication, CourseRequestController.join);
+
 /* Get all created Course requests from all users */
 router.get('/get-all-public', authentication, CourseRequestController.getAllPublicCRs);
 

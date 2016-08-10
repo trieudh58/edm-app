@@ -110,6 +110,74 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/course-requests/join
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Join one public Course request (created by other users)
+     *      notes: Return result
+     *      nickname: Join one public Course request
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: courseRequestId
+     *          description: Course request id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Return join request */
+    join: function (req, res) {
+        models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!cr) {
+                res.json({
+                    success: false,
+                    message: 'Course request does not exist.'
+                });
+            }
+            else if (cr.creator == req.user._id) {
+                res.json({
+                    success: false,
+                    message: 'Can not join Course request that created by your own.'
+                });
+            }
+            else {
+                cr.update({
+                    $push: {
+                        joiners: {
+                            joiner: req.user._id
+                        }
+                    }
+                }, function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Successfully joined Course request.'
+                        });
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/course-requests/get-all-public
      * operations:
      *   -  httpMethod: GET
