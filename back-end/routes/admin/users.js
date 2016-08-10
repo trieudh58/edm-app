@@ -10,6 +10,9 @@ adminRouter.post('/create', authentication, adminPermission, AdminUserController
 /* Activate a user */
 adminRouter.put('/activate-user', authentication, adminPermission, AdminUserController.activateUser);
 
+/* Deactivate a user */
+adminRouter.put('/deactivate-user', authentication, adminPermission, AdminUserController.deactivateUser);
+
 /* Delete a user. Admin permission required */
 adminRouter.delete('/delete', authentication, adminPermission, AdminUserController.delete);
 

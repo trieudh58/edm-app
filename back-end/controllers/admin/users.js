@@ -152,6 +152,74 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/users/deactivate-user
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Deactivate a user by email
+     *      notes: Return result
+     *      nickname: Deactivate user
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: email
+     *          description: User email
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: email
+     */
+    /* Deactivate a user */
+    deactivateUser: function (req, res) {
+        User.findOne({
+            email: req.body.email,
+            isAdmin: false
+        }, function (err, user) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!user) {
+                res.json({
+                    success: false,
+                    message: 'Email does not exist.'
+                });
+            }
+            else if (!user.isActive) {
+                res.json({
+                    success: false,
+                    message: 'Email is already deactivated.'
+                });
+            }
+            else {
+                user.update({
+                    isActive: false
+                }, function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Account deactivated.'
+                        });
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/users/delete
      * operations:
      *   -  httpMethod: DELETE
