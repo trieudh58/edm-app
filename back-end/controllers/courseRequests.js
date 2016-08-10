@@ -130,7 +130,7 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Return join request */
+    /* Return join result */
     join: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
@@ -169,6 +169,81 @@ module.exports = {
                         res.json({
                             success: true,
                             message: 'Successfully joined Course request.'
+                        });
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/undo-join
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Undo join one public Course request (created by other users)
+     *      notes: Return result
+     *      nickname: Undo join one public Course request
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: courseRequestId
+     *          description: Course request id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Return undo-join result */
+    undoJoin: function (req, res) {
+        models.CourseRequest.findById({
+            _id: req.body.courseRequestId,
+            joiners: {
+                $elemMatch: {
+                    joiner: req.user._id
+                }
+            }
+        }, function (err, cr) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!cr) {
+                res.json({
+                    success: false,
+                    message: 'Course request does not exist or joiner is not match.'
+                });
+            }
+            else if (cr.creator == req.user._id) {
+                res.json({
+                    success: false,
+                    message: 'Can not undo-join Course request that created by your own. Delete it instead'
+                });
+            }
+            else {
+                cr.update({
+                    $pull: {
+                        joiners: {
+                            joiner: req.user._id
+                        }
+                    }
+                }, function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Successfully undo-joined Course request.'
                         });
                     }
                 });
