@@ -13,4 +13,6 @@ adminRouter.use('/subjects', require('./subjects'));
 
 adminRouter.use('/student-groups', require('./studentGroups'));
 
+adminRouter.use('/course-requests', require('./courseRequests'));
+
 module.exports = adminRouter;
