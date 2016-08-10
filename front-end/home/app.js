@@ -62,8 +62,17 @@
         animateScale: true
       });
 	});
-  App.run(function($rootScope,getStudentInfor){
+  App.run(function($rootScope,getStudentInfor,getNotifications){
+    $rootScope.reloadHeadbarNotification = function (isread){
+        getNotifications.getSomeNewNotifications().then(function(res){
+          $rootScope.newNotifications=res.data.latest;
+          $rootScope.unReadNotification=res.data.unread;
+        });
+    } 
+
+    $rootScope.reloadHeadbarNotification();
     $rootScope.emailTrim =function(email){
+      if(email)
       return email.split('@')[0];
     }
 
@@ -84,13 +93,18 @@
         outtime=date.toISOString().slice(0,10);
     return outtime;
   }
-  getStudentInfor.get().then(function(response){
-    $rootScope.userInfor=response.data;
+    $rootScope.readNotification=function($index,isread){
+      if(!isread){
+        $rootScope.newNotifications[$index].isRead=true;
+        $rootScope.unReadNotification--;
+      }
+    }
+    getStudentInfor.get().then(function(response){
+      $rootScope.userInfor=response.data;
   })
   })
   App.controller('verify',function($http,$scope,$routeParams,$location){
      var qs = $location.search();
-     console.log(qs);
     $http({
       method:'PUT',
       url:originPath+'/api/v1/users/verify-email',
@@ -104,7 +118,7 @@
         $scope.response='request fail!';
     });
   })
-	App.controller('LoginController', function($scope,$rootScope,$http,$localStorage,$window,getSomeNewNotifications) {
+	App.controller('LoginController', function($scope,$rootScope,$http,$localStorage,$window) {
         $scope.message={}
         $rootScope.logout=function(){
             $http({
@@ -122,12 +136,6 @@
                     console.log('fail');
                 });
             }
-
-        var newFeeds=getSomeNewNotifications.get();
-        newFeeds.then(function(res){
-          $rootScope.newFeeds=res.data.latest;
-          $rootScope.unReadFeads=res.data.unread;
-        });
 	});
 
   App.controller('ProfileController', function($scope,$http,$localStorage){
@@ -240,62 +248,6 @@ App.controller('subjects',function($scope,$http){
   });
 });
 
-
-
-App.factory('getSomeNewNotifications',function($http,$localStorage){
-  return{
-    get: function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/notifications/get-5-latest-titles',
-        params:{
-          token:$localStorage.access_token
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-      });
-    }
-  };
-});
-
-App.factory('getAllNotifications',function($http,$localStorage){
-  return{
-    get:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/notifications/get-titles',      /////// lost
-        params:{
-          token:$localStorage.access_token
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-        //////////// fail
-      });
-    }
-  };
-});
-
-App.factory('markNotificationAsImportant',function($http,$localStorage){
-  return{
-    put:function(id){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/notifications/mark-one-as-important',
-        data:{
-          token:$localStorage.access_token,
-          notificationId:id
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-
-      });
-    }
-  }
-});
-
 App.factory('deleteNotification',function($http,$localStorage){
   return{
     delete:function(IDs){
@@ -318,9 +270,9 @@ App.factory('deleteNotification',function($http,$localStorage){
   }
 });
 
-App.factory('markNotificationAsUnImportant',function($http,$localStorage){
+App.factory('notitificationStateChange',function($http,$localStorage){
   return{
-    put:function(id){
+    putMarkAsUnImportant:function(id){
       return $http({
         method:'PUT',
         url:originPath+'/api/v1/notifications/mark-one-as-unimportant',
@@ -333,13 +285,68 @@ App.factory('markNotificationAsUnImportant',function($http,$localStorage){
       },function(response){
 
       });
+    },
+    putMarkAsImportant:function(id){
+      return $http({
+        method:'PUT',
+        url:originPath+'/api/v1/notifications/mark-one-as-important',
+        data:{
+          token:$localStorage.access_token,
+          notificationId:id
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+
+      });
+    },
+    putMarkAsUnRead:function(id){
+      return $http({
+        method:'PUT',
+        url:originPath+'/api/v1/notifications/mark-one-as-unread',
+        data:{
+          token:$localStorage.access_token,
+          notificationId:id
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+
+      });
+    },
+    putMarkAsRead:function(id){
+      return $http({
+        method:'PUT',
+        url:originPath+'/api/v1/notifications/mark-one-as-read',
+        data:{
+          token:$localStorage.access_token,
+          notificationId:id
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+
+      });
+    },
+    putMarkAllAsRead:function(){
+      return $http({
+        method:'PUT',
+        url:originPath+'/api/v1/notifications/mark-all-as-read',
+        data:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+
+      });
     }
   }
 });
 
-App.factory('getImportantNotifications',function($http,$localStorage){
+App.factory('getNotifications',function($http,$localStorage){
   return{
-    get:function(){
+    getImportantNotification:function(){
       return $http({
         method:'GET',
         url:originPath+'/api/v1/notifications/get-important-titles',
@@ -351,12 +358,50 @@ App.factory('getImportantNotifications',function($http,$localStorage){
       },function(response){
         //////////// fail
       });
+    },
+    getUnread:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/notifications/get-unread-titles',
+        params:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+        //////////// fail
+      });
+    },
+    getAllNotifications:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/notifications/get-titles',
+        params:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+        //////////// fail
+      });
+    },
+    getSomeNewNotifications: function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/notifications/get-5-latest-titles',
+        params:{
+          token:$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      },function(response){
+      });
     }
-  }
+  };
 });
 
-App.controller('allnotifications',function($scope,$route,getAllNotifications,getImportantNotifications,deleteNotification,markNotificationAsImportant,markNotificationAsUnImportant,$location){
-  var request=getAllNotifications.get();
+App.controller('allnotifications',function($scope,$rootScope,$route,$location,getNotifications,deleteNotification,notitificationStateChange){
+  var request=getNotifications.getAllNotifications();
   request.then(function(response){
     $scope.notifications=response.data; 
   });
@@ -382,7 +427,7 @@ App.controller('allnotifications',function($scope,$route,getAllNotifications,get
     
   };
 
-  $scope.starClickToggle =function ($event,notificationId,isImportant) {
+  $scope.starClickToggle =function ($event,$index,notificationId,isImportant) {
       $event.preventDefault();
       //detect type
       var element= angular.element($event.target);
@@ -402,24 +447,66 @@ App.controller('allnotifications',function($scope,$route,getAllNotifications,get
       }
       //deleteNotification.delete(notificationId);
       if(isImportant){
-        markNotificationAsUnImportant.put(notificationId);
+        notitificationStateChange.putMarkAsUnImportant(notificationId);
+        $scope.notifications[$index].isImportant=false;
       }
       else{
-        markNotificationAsImportant.put(notificationId);
+        notitificationStateChange.putMarkAsImportant(notificationId);
+        $scope.notifications[$index].isImportant=true;
       }
     };
   $scope.showimportant=function(){
-    getImportantNotifications.get().then(function(response){
+    getNotifications.getImportantNotification().then(function(response){
       $scope.notifications=response.data;
     })
   }
+  $scope.showUnread=function(){
+    getNotifications.getUnread().then(function(response){
+            $scope.notifications=response.data;
+    })
+  }
+  $scope.isReadClickToggle=function($event,$index,notificationId,isRead){
+      $event.preventDefault();
+      //detect type
+      var element= angular.element($event.target);
+      // $event.target.children(0);
+      var fa = element.hasClass("fa");
 
+      if (fa) {
+        element.toggleClass("fa-eye-slash");
+        element.toggleClass("fa-eye");
+      }
+      //deleteNotification.delete(notificationId);
+      if(isRead){
+        notitificationStateChange.putMarkAsUnRead(notificationId);
+        try{
+          $rootScope.newNotifications[$index].isRead=false;
+        }
+        catch(e){
+          
+        }
+        $scope.notifications[$index].isRead=false;
+        $rootScope.unReadNotification++;
+      }
+      else{
+        notitificationStateChange.putMarkAsRead(notificationId);
+        try{
+          $rootScope.newNotifications[$index].isRead=true;
+        }
+        catch(e){
+
+        }
+        $scope.notifications[$index].isRead=true;
+        $rootScope.unReadNotification--;
+      }
+  }
   $scope.deleteNotifications=function(){
     var idList=angular.element('.notificationCheckbox:checked').map(function() {
     return this.value;
     }).get();
     angular.element('.notificationCheckbox:checked').attr('checked',false).parent().parent().hide();
     deleteNotification.delete(idList.join(','));
+    $rootScope.reloadHeadbarNotification();
   }
 
 });
@@ -636,6 +723,7 @@ App.controller('courserequest',function($scope){
   //     }
   //   }
   // }]);
+
 
   function getRandomValue (data) {
     var l = data.length, previous = l ? data[l - 1] : 50;

@@ -21,3 +21,8 @@
 [ng-click]{
 	cursor: pointer;
 }
+
+.unread-row{
+	font-weight: bold;
+	text-shadow: 	text-shadow: 2px 2px #ff0000;
+}
