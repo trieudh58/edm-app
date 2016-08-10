@@ -110,6 +110,113 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/course-requests/join
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Join one public Course request (created by other users)
+     *      notes: Return result
+     *      nickname: Join one public Course request
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: courseRequestId
+     *          description: Course request id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Return join request */
+    join: function (req, res) {
+        models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!cr) {
+                res.json({
+                    success: false,
+                    message: 'Course request does not exist.'
+                });
+            }
+            else if (cr.creator == req.user._id) {
+                res.json({
+                    success: false,
+                    message: 'Can not join Course request that created by your own.'
+                });
+            }
+            else {
+                cr.update({
+                    $push: {
+                        joiners: {
+                            joiner: req.user._id
+                        }
+                    }
+                }, function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Successfully joined Course request.'
+                        });
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/get-all-public
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get all public Course requests
+     *      notes: Return all public Course requests
+     *      nickname: Get all public Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return all public Course request created by all users */
+    getAllPublicCRs: function (req, res) {
+        models.CourseRequest.find({
+            status: 'Public'
+        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+            updatedAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/course-requests/get-own-created
      * operations:
      *   -  httpMethod: GET
@@ -169,7 +276,7 @@ module.exports = {
         models.CourseRequest.find({
             creator: req.user._id,
             status: 'Public'
-        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+        }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
             updatedAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
@@ -209,7 +316,7 @@ module.exports = {
         models.CourseRequest.find({
             creator: req.user._id,
             status: 'Pending'
-        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+        }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
             updatedAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
@@ -222,6 +329,105 @@ module.exports = {
                 res.json({
                     success: true,
                     data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/get-own-denied
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get denied Course requests
+     *      notes: Return denied Course requests
+     *      nickname: Get denied Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return denied Course request (by current user) */
+    getOwnDeniedCRs: function (req, res) {
+        models.CourseRequest.find({
+            creator: req.user._id,
+            status: 'Denied'
+        }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
+            updatedAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/delete-one
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Delete one Course request
+     *      notes: Return result
+     *      nickname: Delete one Course request
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: courseRequestId
+     *          description: Course request id
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Return delete result */
+    deleteOne: function (req, res) {
+        models.CourseRequest.findOne({
+            _id: req.query.courseRequestId,
+            creator: req.user._id
+        }, function(err, cr) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!cr) {
+                res.json({
+                    success: false,
+                    message: 'Course request does not exist or invalid user id.'
+                });
+            }
+            else {
+                cr.remove(function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Course request deleted.'
+                        });
+                    }
                 });
             }
         });
