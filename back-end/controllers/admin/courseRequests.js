@@ -131,5 +131,68 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/course-requests/deny-one
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Deny one pending request
+     *      notes: Return result
+     *      nickname: Deny one pending request
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: courseRequestId
+     *          description: Course request id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    denyOne: function (req, res) {
+        models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!cr) {
+                res.json({
+                    success: false,
+                    message: 'Course request does not exist.'
+                });
+            }
+            else if (cr.status != 'Pending') {
+                res.json({
+                    success: false,
+                    message: 'Course request is public or denied.'
+                });
+            }
+            else {
+                cr.update({
+                    status: 'Denied'
+                }, function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Course request is now denied'
+                        });
+                    }
+                });
+            }
+        });
     }
 };

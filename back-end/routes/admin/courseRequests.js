@@ -10,4 +10,7 @@ adminRouter.put('/public-one', authentication, adminPermission, AdminCourseReque
 /* Add one Course request to pending */
 adminRouter.put('/add-to-pending', authentication, adminPermission, AdminCourseRequestController.addToPending);
 
+/* Deny one Course request */
+adminRouter.put('/deny-one', authentication, adminPermission, AdminCourseRequestController.denyOne);
+
 module.exports = adminRouter;
