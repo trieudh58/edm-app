@@ -7,6 +7,9 @@ var adminPermission = require('../../middleware/adminPermission');
 /* Get all public Course requests */
 adminRouter.get('/get-all-public', authentication, adminPermission, AdminCourseRequestController.getAllPublic);
 
+/* Get all pending Course requests */
+adminRouter.get('/get-all-pending', authentication, adminPermission, AdminCourseRequestController.getAllPending);
+
 /* Public one Course request */
 adminRouter.put('/public-one', authentication, adminPermission, AdminCourseRequestController.publicOne);
 

@@ -48,6 +48,45 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/course-requests/get-all-pending
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get all pending Course requests
+     *      notes: Return pending Course requests
+     *      nickname: Get pending Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get all pending Course requests */
+    getAllPending: function (req, res) {
+        models.CourseRequest.find({
+            status: 'Pending'
+        }, '-__v').populate('creator', 'email').populate('joiners.joiner', 'email').sort({
+            createdAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/course-requests/public-one
      * operations:
      *   -  httpMethod: PUT
