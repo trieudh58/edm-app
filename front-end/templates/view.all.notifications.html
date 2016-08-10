@@ -12,7 +12,7 @@
     <!-- Main content -->
 	<section class="content">
 	        <div >
-	          <div class="box box-primary">
+	          <div class="box box-primary fixed">
 	            <div class="box-header with-border">
 	              <h3 class="box-title">Thông báo</h3>
 
@@ -35,6 +35,7 @@
 	                <button type="button" class="btn btn-default btn-sm" ng-click='refresh()'><i class="fa fa-refresh"></i></button>
 
 	                 <button type="button" class="btn btn-default btn-sm" ng-click='showimportant()'><i class="fa fa-star"></i></button>
+	                <button type="button" class="btn btn-default btn-sm" ng-click='showUnread()'><i class="fa fa-eye"></i></button>
 	                	</div>
 	                  <!-- /.btn-group -->
 	                </div>
@@ -43,9 +44,12 @@
 	              <div class="table-responsive mailbox-messages">
 	                <table class="table table-hover table-striped">
 	                  <tbody>
-	                  <tr ng-repeat='notification in notifications'>
+	                  <tr ng-repeat='notification in notifications' ng-class="{true: '', false: 'unread-row'}[notification.isRead==true]">
 	                    <td><input type="checkbox" value='{{notification.notification._id}}' class="notificationCheckbox"></td>
-	                    <td class="mailbox-star" ng-click="starClickToggle($event,notification.notification._id,notification.isImportant)"><a href="#"><i ng-class="{true: 'fa fa-star text-yellow', false: 'fa fa-star-o text-yellow'}[notification.isImportant==true]"></i></a></td>
+	                    <td class="mailbox-star"><a href="#"><i ng-click="starClickToggle($event,$index,notification.notification._id,notification.isImportant)" ng-class="{true: 'fa fa-star text-yellow', false: 'fa fa-star-o text-yellow'}[notification.isImportant==true]"></i></a></td>
+
+	                    <td ><a href="#"><i ng-click="isReadClickToggle($event,$index,notification.notification._id,notification.isRead)" ng-class="{true: 'fa fa-eye-slash', false: 'fa fa-eye'}[notification.isRead==true]"></i></a></td>
+
 	                    <td class="mailbox-name"  ng-click="redirect('notification/'+notification.notification._id)">{{emailTrim(notification.notification.creator.email)}}</td>
 	                    <td class="mailbox-subject" ng-click="redirect('notification/'+notification.notification._id)" ng-cloak>{{notification.notification.title}}
 	                    </td>

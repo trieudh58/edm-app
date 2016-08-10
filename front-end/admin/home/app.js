@@ -8,23 +8,27 @@
                 controller:'notification',
                 templateUrl:'templates/notification.view.html'
             })
-            .when('draftnotifications',{
+            .when('/draftnotifications',{
                 controller:'draftnotifications',
                 templateUrl:'templates/draft.view.html'
             })
-            .when('sentNotification',{
+            .when('/sentnotification',{
                 controller:'sentNotification',
                 templateUrl:'templates/sentnotifications.view.html'
             })
-            .when('courseRequestList',{
+            .when('/courseRequestList',{
                 controller:'courseRequestList',
                 templateUrl:'templates/course.request.view.list.html'
+            }).
+            when('/createnotification',{
+                controller:'createnotification',
+                templateUrl:'templates/create.notification.html'
             });
 			// .otherwise({ redirectTo: '/' });
 	});
 
 	// create the controller and inject Angular's $scope
-    App.run(function($scopes,$rootScope,$location,deleteNotification,$http,$localStorage){
+    App.run(function($rootScope,$location,deleteNotification,$http,$localStorage,$route){
         $rootScope.logout=function(){
             console.log('logout');
             $http({
@@ -37,8 +41,6 @@
                         $location.path('/');
                     }
                 }, function myError(response) {
-                    console.log($localStorage.access_token);
-                    $scope.message.error='request fail';
                     console.log('fail');
                 });
         };
@@ -109,7 +111,7 @@
             }
         };
     })
-    App.factory('courseRequestList',function($http),$localStorage){
+    App.factory('courseRequestList',function($http ,$localStorage){
         return{
             get:function(){
                 return $http({
@@ -121,8 +123,9 @@
 
                 });
             }
-        }
-    }
+         }
+        });
+
     App.factory('deleteNotification',function($http,$localStorage){
           return{
             delete:function(IDs){
@@ -175,6 +178,23 @@
             }
         };
     });
+    App.factory('createnotification',function($http,$localStorage){
+        return function(){
+                return $http({
+                    method:'GET',
+                    url:originPath+'/api/v1/admin/notifications/get-all-sent',
+                    headers:{
+                        'x-access-token':$localStorage.access_token
+                    }
+                }).then(function(response){
+                    return response.data;
+                })
+            }
+    })
+    App.controller('createnotification',function(createnotification,$rootScope){
+
+    });
+
 	App.controller('draftnotifications', function($scope,getDrafts) {
 
         getDrafts.get().then(function(response){
