@@ -15,6 +15,9 @@ router.get('/get-own-public', authentication, CourseRequestController.getOwnPubl
 /* Get pending Course requests */
 router.get('/get-own-pending', authentication, CourseRequestController.getOwnPendingCRs);
 
+/* Get denied Course requests */
+router.get('/get-own-denied', authentication, CourseRequestController.getOwnDeniedCRs);
+
 /* Delete a Course request by id */
 router.delete('/delete-one', authentication, CourseRequestController.deleteOne);
 

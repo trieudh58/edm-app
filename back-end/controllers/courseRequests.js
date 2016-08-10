@@ -229,6 +229,46 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/course-requests/get-own-denied
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get denied Course requests
+     *      notes: Return denied Course requests
+     *      nickname: Get denied Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return denied Course request (by current user) */
+    getOwnDeniedCRs: function (req, res) {
+        models.CourseRequest.find({
+            creator: req.user._id,
+            status: 'Denied'
+        }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
+            updatedAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/course-requests/delete-one
      * operations:
      *   -  httpMethod: DELETE
