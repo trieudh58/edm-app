@@ -4,6 +4,9 @@ var AdminCourseRequestController = require('../../controllers/admin/courseReques
 var authentication = require('../../middleware/authentication');
 var adminPermission = require('../../middleware/adminPermission');
 
+/* Get all public Course requests */
+adminRouter.get('/get-all-public', authentication, adminPermission, AdminCourseRequestController.getAllPublic);
+
 /* Public one Course request */
 adminRouter.put('/public-one', authentication, adminPermission, AdminCourseRequestController.publicOne);
 

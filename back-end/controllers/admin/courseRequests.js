@@ -9,6 +9,45 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/course-requests/get-all-public
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get all public Course requests
+     *      notes: Return public Course requests
+     *      nickname: Get public Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get all public Course requests */
+    getAllPublic: function (req, res) {
+        models.CourseRequest.find({
+            status: 'Public'
+        }, '-__v').populate('creator', 'email').populate('joiners.joiner', 'email').sort({
+            createdAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/course-requests/public-one
      * operations:
      *   -  httpMethod: PUT
@@ -29,6 +68,7 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
+    /* Public one Course request */
     publicOne: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
@@ -92,6 +132,7 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
+    /* Add one Course request to pending */
     addToPending: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
@@ -155,6 +196,7 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
+    /* Deny one Course request */
     denyOne: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
