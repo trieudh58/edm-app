@@ -265,6 +265,52 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/course-requests/get-by-id
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get public/own Course request
+     *      notes: Return public/own Course request
+     *      nickname: Get public/own Course request
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: courseRequestId
+     *          description: Course request id
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Return one public/own Course request (by id) */
+    getById: function (req, res) {
+        models.CourseRequest.findById(req.query.courseRequestId, '-__v').populate('courseInfo.subject', 'code name').populate('creator', 'email').exec(function (err, cr) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (cr.creator == req.user._id || cr.status == 'Public') {
+                res.json({
+                    success: true,
+                    data: cr
+                });
+            }
+            else {
+                res.json({
+                    success: false,
+                    message: 'Course request is not public or not created by you.'
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/course-requests/get-all-public
      * operations:
      *   -  httpMethod: GET

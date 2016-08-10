@@ -12,6 +12,9 @@ router.put('/join', authentication, CourseRequestController.join);
 /* Undo-join one Course request */
 router.put('/undo-join', authentication, CourseRequestController.undoJoin);
 
+/* Get one Course request by id */
+router.get('/get-by-id', authentication, CourseRequestController.getById);
+
 /* Get all created Course requests from all users */
 router.get('/get-all-public', authentication, CourseRequestController.getAllPublicCRs);
 
