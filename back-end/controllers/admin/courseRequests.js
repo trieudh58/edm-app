@@ -43,10 +43,10 @@ module.exports = {
                     message: 'Course request does not exist.'
                 });
             }
-            else if (cr.status != 'Pending') {
+            else if (cr.status == 'Public') {
                 res.json({
                     success: false,
-                    message: 'Course request is public or denied.'
+                    message: 'Course request is already public.'
                 });
             }
             else {
@@ -106,10 +106,10 @@ module.exports = {
                     message: 'Course request does not exist.'
                 });
             }
-            else if (cr.status != 'Public') {
+            else if (cr.status == 'Pending') {
                 res.json({
                     success: false,
-                    message: 'Course request is pending or denied.'
+                    message: 'Course request is already pending.'
                 });
             }
             else {
@@ -169,10 +169,10 @@ module.exports = {
                     message: 'Course request does not exist.'
                 });
             }
-            else if (cr.status != 'Pending') {
+            else if (cr.status == 'Denied') {
                 res.json({
                     success: false,
-                    message: 'Course request is public or denied.'
+                    message: 'Course request is already denied.'
                 });
             }
             else {
