@@ -10,6 +10,9 @@ adminRouter.get('/get-all-public', authentication, adminPermission, AdminCourseR
 /* Get all pending Course requests */
 adminRouter.get('/get-all-pending', authentication, adminPermission, AdminCourseRequestController.getAllPending);
 
+/* Get all denied Course requests */
+adminRouter.get('/get-all-denied', authentication, adminPermission, AdminCourseRequestController.getAllDenied);
+
 /* Public one Course request */
 adminRouter.put('/public-one', authentication, adminPermission, AdminCourseRequestController.publicOne);
 
