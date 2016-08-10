@@ -110,6 +110,45 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/course-requests/get-all-public
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get all public Course requests
+     *      notes: Return all public Course requests
+     *      nickname: Get all public Course requests
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return all public Course request created by all users */
+    getAllPublicCRs: function (req, res) {
+        models.CourseRequest.find({
+            status: 'Public'
+        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+            updatedAt: 'desc'
+        }).exec(function (err, crs) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                res.json({
+                    success: true,
+                    data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/course-requests/get-own-created
      * operations:
      *   -  httpMethod: GET
