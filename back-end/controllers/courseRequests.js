@@ -169,7 +169,7 @@ module.exports = {
         models.CourseRequest.find({
             creator: req.user._id,
             status: 'Public'
-        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+        }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
             updatedAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
@@ -209,7 +209,7 @@ module.exports = {
         models.CourseRequest.find({
             creator: req.user._id,
             status: 'Pending'
-        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+        }, '-creator -__v').populate('courseInfo.subject', 'code name').sort({
             updatedAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
@@ -222,6 +222,65 @@ module.exports = {
                 res.json({
                     success: true,
                     data: crs
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/course-requests/delete-one
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Delete one Course request
+     *      notes: Return result
+     *      nickname: Delete one Course request
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: courseRequestId
+     *          description: Course request id
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Return delete result */
+    deleteOne: function (req, res) {
+        models.CourseRequest.findOne({
+            _id: req.query.courseRequestId,
+            creator: req.user._id
+        }, function(err, cr) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!cr) {
+                res.json({
+                    success: false,
+                    message: 'Course request does not exist or invalid user id.'
+                });
+            }
+            else {
+                cr.remove(function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Course request deleted.'
+                        });
+                    }
                 });
             }
         });
