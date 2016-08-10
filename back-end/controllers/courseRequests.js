@@ -151,6 +151,12 @@ module.exports = {
                     message: 'Can not join Course request that created by your own.'
                 });
             }
+            else if (cr.status != 'Public') {
+                res.json({
+                    success: false,
+                    message: 'Course request is not public.'
+                });
+            }
             else {
                 cr.update({
                     $push: {
@@ -224,6 +230,12 @@ module.exports = {
                 res.json({
                     success: false,
                     message: 'Can not undo-join Course request that created by your own. Delete it instead'
+                });
+            }
+            else if (cr.status != 'Public') {
+                res.json({
+                    success: false,
+                    message: 'Course request is not public.'
                 });
             }
             else {
