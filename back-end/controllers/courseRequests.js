@@ -272,7 +272,7 @@ module.exports = {
     getAllPublicCRs: function (req, res) {
         models.CourseRequest.find({
             status: 'Public'
-        }, '-__v').populate('courseInfo.subject', 'code name').sort({
+        }, '-__v').populate('courseInfo.subject', 'code name').populate('creator', 'email').sort({
             updatedAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
