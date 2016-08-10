@@ -7,6 +7,9 @@ var adminPermission = require('../../middleware/adminPermission');
 /* Create a user */
 adminRouter.post('/create', authentication, adminPermission, AdminUserController.create);
 
+/* Activate a user */
+adminRouter.put('/activate-user', authentication, adminPermission, AdminUserController.activateUser);
+
 /* Delete a user. Admin permission required */
 adminRouter.delete('/delete', authentication, adminPermission, AdminUserController.delete);
 

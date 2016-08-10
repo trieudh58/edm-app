@@ -12,7 +12,7 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/users/create
+     * path: /api/v1/admin/users/create
      * operations:
      *   -  httpMethod: POST
      *      summary: Create user (Sign up) with email and password
@@ -77,6 +77,74 @@ module.exports = {
                             });
                         }
                     });
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/users/activate-user
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Activate a user by email
+     *      notes: Return result
+     *      nickname: Activate user
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: x-access-token
+     *          description: Your token
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: email
+     *          description: User email
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: email
+     */
+    /* Activate a user */
+    activateUser: function (req, res) {
+        User.findOne({
+            email: req.body.email,
+            isAdmin: false
+        }, function (err, user) {
+            if (err) {
+                res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!user) {
+                res.json({
+                    success: false,
+                    message: 'Email does not exist.'
+                });
+            }
+            else if (user.isActive) {
+                res.json({
+                    success: false,
+                    message: 'Email is already activated.'
+                });
+            }
+            else {
+                user.update({
+                    isActive: true
+                }, function (err) {
+                    if (err) {
+                        res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else {
+                        res.json({
+                            success: true,
+                            message: 'Account activated.'
+                        });
+                    }
                 });
             }
         });
