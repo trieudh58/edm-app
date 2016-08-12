@@ -26,7 +26,7 @@ router.put('/mark-all-as-read', authentication, NotificationController.markAllAs
 router.put('/mark-one-as-read', validation.notifications.markOneAsRead, authentication, NotificationController.markOneAsRead);
 
 /* Mark one notification as unread */
-router.put('/mark-one-as-unread', authentication, NotificationController.markOneAsUnread);
+router.put('/mark-one-as-unread', validation.notifications.markOneAsUnread, authentication, NotificationController.markOneAsUnread);
 
 /* Mark one notification as important */
 router.put('/mark-one-as-important', authentication, NotificationController.markOneAsImportant);
