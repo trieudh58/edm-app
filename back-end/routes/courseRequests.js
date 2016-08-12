@@ -11,7 +11,7 @@ router.post('/create', validation.courseRequests.create, authentication, CourseR
 router.put('/join', validation.courseRequests.join, authentication, CourseRequestController.join);
 
 /* Undo-join one Course request */
-router.put('/undo-join', authentication, CourseRequestController.undoJoin);
+router.put('/undo-join', validation.courseRequests.undoJoin, authentication, CourseRequestController.undoJoin);
 
 /* Get one Course request by id */
 router.get('/get-by-id', authentication, CourseRequestController.getById);
