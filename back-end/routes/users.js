@@ -4,7 +4,7 @@ var UserController = require('../controllers/users');
 var authentication = require('../middleware/authentication');
 
 /* Authenticate a user */
-router.post('/authenticate', UserController.authenticate);
+router.post('/authenticate', require('../validation/users'), UserController.authenticate);
 
 /* Get data of current user */
 router.get('/get', authentication, UserController.get);
