@@ -32,6 +32,6 @@ router.get('/get-own-pending', authentication, CourseRequestController.getOwnPen
 router.get('/get-own-denied', authentication, CourseRequestController.getOwnDeniedCRs);
 
 /* Delete a Course request by id */
-router.delete('/delete-one', authentication, CourseRequestController.deleteOne);
+router.delete('/delete-one', validation.courseRequests.deleteOne, authentication, CourseRequestController.deleteOne);
 
 module.exports = router;

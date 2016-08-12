@@ -5,5 +5,5 @@ notificationValidation.markOneAsRead = require('./markOneAsRead');
 notificationValidation.markOneAsUnread = require('./markOneAsUnread');
 notificationValidation.markOneAsImportant = require('./markOneAsImportant');
 notificationValidation.markOneAsUnimportant = require('./markOneAsUnimportant');
-notificationValidation.delete = require('./delete');
+notificationValidation.deleteNotifications = require('./deleteNotifications');
 module.exports = notificationValidation;

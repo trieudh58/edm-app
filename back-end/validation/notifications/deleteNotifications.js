@@ -1,11 +1,11 @@
 var Joi = require('joi');
 
 var schema = Joi.object().keys({
-    notificationId: Joi.string().required()
+    notificationIds: Joi.string().required()
 });
 module.exports = function (req, res, next) {
     Joi.validate({
-        notificationId: req.body.notificationId
+        notificationId: req.query.notificationIds
     }, schema, function (err) {
         if (err) {
             return res.json({
