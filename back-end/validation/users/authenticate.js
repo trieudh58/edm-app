@@ -9,13 +9,12 @@ module.exports = function (req, res, next) {
         email: req.body.email,
         password: req.body.password
     }, authenticateSchema, function (err) {
-        if (!err) {
-            next();
-        }
-        else {
+        if (err) {
             return res.json({
-                err: err
+                success: false,
+                message: err.details[0].message
             });
         }
+        next();
     });
 };

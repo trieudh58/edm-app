@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 var UserController = require('../controllers/users');
 var authentication = require('../middleware/authentication');
+var validation = require('../validation');
 
 /* Authenticate a user */
-router.post('/authenticate', require('../validation/users'), UserController.authenticate);
+router.post('/authenticate', validation.users.authenticate, UserController.authenticate);
 
 /* Get data of current user */
 router.get('/get', authentication, UserController.get);
