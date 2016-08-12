@@ -32,7 +32,7 @@ router.put('/mark-one-as-unread', validation.notifications.markOneAsUnread, auth
 router.put('/mark-one-as-important', validation.notifications.markOneAsImportant, authentication, NotificationController.markOneAsImportant);
 
 /* Mark one notification as unimportant */
-router.put('/mark-one-as-unimportant', authentication, NotificationController.markOneAsUnimportant);
+router.put('/mark-one-as-unimportant', validation.notifications.markOneAsUnimportant, authentication, NotificationController.markOneAsUnimportant);
 
 /* Delete notifications */
 router.delete('/delete', authentication, NotificationController.deleteNotifications);
