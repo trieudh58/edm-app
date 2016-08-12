@@ -23,7 +23,7 @@ router.get('/get-5-latest-titles', authentication, NotificationController.get5La
 router.put('/mark-all-as-read', authentication, NotificationController.markAllAsRead);
 
 /* Mark one notification as read */
-router.put('/mark-one-as-read', authentication, NotificationController.markOneAsRead);
+router.put('/mark-one-as-read', validation.notifications.markOneAsRead, authentication, NotificationController.markOneAsRead);
 
 /* Mark one notification as unread */
 router.put('/mark-one-as-unread', authentication, NotificationController.markOneAsUnread);
