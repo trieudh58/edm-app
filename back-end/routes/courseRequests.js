@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 var CourseRequestController = require('../controllers/courseRequests');
 var authentication = require('../middleware/authentication');
+var validation = require('../validation');
 
 /* Create new Course request */
-router.post('/create', authentication, CourseRequestController.create);
+router.post('/create', validation.courseRequests.create, authentication, CourseRequestController.create);
 
 /* Join one Course request created by others */
 router.put('/join', authentication, CourseRequestController.join);
