@@ -28,7 +28,7 @@ module.exports = {
     getAllPublic: function (req, res) {
         models.CourseRequest.find({
             status: 'Public'
-        }, '-__v').populate('creator', 'email').populate('joiners.joiner', 'email').sort({
+        }, '-__v').populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
             createdAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
@@ -67,7 +67,7 @@ module.exports = {
     getAllPending: function (req, res) {
         models.CourseRequest.find({
             status: 'Pending'
-        }, '-__v').populate('creator', 'email').populate('joiners.joiner', 'email').sort({
+        }, '-__v').populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
             createdAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
@@ -106,7 +106,7 @@ module.exports = {
     getAllDenied: function (req, res) {
         models.CourseRequest.find({
             status: 'Denied'
-        }, '-__v').populate('creator', 'email').populate('joiners.joiner', 'email').sort({
+        }, '-__v').populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
             createdAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
