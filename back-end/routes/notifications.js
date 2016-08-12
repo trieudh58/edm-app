@@ -29,7 +29,7 @@ router.put('/mark-one-as-read', validation.notifications.markOneAsRead, authenti
 router.put('/mark-one-as-unread', validation.notifications.markOneAsUnread, authentication, NotificationController.markOneAsUnread);
 
 /* Mark one notification as important */
-router.put('/mark-one-as-important', authentication, NotificationController.markOneAsImportant);
+router.put('/mark-one-as-important', validation.notifications.markOneAsImportant, authentication, NotificationController.markOneAsImportant);
 
 /* Mark one notification as unimportant */
 router.put('/mark-one-as-unimportant', authentication, NotificationController.markOneAsUnimportant);
