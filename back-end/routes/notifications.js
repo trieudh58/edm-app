@@ -35,6 +35,6 @@ router.put('/mark-one-as-important', validation.notifications.markOneAsImportant
 router.put('/mark-one-as-unimportant', validation.notifications.markOneAsUnimportant, authentication, NotificationController.markOneAsUnimportant);
 
 /* Delete notifications */
-router.delete('/delete', authentication, NotificationController.deleteNotifications);
+router.delete('/delete', validation.notifications.delete, authentication, NotificationController.deleteNotifications);
 
 module.exports = router;
