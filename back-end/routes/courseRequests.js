@@ -8,7 +8,7 @@ var validation = require('../validation');
 router.post('/create', validation.courseRequests.create, authentication, CourseRequestController.create);
 
 /* Join one Course request created by others */
-router.put('/join', authentication, CourseRequestController.join);
+router.put('/join', validation.courseRequests.join, authentication, CourseRequestController.join);
 
 /* Undo-join one Course request */
 router.put('/undo-join', authentication, CourseRequestController.undoJoin);
