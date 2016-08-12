@@ -11,7 +11,7 @@ router.post('/authenticate', validation.users.authenticate, UserController.authe
 router.get('/get', authentication, UserController.get);
 
 /* Register new account */
-router.post('/register', UserController.register);
+router.post('/register', validation.users.register, UserController.register);
 
 /* Verify email with remember token */
 router.put('/verify-email', UserController.verifyEmail);
