@@ -236,7 +236,7 @@ module.exports = {
      *          dataType: string
      *        - name: email
      *          description: Your email
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      *          format: email
@@ -244,7 +244,7 @@ module.exports = {
     /* Delete a user. Admin permission required */
     delete: function (req, res) {
         User.findOneAndRemove({
-            email: req.body.email
+            email: req.query.email
         }, function (err, removedUser) {
             if (err) {
                 res.status(500).json({
