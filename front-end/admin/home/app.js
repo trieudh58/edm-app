@@ -9,20 +9,24 @@
                 templateUrl:'templates/notification.view.html'
             })
             .when('/draftnotifications',{
-                controller:'draftnotifications',
+                controller:'draftNotifications',
                 templateUrl:'templates/draft.view.html'
             })
             .when('/sentnotification',{
                 controller:'sentNotification',
                 templateUrl:'templates/sentnotifications.view.html'
-            })
-            .when('/courseRequestList',{
-                controller:'courseRequestList',
-                templateUrl:'templates/course.request.view.list.html'
             }).
             when('/createnotification',{
-                controller:'createnotification',
+                controller:'createNotification',
                 templateUrl:'templates/create.notification.html'
+            })
+            .when('/courserequestlist',{
+                controller:'courseRequestList',
+                templateUrl:'templates/course.request.view.list.html'
+            })
+            .when('/courserequest/:id',{
+                controller:'courseRequest',
+                templateUrl:'templates/notification.view.html'
             });
 			// .otherwise({ redirectTo: '/' });
 	});
@@ -44,6 +48,10 @@
                     console.log('fail');
                 });
         };
+        $rootScope.emailTrim =function(email){
+            if(email)
+            return email.split('@')[0];
+          }
         $rootScope.redirect= function(path){
             $location.path(path);
           };
@@ -91,36 +99,74 @@
             return outtime;
           }
     });
-    App.factory('notificationCreate',function($http,$localStorage){
+
+    App.factory('courseRequestService',function($http ,$localStorage){
         return{
-            post:function(title,body,targetGroupIds){
-                return $http({
-                    method:'POST',
-                    url:originPath+'/api/v1/admin/notifications/create',
-                    data:{
-                        title:title,
-                        body:body,
-                        targetGroupIds:targetGroupIds,
-                        token:$localStorage.access_token
-                    }
-                }).then(function(response){
-                    return response.data
-                },function(response){
-                    //fail
-                });
-            }
-        };
-    })
-    App.factory('courseRequestList',function($http ,$localStorage){
-        return{
-            get:function(){
+            getPublicRequests:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+''
+                    url:originPath+'/api/v1/admin/course-requests/get-all-public',
+                    headers:{
+                        'x-access-token':$localStorage.access_token
+                    }
                 }).then(function(response){
-
+                    return response.data;
                 },function(){
 
+                });
+            },
+            getOneCourseRequest:function(id){
+                return $http({
+                    method:'GET',
+                    url: originPath +'/api/v1/admin/course-requests/get-all-denied'
+                });
+            },
+            getDeniedRequests:function(){
+                return $http({
+                    method:'GET',
+                    url:originPath+'/api/v1/admin/course-requests/get-all-denied',
+                    headers:{
+                        'x-access-token':$localStorage.access_token
+                    }
+                }).then(function(response){
+                    return response.data;
+                });
+            },
+            getPendingRequests:function(){
+                return $http({
+                    method:'GET',
+                    url:originPath+'/api/v1/admin/course-requests/get-all-pending',
+                    headers:{
+                        'x-access-token':$localStorage.access_token
+                    }
+                }).then(function(response){
+                    return response.data;
+                },function(){
+
+                });
+            },
+            putDenyRequest:function(id){
+                return $http({
+                    method:'PUT',
+                    url:originPath+'/api/v1/admin/course-requests/deny-one',
+                    data:{
+                        token:$localStorage.access_token,
+                        courseRequestId:id
+                    }
+                }).then(function(response){
+                    return response.data;
+                });
+            },
+            putPublicRequest:function(id){
+                return $http({
+                    method:'PUT',
+                    url:originPath+'/api/v1/admin/course-requests/public-one',
+                    data:{
+                        token:$localStorage.access_token,
+                        courseRequestId:id
+                    }
+                }).then(function(response){
+                    return response.data;
                 });
             }
          }
@@ -131,7 +177,7 @@
             delete:function(IDs){
               return $http({
                 method:'DELETE',
-                url:originPath+'/',
+                url:originPath+'/api/v1/admin/notifications/delete-by-ids',
                 headers:{
                   'x-access-token':$localStorage.access_token
                 },
@@ -178,11 +224,12 @@
             }
         };
     });
-    App.factory('createnotification',function($http,$localStorage){
-        return function(){
+    App.factory('getStudentGroup',function($http,$localStorage){
+        return{
+            get:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+'/api/v1/admin/notifications/get-all-sent',
+                    url:originPath+'/api/v1/admin/student-groups/get-all',
                     headers:{
                         'x-access-token':$localStorage.access_token
                     }
@@ -190,12 +237,66 @@
                     return response.data;
                 })
             }
+        }
     })
-    App.controller('createnotification',function(createnotification,$rootScope){
+    App.factory('notificationService',function($http,$localStorage){
+        return {
+            createNotification:function(targetGroupIds,title,body){
+                return $http({
+                    method:'POST',
+                    url:originPath+'/api/v1/admin/notifications/create',
+                    headers:{
+                        'x-access-token':$localStorage.access_token
+                    },
+                    data:{
+                        targetGroupIds:targetGroupIds,
+                        title:title,
+                        body:body
+                    }
+                }).then(function(response){
+                    return response.data;
+                })
+            },
+            sendNotification:function(targetGroupIds,title,body){
+                return $http({
+                    method:'POST',
+                    url:originPath+'/api/v1/admin/notifications/create-and-send',
+                    headers:{
+                        'x-access-token':$localStorage.access_token
+                    },
+                    data:{
+                        targetGroupIds:targetGroupIds,
+                        title:title,
+                        body:body
+                    }
+                }).then(function(response){
+                    return response.data;
+                })
+            }
+        }
+    })
+
+    App.controller('createNotification',function(notificationService,getStudentGroup,$scope,$route,$rootScope){
+        getStudentGroup.get().then(function(res){
+            $scope.studentGroups=res.data;
+        })
+        $scope.notificationData={};
+
+        $scope.createNotification=function(){
+            console.log('create');
+            notificationService.createnotification($scope.notificationData.studentGroups.join(','),$scope.notificationData.title,$scope.notificationData.body);
+            $rootScope.refresh();
+        }
+        $scope.sendNotification=function(){
+            console.log('send');
+            notificationService.sendNotification($scope.notificationData.studentGroups.join(','),$scope.notificationData.title,$scope.notificationData.body);
+            $rootScope.refresh();
+        }
+        
 
     });
 
-	App.controller('draftnotifications', function($scope,getDrafts) {
+	App.controller('draftNotifications', function($scope,getDrafts) {
 
         getDrafts.get().then(function(response){
             $scope.draftsNotification=response.data;
@@ -205,4 +306,59 @@
         getSentNotifications.get().then(function(response){
             $scope.sentNotification=response.data;
         });
+    });
+
+
+    App.controller('courseRequest',function($scope,courseRequestService){
+
+    });
+
+    App.controller('courseRequestList',function($scope,courseRequestService){
+        courseRequestService.getPendingRequests().then(function(response){
+            $scope.requestList=response.data;
+        });
+        $scope.taskButton='pendingList';
+        $scope.getPendingRequests=function($event){
+            courseRequestService.getPendingRequests().then(function(response){
+            $scope.requestList=response.data;
+            });
+            var element= angular.element($event.target).parent();
+            element.siblings().removeClass('active');
+            element.addClass('active');
+            $scope.taskButton='pendingList';
+        };
+        $scope.getDeniedRequests=function($event){
+            courseRequestService.getDeniedRequests().then(function(response){
+                $scope.requestList=response.data;
+            });
+            var element= angular.element($event.target).parent();
+            element.siblings().removeClass('active');
+            element.addClass('active');
+            $scope.taskButton='deniedList';
+        };
+        $scope.getPublicRequests=function($event){
+            courseRequestService.getPublicRequests().then(function(response){
+                $scope.requestList=response.data;
+            });
+            var element= angular.element($event.target).parent();
+            element.siblings().removeClass('active');
+            element.addClass('active');
+            $scope.taskButton='publicList';
+        }
+        $scope.publicRequests=function($index,requestId){
+            courseRequestService.putPublicRequest(requestId);
+            $scope.requestList.pop($index);
+        };
+        $scope.denyRequests=function($index,requestId){
+            courseRequestService.putDenyRequest(requestId);
+            $scope.requestList.pop($index);
+        }
+        $scope.expectimeConvert=function(time){
+            if(time=='Moring')
+                return 'Buổi sáng';
+            if(time=='Afternoon')
+                return 'Buổi chiều';
+            else
+                return'Buổi tối';
+        }
     });

@@ -30,7 +30,7 @@
             <!-- /.box-header -->
             <div class="box-body pad">
               <form>
-                <textarea class="textarea" placeholder="Place some text here" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                <textarea class="textarea" placeholder="Place some text here" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;" data-ng-model='courseData.reason'></textarea>
               </form>
             </div>
           </div>
@@ -51,22 +51,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label>Môn học</label>
-                  <select class="form-control select2" style="width: 100%;">
-                        <option>Những nguyên lý cơ bản của chủ nghĩa Mác – Lênin 1</option>
-                        <option>Những nguyên lý cơ bản của chủ nghĩa Mác – Lênin 2</option>
-                        <option>Tư tưởng Hồ Chí Minh</option>
-                        <option>Đường lối cách mạng của Đảng Cộng sản Việt Nam</option>
-                        <option>Tin học cơ sở 1</option>
-                        <option>Tin học cơ sở 4</option>
-                        <option>Tiếng Anh cơ sở 1</option>
-                        <option>Tiếng Anh cơ sở 2</option>
-                        <option>Tiếng Anh cơ sở 3</option>
-                        <option>Tiếng Anh cơ sở 4</option>
-                        <option>Tiếng Anh cơ sở 5</option>
-                        <option>Đường lối quân sự của Đảng</option>
-                        <option>Công tác quốc phòng an ninh</option>
-                        <option>quân sự chung và kĩ thuật bắn súng tiểu liên AK</option>
-                  </select>
+                  <select class="form-control select2" style="width: 100%;" data-ng-model="courseData.subject" data-ng-options="v as v.name.vi for v in subjects"></select>
                 </div>
                 <!-- /.form-group -->
                 </div>
@@ -77,9 +62,9 @@
                       <label>Thời gian</label>
                       <div class="input-group">
                         <div id="radioBtn" class="btn-group">
-                          <a class="btn btn-primary btn-sm active" data-toggle="fun" data-title="Morning">Sáng</a>
-                          <a class="btn btn-primary btn-sm notActive" data-toggle="fun" data-title="Afternoon">Chiều</a>
-                          <a class="btn btn-primary btn-sm notActive" data-toggle="fun" data-title="Evening">Tối</a>
+                          <a class="expectedtime btn btn-primary btn-sm active" data-toggle="fun" data-title="Morning">Sáng</a>
+                          <a class="expectedtime btn btn-primary btn-sm notActive" data-toggle="fun" data-title="Afternoon">Chiều</a>
+                          <a class="expectedtime btn btn-primary btn-sm notActive" data-toggle="fun" data-title="Evening">Tối</a>
                       </div>
                     </div>
                   </div>

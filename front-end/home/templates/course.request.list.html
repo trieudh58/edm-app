@@ -1,0 +1,80 @@
+    <section class="content-header">
+      <h1>
+        Xem tất cả
+        <small>review</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Home</a></li>
+        <li class="active">Xem tất cả</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+	<section class="content">
+	        <div >
+	          <div class="box box-primary fixed">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">Danh sach xin mo lop</h3>
+
+	              <div class="box-tools pull-right">
+	                <div class="has-feedback">
+	                  <input type="text" class="form-control input-sm" placeholder="Search">
+	                  <span class="glyphicon glyphicon-search form-control-feedback"></span>
+	                </div>
+	              </div>
+	              <!-- /.box-tools -->
+	            </div>
+	            <!-- /.box-header -->
+	            <ul class="nav nav-tabs">
+	                <li class="active" ng-click="getPublicRequests($event)"><a>Danh sách lớp đang yêu cầu</a></li>
+	                <li ng-click="getCreatedRequests($event)"><a>Yêu cầu của bạn</a></li>
+              	</ul>
+	            <div class="box-body no-padding">
+	              <div class="mailbox-controls">
+	                <button type="button" class="btn btn-default btn-sm" ng-click='refresh()' ng-if="ownrequest==false"><i class="fa fa-refresh"></i></button>
+
+	                 <button type="button" class="btn btn-default btn-sm" ng-click='ownPendings()'  ng-if="ownrequest" title="Pending"><i class="fa fa-search" ></i></button>
+
+	                <button type="button" class="btn btn-default btn-sm" ng-click='ownDenieds()'  ng-if="ownrequest" title="Denieds"><i class="fa fa-search"></i></button>
+
+	                <button type="button" class="btn btn-default btn-sm" ng-click='ownPublics()'  ng-if="ownrequest" title="Publics"><i class="fa fa-search" ></i></button>
+	                	</div>
+	                  <!-- /.btn-group -->
+	                </div>
+	                <!-- /.pull-right -->
+	              </div>
+	              <div class="table-responsive mailbox-messages">
+	                <table class="table table-hover table-striped">
+	                  <tbody>
+	                  <tr>
+	                  	<th ng-if="ownrequest==false">Nguoi xin</th>
+	                  	<th>Mon hoc</th>
+	                  	<th>Thoi gian</th>
+	                  	<th>so nguoi</th>
+	                  	<th></th>
+	                  </tr>
+	                  <tr ng-repeat='request in requestList' ng-click="redirect('courserequestview/'+request._id)">
+
+	                    <td ng-cloak ng-if="ownrequest==false">{{emailTrim(request.creator.email)}}</td>
+
+	                    <td  ng-cloak>{{request.courseInfo.subject.name.vi}}
+	                    </td>
+
+	                    <td ng-cloak>{{expectimeConvert(request.courseInfo.expectedTime)}}</td>
+
+	                    <td >1</td>
+
+	                    <td ng-cloak>{{timeConvert(request.createdAt)}}</td>
+
+	                  </tr>
+	                  </tbody>
+	                </table>
+	                <!-- /.table -->
+	              </div>
+	              <!-- /.mail-box-messages -->
+	          <!-- /. box -->
+	        </div>
+	        <!-- /.col -->
+	      </div>
+	      <!-- /.row -->
+	    </section>

@@ -4,6 +4,7 @@ var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap'
 var originPath='http://localhost:3001';
 // configure our routes
 App.config(function($routeProvider,ChartJsProvider) {
+
 $routeProvider
 
   .when('/verify',{
@@ -35,11 +36,15 @@ $routeProvider
   })
   .when('/courserequest',{
     controller:'courserequest',
-    templateUrl:'templates/courserequest.view.html'
-  })
-  .when('courseRequestReview/:id',{
-    controller:'courseRequestReview',
     templateUrl:'templates/create.courserequest.view.html'
+  })
+  .when('/courserequestview/:id',{
+    controller:'courseRequestReview',
+    templateUrl:'templates/courserequest.review.html'
+  })
+  .when('/courserequestlist',{
+    controller:'courseRequestList',
+    templateUrl:'templates/course.request.list.html'
   });
   // #$locationProvider.html5Mode(true);
 	//.otherwise({ redirectTo: '/' });
@@ -281,18 +286,83 @@ App.controller('notification',function($scope,$rootScope,getNotification,$routeP
   markAsRead.put($routeParams.id);
 });
 
-App.controller('courserequest',function($scope,courseRequest){
-    $scope.senCourseRequest=function(reason,subjectID,expectedtime){
-      courseRequest.createCourseRequest(reason,subjectID,expectedtime).then(function(res){
+App.controller('courserequest',function($scope,courseRequest,getSubjectNameAndCredits){
+    getSubjectNameAndCredits.get().then(function(response){
+      $scope.subjects=response.subjects;
+    })
+    $scope.courseData={};
+    $scope.courseData.expectedtime=angular.element('.expectedtime.active').attr('data-title');
+    $scope.senCourseRequest=function(){
+      courseRequest.createCourseRequest($scope.courseData.reason,$scope.courseData.subject._id,$scope.courseData.expectedtime).then(function(res){
         //
       })
     }
 });
 
-App.controller('courseRequestReview',function($scope,$routeParams,courseRequest){
-    courseRequest.getCourseRequest($routeParams.id).then(function(res){
-      $scope.courseRequest=res.data;  /////////////////
+App.controller('courseRequestList',function($scope,courseRequest,$location,$route){
+  courseRequest.getPublicCourseRequests().then(function(response){
+    $scope.requestList=response.data;
+  })
+  $scope.ownrequest=false;
+  $scope.refresh=function(){
+      $route.reload();
+  };
+  $scope.expectimeConvert=function(time){
+    if(time=='Moring')
+        return 'Buổi sáng';
+    if(time=='Afternoon')
+        return 'Buổi chiều';
+    else
+        return'Buổi tối';
+  };
+  $scope.redirect= function(path){
+    $location.path(path);
+  }
+  $scope.getPublicRequests=function($event){
+    courseRequest.getPublicCourseRequests().then(function(response){
+      $scope.requestList=response.data;
     });
+    var element= angular.element($event.target).parent();
+    element.siblings().removeClass('active');
+    element.addClass('active');
+    $scope.ownrequest=false;
+  }
+  $scope.getCreatedRequests=function($event){
+    courseRequest.getOwnRequestCreated().then(function(response){
+      $scope.requestList=response.data;
+    });
+    var element= angular.element($event.target).parent();
+    element.siblings().removeClass('active');
+    element.addClass('active');
+    $scope.ownrequest=true;
+  }
+  $scope.ownPendings=function(){
+    courseRequest.getOwnRequestPending().then(function(response){
+      $scope.requestList=response.data;
+    });
+  },
+  $scope.ownPublics=function(){
+    courseRequest.getPublicCourseRequests().then(function(response){
+      $scope.requestList=response.data;
+    });
+  },
+  $scope.ownDenieds=function(){
+    courseRequest.getOwnRequestDenied().then(function(response){
+      $scope.requestList=response.data;
+    });
+  }
+})
+
+App.controller('courseRequestReview',function($scope,$routeParams,courseRequest){
+    courseRequest.getOneById($routeParams.id).then(function(res){
+      $scope.joiners=res.data;
+    });
+    $scope.join=function(id){
+      courseRequest.putJoinOneById(id);
+    }
+    $scope.unjoin=function(id){
+      courseRequest.putUnJoinOneById(id);
+    }
 });
 
 // Simulate async data update
@@ -605,8 +675,111 @@ App.factory('courseRequest',function($http,$localStorage){
 
       });
     },
-    getCourseRequest:function(id){
+    getPublicCourseRequests:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/course-requests/get-all-public',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      });
       /////////////////////////////////////////////////////////////
+    },
+    getOwnRequestCreated:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/course-requests/get-own-created',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      })
+    },
+    getOwnRequestPublic:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/course-requests/get-own-public',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      })
+    },
+    getOwnRequestPending:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/course-requests/get-own-pending',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      })
+    },
+    getOwnRequestDenied:function(){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/course-requests/get-own-denied',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        }
+      }).then(function(response){
+        return response.data;
+      })
+    },
+    getOneById:function(id){
+      return $http({
+        method:'GET',
+        url:originPath+'/api/v1/course-requests/get-own-denied',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        },
+        params:{
+          courseRequestId:id
+        }
+      }).then(function(response){
+        return response.data;
+      })
+    },
+    deleteOneById:function(id){
+      return $http({
+        method:'DELETE',
+        url:originPath+'/api/v1/course-requests/delete-one',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        },
+        params:{
+          courseRequestId:id
+        }
+      })
+    },
+    putJoinOneById:function(id){
+      return $http({
+        method:'PUT',
+        url:originPath+'/api/v1/course-requests/join',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        },
+        data:{
+          courseRequestId:id
+        }
+      })
+    },
+    putUnJoinOneById:function(id){
+      return $http({
+        method:'DELETE',
+        url:originPath+'/api/v1/course-requests/undo-join',
+        headers:{
+          'x-access-token':$localStorage.access_token
+        },
+        data:{
+          courseRequestId:id
+        }
+      })
     }
   }
 })
