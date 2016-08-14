@@ -2,15 +2,16 @@ var express = require('express');
 var router = express.Router();
 var CourseRequestController = require('../controllers/courseRequests');
 var authentication = require('../middleware/authentication');
+var validation = require('../validation/courseRequests');
 
 /* Create new Course request */
-router.post('/create', authentication, CourseRequestController.create);
+router.post('/create', validation.create, authentication, CourseRequestController.create);
 
 /* Join one Course request created by others */
-router.put('/join', authentication, CourseRequestController.join);
+router.put('/join', validation.join, authentication, CourseRequestController.join);
 
 /* Undo-join one Course request */
-router.put('/undo-join', authentication, CourseRequestController.undoJoin);
+router.put('/undo-join', validation.undoJoin, authentication, CourseRequestController.undoJoin);
 
 /* Get one Course request by id */
 router.get('/get-by-id', authentication, CourseRequestController.getById);
@@ -31,6 +32,6 @@ router.get('/get-own-pending', authentication, CourseRequestController.getOwnPen
 router.get('/get-own-denied', authentication, CourseRequestController.getOwnDeniedCRs);
 
 /* Delete a Course request by id */
-router.delete('/delete-one', authentication, CourseRequestController.deleteOne);
+router.delete('/delete-one', validation.deleteOne, authentication, CourseRequestController.deleteOne);
 
 module.exports = router;
