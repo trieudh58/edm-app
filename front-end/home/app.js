@@ -20,7 +20,7 @@ $routeProvider
       }
   })
   .when('/studentscore',{
-      templateUrl:'templates/student.score.html'
+      templateUrl:'templates/student.score.view.html'
   })
   .when('/subjects',{
     controller:'subjects',
@@ -28,19 +28,19 @@ $routeProvider
   })
   .when('/allnotifications',{
     controller:'allnotifications',
-    templateUrl:'templates/view.all.notifications.html'
+    templateUrl:'templates/all.notifications.view.html'
   })
   .when('/notification/:id',{
     controller:'notification',
     templateUrl:'templates/notification.view.html'
   })
   .when('/courserequest',{
-    controller:'courserequest',
-    templateUrl:'templates/create.courserequest.view.html'
+    controller:'courseRequest',
+    templateUrl:'templates/create.course.request.view.html'
   })
   .when('/courserequestview/:id',{
     controller:'courseRequestReview',
-    templateUrl:'templates/courserequest.review.html'
+    templateUrl:'templates/course.request.view.html'
   })
   .when('/courserequestlist',{
     controller:'courseRequestList',
@@ -57,7 +57,22 @@ $routeProvider
     animateScale: true
   });
 });
-App.run(function($rootScope,getStudentInfor,getNotifications){
+App.run(function($rootScope,getStudentInfor,getNotifications,$http,$localStorage,$window){
+  $rootScope.logout=function(){
+    $http({
+            method : "POST",
+            url : originPath+"/api/v1/users/logout",
+            data:{token:$localStorage.access_token}
+        }).then(function mySuccess(response) {
+            if(response.data.success){
+                $localStorage.access_token=undefined;
+                $window.open('/', "_self");
+            }
+        }, function myError(response) {
+            console.log('request fail to logout');
+        });
+    }
+
   $rootScope.reloadHeadbarNotification = function (isread){
       getNotifications.getSomeNewNotifications().then(function(res){
         $rootScope.newNotifications=res.data.latest;
@@ -113,25 +128,7 @@ App.controller('verify',function($http,$scope,$routeParams,$location){
       $scope.response='request fail!';
   });
 })
-App.controller('LoginController', function($scope,$rootScope,$http,$localStorage,$window) {
-      $scope.message={}
-      $rootScope.logout=function(){
-          $http({
-                  method : "POST",
-                  url : originPath+"/api/v1/users/logout",
-                  data:{token:$localStorage.access_token}
-              }).then(function mySuccess(response) {
-                  if(response.data.success){
-                      $localStorage.access_token=undefined;
-                      $window.open('/', "_self");
-                  }
-              }, function myError(response) {
-                  console.log($localStorage.access_token);
-                  $scope.message.error='request fail';
-                  console.log('fail');
-              });
-          }
-});
+
 
 App.controller('ProfileController', function($scope,$http,$localStorage){
     //////profile
@@ -286,15 +283,21 @@ App.controller('notification',function($scope,$rootScope,getNotification,$routeP
   markAsRead.put($routeParams.id);
 });
 
-App.controller('courserequest',function($scope,courseRequest,getSubjectNameAndCredits){
+App.controller('courseRequest',function($scope,$route,courseRequest,getSubjectNameAndCredits){
     getSubjectNameAndCredits.get().then(function(response){
       $scope.subjects=response.subjects;
     })
     $scope.courseData={};
-    $scope.courseData.expectedtime=angular.element('.expectedtime.active').attr('data-title');
-    $scope.senCourseRequest=function(){
+    $scope.hideAlert=function(){
+      $scope.message=false;
+    }
+    $scope.sendCourseRequest=function(){
+      $scope.courseData.expectedtime=angular.element('.expectedtime.active').attr('data-title');
       courseRequest.createCourseRequest($scope.courseData.reason,$scope.courseData.subject._id,$scope.courseData.expectedtime).then(function(res){
-        //
+        $scope.courseData={};
+        $scope.message={
+          type:res.success,
+          content:res.message};
       })
     }
 });
@@ -308,7 +311,7 @@ App.controller('courseRequestList',function($scope,courseRequest,$location,$rout
       $route.reload();
   };
   $scope.expectimeConvert=function(time){
-    if(time=='Moring')
+    if(time=='Morning')
         return 'Buổi sáng';
     if(time=='Afternoon')
         return 'Buổi chiều';
@@ -421,8 +424,8 @@ App.factory('getSubjectNameAndCredits',function($http,$localStorage){
       // console.log(response.data);
       return response.data;
     },
-     function myError(response) {
-        $scope.message.error='request fail';          //////////////////!
+     function myError() {
+        //
     });
     }
   };
@@ -439,8 +442,8 @@ App.factory('getStudentRecord',function($http,$localStorage){
         }
     }).then(function mySuccess(response) {
         return response.data;
-    }, function myError(response) {
-        $scope.message.error='request fail'; ////////!
+    }, function myError() {
+         ////////!
     });
     }
   };
@@ -457,8 +460,8 @@ App.factory('getStudentInfor',function($http,$localStorage){
         }
       }).then(function(response){
         return response.data;
-      },function(response){
-        $scope.message.error='request fail'; /////////???!
+      },function(){
+        /////////???!
       });
     }
   };
@@ -671,8 +674,11 @@ App.factory('courseRequest',function($http,$localStorage){
         }
       }).then(function(response){
         return response.data;
-      },function(response){
-
+      },function(){
+        return {
+          success:false,
+          message:'Create Request Fail!'
+        };
       });
     },
     getPublicCourseRequests:function(){
