@@ -4,14 +4,16 @@ var models = require('../models');
 var async = require('async');
 var bcrypt = require('bcrypt');
 
-var scoreStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_2012.csv');
+//var scoreStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_2012.csv');
+var scoreStream = fs.createReadStream(__dirname + '/raw/devMode_out_DIEM.csv');
 var studentRecords = [];
-var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
+var csvScoreStream = csv.parse({delimiter: ';'}).on('data', function (data) {
     studentRecords.push(data);
 }).on('finish', function () {
-    var whenStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_When.csv');
+    //var whenStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_When.csv');
+    var whenStream = fs.createReadStream(__dirname + '/raw/devMode_out_TIME.csv');
     var whenRecords = [];
-    var csvWhenRecord = csv.parse({delimiter: ','}).on('data', function (data) {
+    var csvWhenRecord = csv.parse({delimiter: ';'}).on('data', function (data) {
         whenRecords.push(data);
     }).on('finish', function () {
         // Create user
@@ -23,8 +25,8 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                 }
                 for (var i = 1; i < studentRecords.length; i++) {
                     // Parse String to Date type
-                    var DOB = studentRecords[i][2].split('/');
-                    var date = new Date(parseInt(DOB[2]), parseInt(DOB[1]) - 1, parseInt(DOB[0].substring(1)), 0, 0, 1);
+                    var DOB = studentRecords[i][4].split('/');
+                    var date = new Date(parseInt(DOB[2]), parseInt(DOB[1]) - 1, parseInt(DOB[0]), 0, 0, 1);
 
                     var studentGroups = [];
                     var startYear = (studentRecords[i][0].length == 7) ? parseInt(studentRecords[i][0].slice(0,1)) : parseInt(studentRecords[i][0].slice(0,2));
@@ -51,9 +53,10 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                         password: bcrypt.hashSync('123456', 1),
                         studentCode: studentRecords[i][0],
                         personalInfo: {
+                            fullName: studentRecords[i][1],
                             gender: studentRecords[i][3],
                             DOB: date,
-                            className: studentRecords[i][1],
+                            className: studentRecords[i][2],
                             groups: studentGroups
                         },
                         isActive: false
@@ -84,7 +87,7 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
         var updateScore = function (studentRecords, whenRecords, callback) {
             console.log('Updating scores...');
             for (var i = 1; i < studentRecords.length; i++) {
-                for (var j = 4; j < studentRecords[i].length; j++) {
+                for (var j = 5; j < studentRecords[i].length; j++) {
                     var normalizedScoreString = '';
                     var scoreArray = [];
                     var normalizedWhenString = '';
@@ -121,34 +124,52 @@ var csvScoreStream = csv.parse({delimiter: ','}).on('data', function (data) {
                             }
                         }
                     }
-                    for (var l = 0; l < scoreArray.length; l++) {
-                        models.StudentRecord.update({
-                            studentCode: studentRecords[i][0]
-                        }, {
-                            $push: {
-                                record: {
-                                    subjectCode: studentRecords[0][j],
-                                    attempt: {
-                                        score: scoreArray[l],
-                                        semester: whenArray[l]
-                                    }
+                    var computeAttempt = function (whenArray, scoreArray, studentRecords, i, j, callback) {
+                        var attempt = [];
+                        for (var m = 0; m < whenArray.length; m++) {
+                            attempt.push({
+                                score: scoreArray[m],
+                                semester: whenArray[m]
+                            });
+                        }
+                        callback(null, attempt, studentRecords, i, j);
+                    };
+                    var pushToRecord = function (attempt, studentRecords, i, j, callback) {
+                        if (attempt.length) {
+                            var record = {
+                                subjectCode: studentRecords[0][j],
+                                attempt: attempt
+                            };
+                            models.StudentRecord.update({
+                                studentCode: studentRecords[i][0]
+                            }, {
+                                $push: {
+                                    record: record
                                 }
-                            }
-                        }, {
-                            safe: true,
-                            // Insert new instance if it does not exist
-                            upsert: false
-                        }, function (err, updatedRecord) {
-                            if (err) {
-                                throw err;
-                            }
-                        });
-                    }
+                            }, function (err, sr) {
+                                if (err) {
+                                    throw err;
+                                }
+                                else {
+                                }
+                            });
+                        }
+                        callback(null, 'Done');
+                    };
+                    var initialFunction = function (whenArray, scoreArray, studentRecords, i, j, callback) {
+                        callback(null, whenArray, scoreArray, studentRecords, i, j);
+                    };
+
+                    var queue = [];
+                    queue.push(initialFunction.bind(null, whenArray, scoreArray, studentRecords, i, j));
+                    queue.push(computeAttempt);
+                    queue.push(pushToRecord);
+                    async.waterfall(queue);
                 }
             }
             callback(null, studentRecords, whenRecords);
         };
-        // Asynchronous queue
+        // Synchronous queue
         var queue = [
             function (callback) {
                 callback(null, studentRecords, whenRecords);

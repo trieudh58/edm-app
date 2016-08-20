@@ -11,6 +11,9 @@ var UserSchema = new mongoose.Schema({
         type: String
     },
     personalInfo: {
+        fullName: {
+            type: String
+        },
         gender: {
             type: Boolean
         },

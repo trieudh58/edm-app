@@ -61,7 +61,7 @@ INT2044;Lý thuyết thông tin;Information Theory;3;45;;;MAT1101
 INT3414;Chuyên đề Công nghệ;Technology workshop;3;30;15;;INT1003
 ELT3144;Xử lý tín hiệu số;Digital Signal Processing;4;45;15;;MAT1093
 ELT2040;Điện tử tương tự;Analog Electronics;3;45;;;PHY1103
- ELT3102;Thực tập điện tử tương tự;Analog Electronic Engineering Practice;2;;30;;ELT2040
+ELT3102;Thực tập điện tử tương tự;Analog Electronic Engineering Practice;2;;30;;ELT2040
 ELT2041;Điện tử số ;Digital Electronics;3;45;;;PHY1103
 ELT3043;Truyền thông;Communications;3;45;;;
 INT3303;Mạng không dây;Wireless Networks;3;36;9;;INT2209
