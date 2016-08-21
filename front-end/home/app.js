@@ -12,7 +12,7 @@ $routeProvider
     controller:'verify'
   })
   .when('/profile',{
-      templateUrl: 'templates/profile.html',
+      templateUrl: 'templates/profile.view.html',
       controller:'ProfileController',
       resolve:{
           //home page
@@ -130,8 +130,24 @@ App.controller('verify',function($http,$scope,$routeParams,$location){
 })
 
 
-App.controller('ProfileController', function($scope,$http,$localStorage){
-    //////profile
+App.controller('ProfileController', function($scope,getStudentInfor){
+    getStudentInfor.get().then(response=>{
+      $scope.userInformation=response.data;
+      var birthDay=new Date(response.data.personalInfo.DOB);
+      birthDay=birthDay.toISOString().slice(0,10);
+      $scope.settingInformation={
+        email:response.data.email,
+        fullName:response.data.personalInfo.fullName,
+        class:response.data.personalInfo.className,
+        gender:response.data.personalInfo.gender,
+        DOB:birthDay
+      }
+    },err=>{
+      console.log('get student information fail!');
+    });
+    $scope.updateInfo=function(){
+      ///////////
+    }
 });
 
 App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
