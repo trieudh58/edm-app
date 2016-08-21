@@ -35,7 +35,7 @@ $routeProvider
     templateUrl:'templates/notification.view.html'
   })
   .when('/courserequest',{
-    controller:'courseRequest',
+    controller:'createCourseRequest',
     templateUrl:'templates/create.course.request.view.html'
   })
   .when('/courserequestview/:id',{
@@ -87,22 +87,22 @@ App.run(function($rootScope,getStudentInfor,getNotifications,$http,$localStorage
   }
 
   $rootScope.timeConvert=function(inputdate){
-  var datecurrent=new Date($.now());
-  var date= new Date(inputdate);
-  var seconds= (datecurrent-date)/1000;
-  var outtime=''
-  if(seconds<60)
-      outtime='vài giây trước';
-  else if(seconds<3600)
-      outtime= Math.round(seconds/60) + ' phút trước';
-  else if(seconds<86400)
-      outtime= Math.round(seconds/3600)+ ' giờ trước';
-  else if(seconds<86400*6)
-      outtime=Math.round(seconds/86400)+' ngày trước';
-  else
-      outtime=date.toISOString().slice(0,10);
-  return outtime;
-}
+    var datecurrent=new Date($.now());
+    var date= new Date(inputdate);
+    var seconds= (datecurrent-date)/1000;
+    var outtime=''
+    if(seconds<60)
+        outtime='vài giây trước';
+    else if(seconds<3600)
+        outtime= Math.round(seconds/60) + ' phút trước';
+    else if(seconds<86400)
+        outtime= Math.round(seconds/3600)+ ' giờ trước';
+    else if(seconds<86400*6)
+        outtime=Math.round(seconds/86400)+' ngày trước';
+    else
+        outtime=date.getDate() + '-' + (date.getMonth() + 1) + '-' +  date.getFullYear();
+    return outtime;
+  }
   $rootScope.readNotification=function($index,isread){
     if(!isread){
       $rootScope.newNotifications[$index].isRead=true;
@@ -127,19 +127,19 @@ App.controller('verify',function($http,$scope,$routeParams,$location){
   },function error(response){
       $scope.response='request fail!';
   });
-})
+});
 
 
 App.controller('ProfileController', function($scope,getStudentInfor){
     getStudentInfor.get().then(response=>{
       $scope.userInformation=response.data;
       var birthDay=new Date(response.data.personalInfo.DOB);
-      birthDay=birthDay.toISOString().slice(0,10);
+      birthDay=birthDay.getDate() + '-' + (birthDay.getMonth() + 1) + '-' +  birthDay.getFullYear();
       $scope.settingInformation={
         email:response.data.email,
         fullName:response.data.personalInfo.fullName,
         class:response.data.personalInfo.className,
-        gender:response.data.personalInfo.gender,
+        gender:response.data.personalInfo.gender ? 'Nam':'Nữ',
         DOB:birthDay
       }
     },err=>{
@@ -299,7 +299,7 @@ App.controller('notification',function($scope,$rootScope,getNotification,$routeP
   markAsRead.put($routeParams.id);
 });
 
-App.controller('courseRequest',function($scope,$route,courseRequest,getSubjectNameAndCredits){
+App.controller('createCourseRequest',function($scope,$route,courseRequest,getSubjectNameAndCredits){
     getSubjectNameAndCredits.get().then(function(response){
       $scope.subjects=response.subjects;
     })
@@ -318,7 +318,7 @@ App.controller('courseRequest',function($scope,$route,courseRequest,getSubjectNa
     }
 });
 
-App.controller('courseRequestList',function($scope,courseRequest,$location,$route){
+App.controller('courseRequestList',function($scope,$location,$route,processFunction,courseRequest){
   courseRequest.getPublicCourseRequests().then(function(response){
     $scope.requestList=response.data;
   })
@@ -326,14 +326,7 @@ App.controller('courseRequestList',function($scope,courseRequest,$location,$rout
   $scope.refresh=function(){
       $route.reload();
   };
-  $scope.expectimeConvert=function(time){
-    if(time=='Morning')
-        return 'Buổi sáng';
-    if(time=='Afternoon')
-        return 'Buổi chiều';
-    else
-        return'Buổi tối';
-  };
+  $scope.expectimeConvert=processFunction.expectimeConvert;
   $scope.redirect= function(path){
     $location.path(path);
   }
@@ -372,15 +365,19 @@ App.controller('courseRequestList',function($scope,courseRequest,$location,$rout
   }
 })
 
-App.controller('courseRequestReview',function($scope,$routeParams,courseRequest){
+App.controller('courseRequestReview',function($scope,$routeParams,courseRequest,processFunction){
     courseRequest.getOneById($routeParams.id).then(function(res){
-      $scope.joiners=res.data;
+      $scope.courseInfo=res.data;
+      console.log($scope.courseInfo);
     });
+    $scope.expectimeConvert=processFunction.expectimeConvert;
     $scope.join=function(id){
       courseRequest.putJoinOneById(id);
+      processFunction.refreshRoute();
     }
     $scope.unjoin=function(id){
       courseRequest.putUnJoinOneById(id);
+      processFunction.refreshRoute();
     }
 });
 
@@ -756,7 +753,7 @@ App.factory('courseRequest',function($http,$localStorage){
     getOneById:function(id){
       return $http({
         method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-denied',
+        url:originPath+'/api/v1/course-requests/get-by-id',
         headers:{
           'x-access-token':$localStorage.access_token
         },
@@ -806,6 +803,21 @@ App.factory('courseRequest',function($http,$localStorage){
   }
 })
 
+App.factory('processFunction',function($route){
+  return{
+    expectimeConvert:function(time){
+      if(time=='Morning')
+          return 'Buổi sáng';
+      if(time=='Afternoon')
+          return 'Buổi chiều';
+      else
+          return'Buổi tối';
+    },
+    refreshRoute:function(){
+      $route.reload();
+    }
+  }
+})
   // app.controller('BarCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   //   $scope.options = { scaleShowVerticalLines: false };
   //   $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];

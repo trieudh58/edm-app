@@ -49,21 +49,23 @@
 	                  <tbody>
 	                  <tr>
 	                  	<th ng-if="ownrequest==false">Người xin</th>
-	                  	<th>Mon hoc</th>
-	                  	<th>Thoi gian</th>
-	                  	<th>so nguoi</th>
-	                  	<th></th>
+	                  	<th>Mã môn học</th>
+	                  	<th>Tên môn học</th>
+	                  	<th>Thời gian học</th>
+	                  	<th>Số người hiện tại</th>
+	                  	<th>Tạo</th>
 	                  </tr>
 	                  <tr ng-repeat='request in requestList' ng-click="redirect('courserequestview/'+request._id)">
 
 	                    <td ng-cloak ng-if="ownrequest==false">{{emailTrim(request.creator.email)}}</td>
-
+	                    <td  ng-cloak>{{request.courseInfo.subject.code}}
+	                    </td>
 	                    <td  ng-cloak>{{request.courseInfo.subject.name.vi}}
 	                    </td>
 
 	                    <td ng-cloak>{{expectimeConvert(request.courseInfo.expectedTime)}}</td>
 
-	                    <td >1</td>
+	                    <td >{{request.joiners.length}}</td>
 
 	                    <td ng-cloak>{{timeConvert(request.createdAt)}}</td>
 
