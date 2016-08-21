@@ -11,7 +11,10 @@ module.exports = {
     },
     jwt: {
         secret: '!@#@HRHQ12d21sa#$%@#%#@dsa2422234242dsf232@#',
-        expiresTime: '24h'
+        expiresTime: {
+            accessToken: '1h',
+            refreshToken: '14d'
+        }
     },
     bcrypt: {
         saltRounds: 10

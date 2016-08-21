@@ -20,7 +20,8 @@ var EPDetailSchema = new mongoose.Schema({
         type: String
     }]
 }, {
-    timestamps: false
+    timestamps: false,
+    versionKey: false
 });
 
 module.exports = mongoose.model('EPDetail', EPDetailSchema);

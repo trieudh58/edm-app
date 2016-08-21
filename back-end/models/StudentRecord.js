@@ -17,7 +17,8 @@ var StudentRecordSchema = new mongoose.Schema({
         }]
     }]
 }, {
-    timestamps: false
+    timestamps: false,
+    versionKey: false
 });
 
 module.exports = mongoose.model('StudentRecord', StudentRecordSchema);

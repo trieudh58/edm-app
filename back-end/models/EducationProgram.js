@@ -15,7 +15,8 @@ var EducationProgramSchema = new mongoose.Schema({
         require: true
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    versionKey: false
 });
 
 module.exports = mongoose.model('EducationProgram', EducationProgramSchema);

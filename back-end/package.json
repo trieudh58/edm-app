@@ -19,6 +19,7 @@
     "mongoose": "^4.5.2",
     "mongoose-seed": "^0.1.5",
     "morgan": "^1.7.0",
+    "node-uuid": "^1.4.7",
     "nodemailer": "^2.5.0",
     "swagger-express": "^1.0.5"
   }

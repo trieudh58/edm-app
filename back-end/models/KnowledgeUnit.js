@@ -11,7 +11,8 @@ var KnowledgeUnitSchema = new mongoose.Schema({
         require: true
     }
 }, {
-    timestamps: false
+    timestamps: false,
+    versionKey: false
 });
 
 module.exports = mongoose.model('KnowledgeUnit', KnowledgeUnitSchema);

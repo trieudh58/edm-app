@@ -1,44 +1,47 @@
-var BlackListToken = require('../models').BlackListToken;
+var models = require('../models');
 var jwt = require('jsonwebtoken');
 var config = require('../config/index');
 
 module.exports = function (req, res, next) {
     /* Get access token from request */
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
-    if (!token) {
-        res.status(403).json({
+    var accessToken = req.body.token || req.query.token || req.headers['x-access-token'];
+    if (!accessToken) {
+        return res.status(403).json({
             success: false,
             message: 'No token provided.'
         });
     }
     else {
-        // Find in black list token
-        BlackListToken.findOne({
-            token: token
-        }, function (err, isFound) {
-            if (isFound) {
-                res.json({
+        jwt.verify(accessToken, config.jwt.secret, function (err, decoded) {
+            if (err || decoded.type !== 'accessToken') {
+                return res.json({
                     success: false,
-                    message: 'Invalid token.'
+                    message: 'Failed to authenticate. Invalid token.'
                 });
             }
             else {
-                jwt.verify(token, config.jwt.secret, function (err, decoded) {
+                models.User.findById(decoded.userId, function (err, user) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
-                            message: 'Failed to authenticate.'
+                            message: err
                         });
                     }
-                    else if (!decoded.user.isActive) {
-                        res.json({
+                    else if (!user) {
+                        return res.json({
                             success: false,
-                            message: 'Authentication failed. The account is inactive.'
+                            message: 'Failed to authenticate. Invalid user.'
+                        });
+                    }
+                    else if (!user.isActive) {
+                        return res.json({
+                            success: false,
+                            message: 'Failed to authenticate. The account is deactivated.'
                         });
                     }
                     else {
-                        req.user = decoded.user;
-                        req.validToken = token;
+                        req.user = user;
+                        req.accessToken = accessToken;
                         next();
                     }
                 });

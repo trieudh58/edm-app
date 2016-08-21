@@ -43,7 +43,8 @@ var CourseRequestSchema = new mongoose.Schema({
         enum: ['Pending', 'Public', 'Denied']
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
 });
 
 module.exports = mongoose.model('CourseRequest', CourseRequestSchema);

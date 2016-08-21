@@ -41,7 +41,8 @@ var SubjectSchema = new mongoose.Schema({
         }]
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
 });
 
 module.exports = mongoose.model('Subject', SubjectSchema);

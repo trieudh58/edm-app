@@ -15,7 +15,8 @@ var PendingUserSchema = new mongoose.Schema({
         require: true
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
 });
 
 module.exports = mongoose.model('PendingUser', PendingUserSchema);

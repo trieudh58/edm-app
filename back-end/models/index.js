@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var config = require('../config');
+var fs = require('fs');
 
 /* Connect to mongodb */
 var mongooseConnect = function () {
@@ -10,17 +11,13 @@ var mongooseConnect = function () {
 
 var models = {};
 
-models.User = require('./User');
-models.PendingUser = require('./PendingUser');
-models.Subject = require('./Subject');
-models.StudentRecord = require('./StudentRecord');
-models.BlackListToken = require('./BlackListToken');
-models.KnowledgeUnit = require('./KnowledgeUnit');
-models.EducationProgram = require('./EducationProgram');
-models.EPDetail = require('./EPDetail');
-models.Notification = require('./Notification');
-models.StudentGroup = require('./StudentGroup');
-models.CourseRequest = require('./CourseRequest');
+fs.readdir(__dirname, function (err, files) {
+    for (var i = 0; i < files.length; i++) {
+        if (files[i] != 'index.js') {
+            models[files[i].split('.')[0]] = require('./' + files[i]);
+        }
+    }
+});
 
 models.dbConnect = mongooseConnect;
 module.exports = models;

@@ -1,10 +1,9 @@
-var User = require('../models').User;
-var PendingUser = require('../models').PendingUser;
-var BlackListToken = require('../models').BlackListToken;
+var models = require('../models');
 var jwt = require('jsonwebtoken');
 var config = require('../config');
 var bcrypt = require('bcrypt');
 var nodemailer = require('nodemailer');
+var uuid = require('node-uuid');
 
 module.exports = {
     /**
@@ -39,41 +38,118 @@ module.exports = {
      */
     /* Authenticate user with email and password. Return a token if success */
     authenticate: function (req, res) {
-        User.findOne({
+        models.User.findOne({
             email: req.body.email
-        }, function (err, user) {
+        }, 'email password isActive', function (err, user) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             if (!user) {
-                res.json({
+                return res.json({
                     success: false,
-                    message: 'Authentication failed.'
+                    message: 'Failed to authenticate.'
                 });
             }
             else if (!user.isActive) {
-                res.json({
+                return res.json({
                     success: false,
-                    message: 'Authentication failed. The account is inactive.'
+                    message: 'Failed to authenticate. The account is deactivated.'
                 });
             }
             else {
-                bcrypt.compare(req.body.password, user.password, function (err, result) {
-                    if (result) {
-                        var token = jwt.sign({user: user}, config.jwt.secret, {expiresIn: config.jwt.expiresTime});
-                        res.json({
-                            success: true,
-                            token: token
+                bcrypt.compare(req.body.password, user.password, function (err, isMatch) {
+                    if (err) {
+                        return res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else if (!isMatch) {
+                        return res.json({
+                            success: false,
+                            message: 'Failed to authenticate.'
                         });
                     }
                     else {
-                        res.json({
-                            success: false,
-                            message: 'Authentication failed.'
+                        var refreshTokenId = uuid.v4();
+                        jwt.sign({
+                            tokenId: refreshTokenId,
+                            type: 'refreshToken'
+                        }, config.jwt.secret, {
+                            expiresIn: config.jwt.expiresTime.refreshToken
+                        }, function (err, refreshToken) {
+                            if (err) {
+                                return res.status(500).json({
+                                    success: false,
+                                    message: err
+                                });
+                            }
+                            else {
+                                jwt.sign({
+                                    userId: user._id,
+                                    type: 'accessToken'
+                                }, config.jwt.secret, {
+                                    expiresIn: config.jwt.expiresTime.accessToken
+                                }, function (err, accessToken) {
+                                    if (err) {
+                                        return res.status(500).json({
+                                            success: false,
+                                            message: err
+                                        });
+                                    }
+                                    else {
+                                        models.UserToken.findOne({
+                                            userId: user._id
+                                        }, function (err, userToken) {
+                                            if (err) {
+                                                return res.status(500).json({
+                                                    success: false,
+                                                    message: err
+                                                });
+                                            }
+                                            else if (!userToken) {
+                                                models.UserToken.create({
+                                                    userId: user._id,
+                                                    tokens: [{ tokenId: refreshTokenId}]
+                                                }, function (err) {
+                                                    if (err) {
+                                                        return res.status(500).json({
+                                                            success: false,
+                                                            message: err
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                            else {
+                                                userToken.update({
+                                                    $push: {
+                                                        tokens: {
+                                                            tokenId: refreshTokenId
+                                                        }
+                                                    }
+                                                }, function (err) {
+                                                    if (err) {
+                                                        return res.status(500).json({
+                                                            success: false,
+                                                            message: err
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                            return res.json({
+                                                success: true,
+                                                accessToken: accessToken,
+                                                refreshToken: refreshToken
+                                            });
+                                        });
+                                    }
+                                });
+                            }
                         });
+
                     }
                 });
             }
@@ -99,20 +175,20 @@ module.exports = {
      */
     /* Return user data */
     get: function (req, res) {
-        User.findById(req.user._id, '-updatedAt -createdAt -password -__v -notificationStack').populate('personalInfo.groups.group', 'name').exec(function (err, result) {
+        models.User.findById(req.user._id, '-updatedAt -createdAt -password -notificationStack').populate('personalInfo.groups.group', 'name').exec(function (err, result) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!result) {
-                res.json({
+                return res.json({
                     success: false,
                     message: 'User does not exist.'
                 });
             }
-            res.json({
+            return res.json({
                 success: true,
                 data: result
             })
@@ -145,7 +221,7 @@ module.exports = {
      */
     /* Register a new account */
     register: function (req, res) {
-        User.findOne({
+        models.User.findOne({
             email: req.body.email
         }, function (err, user) {
             if (err) {
@@ -168,7 +244,7 @@ module.exports = {
             }
             else {
                 var rememberToken = jwt.sign({ email: req.body.email, password: req.body.password }, config.jwt.secret);
-                PendingUser.update({
+                models.PendingUser.update({
                     email: req.body.email
                 },{
                     password: bcrypt.hashSync(req.body.password, config.bcrypt.saltRounds),
@@ -246,7 +322,7 @@ module.exports = {
      */
     /* Verify pending user */
     verifyEmail: function (req, res) {
-        PendingUser.findOneAndRemove({
+        models.PendingUser.findOneAndRemove({
             email: req.body.email,
             rememberToken: req.body.token
         }, function (err, removedPendingUser) {
@@ -263,7 +339,7 @@ module.exports = {
                 });
             }
             else {
-                User.update({
+                models.User.update({
                     email: removedPendingUser.email
                 }, {
                     password: removedPendingUser.password,
@@ -305,7 +381,7 @@ module.exports = {
      */
     /* User logs out. Return result message */
     logOut: function (req, res) {
-        BlackListToken.create({
+        models.BlackListToken.create({
             token: req.validToken
         }, function (err, bannedToken) {
             if (err) {
