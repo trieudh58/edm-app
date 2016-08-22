@@ -16,7 +16,4 @@ router.post('/register', validation.register, UserController.register);
 /* Verify email with remember token */
 router.put('/verify-email', validation.verifyEmail, UserController.verifyEmail);
 
-/* Log out user - add current token to black list */
-router.post('/logout', authentication, UserController.logOut);
-
 module.exports = router;

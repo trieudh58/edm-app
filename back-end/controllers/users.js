@@ -76,6 +76,7 @@ module.exports = {
                     else {
                         var refreshTokenId = uuid.v4();
                         jwt.sign({
+                            userId: user._id,
                             tokenId: refreshTokenId,
                             type: 'refreshToken'
                         }, config.jwt.secret, {
@@ -349,27 +350,5 @@ module.exports = {
                 });
             }
         });
-    },
-
-    /**
-     * @swagger
-     * path: /api/v1/users/logout
-     * operations:
-     *   -  httpMethod: POST
-     *      summary: User logs out (move refresh token to blacklist)
-     *      notes: Require refresh token
-     *      nickname: Log out
-     *      consumes:
-     *        - text/html
-     *      parameters:
-     *        - name: Authorization
-     *          description: Bearer [refreshToken]
-     *          paramType: header
-     *          required: true
-     *          dataType: string
-     */
-    /* User logs out. Return result message */
-    logOut: function (req, res) {
-
     }
 };
