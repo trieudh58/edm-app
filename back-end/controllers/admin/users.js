@@ -230,14 +230,14 @@ module.exports = {
      *      consumes:
      *        - application/x-www-form-urlencoded
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: email
      *          description: Your email
-     *          paramType: query
+     *          paramType: form
      *          required: true
      *          dataType: string
      *          format: email
@@ -245,22 +245,22 @@ module.exports = {
     /* Delete a user. Admin permission required */
     delete: function (req, res) {
         models.User.findOneAndRemove({
-            email: req.query.email
+            email: req.body.email
         }, function (err, removedUser) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!removedUser) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Email does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     message: 'User is deleted.'
                 });
