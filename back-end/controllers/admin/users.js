@@ -1,7 +1,6 @@
 var models = require('../../models');
 var config = require('../../config');
 var bcrypt = require('bcrypt');
-var nodemailer = require('nodemailer');
 
 module.exports = {
     /**
@@ -21,8 +20,8 @@ module.exports = {
      *      consumes:
      *        - application/x-www-form-urlencoded
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -45,13 +44,13 @@ module.exports = {
             email: req.body.email
         }, function (err, user) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             if (user) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Email exists.'
                 });
@@ -65,15 +64,17 @@ module.exports = {
                                 password: hash
                             }, function (err, user) {
                                 if (err) {
-                                    res.status(500).json({
+                                    return res.status(500).json({
                                         success: false,
                                         message: err
                                     });
                                 }
-                                res.json({
-                                    success: true,
-                                    data: user
-                                });
+                                else {
+                                    return res.json({
+                                        success: true,
+                                        data: user
+                                    });
+                                }
                             });
                         }
                     });
