@@ -18,8 +18,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -28,15 +28,17 @@ module.exports = {
     getNamesAndCredits: function (req, res) {
         Subject.find({}, 'code name details.credits', function (err, subjects) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
-            res.json({
-                success: true,
-                subjects: subjects
-            });
+            else {
+                return res.json({
+                    success: true,
+                    subjects: subjects
+                });
+            }
         });
     },
 
