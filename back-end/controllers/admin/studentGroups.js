@@ -1,4 +1,4 @@
-var models = require('../../models/index');
+var models = require('../../models');
 
 module.exports = {
     /**
@@ -18,25 +18,25 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      */
     /* Return student groups */
     getAll: function (req, res) {
-        models.StudentGroup.find({}, '-__v').sort({
+        models.StudentGroup.find({}).sort({
             name: 'asc'
         }).exec(function (err, groups) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: groups
                 });
@@ -55,8 +55,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -72,13 +72,13 @@ module.exports = {
             name: req.body.groupName
         }, function (err, group) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (group) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Group existed.'
                 });
@@ -88,15 +88,16 @@ module.exports = {
                     name: req.body.groupName
                 }, function (err, createdGroup) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
-                            message: 'Group created: ' + createdGroup.name
+                            message: 'Group created.',
+                            data: createdGroup
                         });
                     }
                 });
@@ -115,34 +116,34 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: groupId
      *          description: Student group id
-     *          paramType: query
+     *          paramType: form
      *          required: true
      *          dataType: string
      */
     /* Return delete result */
     deleteById: function (req, res) {
-        models.StudentGroup.findByIdAndRemove(req.query.groupId, function(err, result) {
+        models.StudentGroup.findByIdAndRemove(req.body.groupId, function(err, result) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!result) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Group does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     message: 'Group deleted.'
                 });
@@ -161,14 +162,14 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: groupName
      *          description: Student group name
-     *          paramType: query
+     *          paramType: form
      *          required: true
      *          dataType: string
      */
@@ -178,19 +179,19 @@ module.exports = {
             name: req.query.groupName
         }, function(err, result) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!result) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Group does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     message: 'Group deleted.'
                 });
