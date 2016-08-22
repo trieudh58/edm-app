@@ -1,4 +1,4 @@
-var User = require('../../models').User;
+var models = require('../../models');
 var config = require('../../config');
 var bcrypt = require('bcrypt');
 var nodemailer = require('nodemailer');
@@ -41,7 +41,7 @@ module.exports = {
      */
     /* Create a user */
     create: function (req, res) {
-        User.findOne({
+        models.User.findOne({
             email: req.body.email
         }, function (err, user) {
             if (err) {
@@ -60,7 +60,7 @@ module.exports = {
                 bcrypt.genSalt(config.bcrypt.saltRounds, function (err, salt) {
                     bcrypt.hash(req.body.password, salt, function (err, hash) {
                         if (!err) {
-                            User.create({
+                            models.User.create({
                                 email: req.body.email,
                                 password: hash
                             }, function (err, user) {
@@ -93,8 +93,8 @@ module.exports = {
      *      consumes:
      *        - application/x-www-form-urlencoded
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -107,24 +107,24 @@ module.exports = {
      */
     /* Activate a user */
     activateUser: function (req, res) {
-        User.findOne({
+        models.User.findOne({
             email: req.body.email,
             isAdmin: false
         }, function (err, user) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!user) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Email does not exist.'
                 });
             }
             else if (user.isActive) {
-                res.json({
+                return res.status(202).json({
                     success: false,
                     message: 'Email is already activated.'
                 });
@@ -134,13 +134,13 @@ module.exports = {
                     isActive: true
                 }, function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Account activated.'
                         });
@@ -175,7 +175,7 @@ module.exports = {
      */
     /* Deactivate a user */
     deactivateUser: function (req, res) {
-        User.findOne({
+        models.User.findOne({
             email: req.body.email,
             isAdmin: false
         }, function (err, user) {
@@ -243,7 +243,7 @@ module.exports = {
      */
     /* Delete a user. Admin permission required */
     delete: function (req, res) {
-        User.findOneAndRemove({
+        models.User.findOneAndRemove({
             email: req.query.email
         }, function (err, removedUser) {
             if (err) {
