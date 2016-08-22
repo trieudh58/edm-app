@@ -167,7 +167,7 @@ module.exports = {
      *        - text/html
      *      parameters:
      *        - name: Authorization
-     *          description: Bearer [token]
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -306,7 +306,7 @@ module.exports = {
      *          dataType: string
      *          format: email
      *        - name: token
-     *          description: Your token
+     *          description: Remember token
      *          paramType: form
      *          required: true
      *          dataType: string
@@ -318,13 +318,13 @@ module.exports = {
             rememberToken: req.body.token
         }, function (err, removedPendingUser) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!removedPendingUser) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Email does not exist or invalid token.'
                 });
@@ -337,17 +337,15 @@ module.exports = {
                     isActive: true
                 }, function (err, result) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
-                    else if (result.ok) {
-                        res.json({
-                            success: true,
-                            message: 'Account activated.'
-                        });
-                    }
+                    return res.json({
+                        success: true,
+                        message: 'Account activated.'
+                    });
                 });
             }
         });
@@ -358,33 +356,20 @@ module.exports = {
      * path: /api/v1/users/logout
      * operations:
      *   -  httpMethod: POST
-     *      summary: User logs out (move current token to blacklist)
-     *      notes: Require access token
+     *      summary: User logs out (move refresh token to blacklist)
+     *      notes: Require refresh token
      *      nickname: Log out
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [refreshToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      */
     /* User logs out. Return result message */
     logOut: function (req, res) {
-        models.BlackListToken.create({
-            token: req.validToken
-        }, function (err, bannedToken) {
-            if (err) {
-                res.status(500).json({
-                    success: false,
-                    message: err
-                });
-            }
-            res.json({
-                success: true,
-                message: 'Token banned.'
-            });
-        });
+
     }
 };
