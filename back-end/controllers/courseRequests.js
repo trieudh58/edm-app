@@ -518,31 +518,31 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: courseRequestId
      *          description: Course request id
-     *          paramType: query
+     *          paramType: form
      *          required: true
      *          dataType: string
      */
     /* Return delete result */
     deleteOne: function (req, res) {
         models.CourseRequest.findOne({
-            _id: req.query.courseRequestId,
+            _id: req.body.courseRequestId,
             creator: req.user._id
         }, function(err, cr) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!cr) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request does not exist or invalid user id.'
                 });
@@ -550,13 +550,13 @@ module.exports = {
             else {
                 cr.remove(function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Course request deleted.'
                         });
