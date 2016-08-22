@@ -41,7 +41,7 @@ validation.createSubject = function (req, res, next) {
 
 validation.delete = function (req, res, next) {
     Joi.validate({
-        subjectCode: req.query.subjectCode
+        subjectCode: req.body.subjectCode
     }, {
         subjectCode: Joi.string().required()
     }, function (err) {

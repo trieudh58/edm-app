@@ -18,8 +18,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -28,15 +28,17 @@ module.exports = {
     getNamesAndCredits: function (req, res) {
         Subject.find({}, 'code name details.credits', function (err, subjects) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
-            res.json({
-                success: true,
-                subjects: subjects
-            });
+            else {
+                return res.json({
+                    success: true,
+                    subjects: subjects
+                });
+            }
         });
     },
 
@@ -51,8 +53,8 @@ module.exports = {
      *      consumes:
      *        - application/x-www-form-urlencoded
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -66,21 +68,21 @@ module.exports = {
     getInfo: function (req, res) {
         Subject.findOne({
             code: req.query.subjectCode
-        }, '-_id -updatedAt -createdAt -__v', function (err, subj) {
+        }, '-_id -updatedAt -createdAt', function (err, subj) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!subj) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Subject does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: subj
                 });
@@ -99,8 +101,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -130,7 +132,7 @@ module.exports = {
             code: req.body.subjectCode
         }, function (err, subj) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
@@ -148,19 +150,19 @@ module.exports = {
                     }
                 }, function (err, result) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
-                    res.json({
+                    return res.json({
                         success: true,
                         message: result
                     });
                 });
             }
             else {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Subject already exists.'
                 });
@@ -179,36 +181,36 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: subjectCode
      *          description: Subject code
-     *          paramType: query
+     *          paramType: form
      *          required: true
      *          dataType: string
      */
     /* Return deletion result */
     deleteSubject: function (req, res) {
         Subject.findOneAndRemove({
-            code: req.query.subjectCode
+            code: req.body.subjectCode
         }, function (err, deleted) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!deleted) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Subject does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     message: 'Subject deleted.',
                     data: deleted
