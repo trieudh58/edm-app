@@ -162,8 +162,8 @@ module.exports = {
      *      consumes:
      *        - application/x-www-form-urlencoded
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -181,19 +181,19 @@ module.exports = {
             isAdmin: false
         }, function (err, user) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!user) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Email does not exist.'
                 });
             }
             else if (!user.isActive) {
-                res.json({
+                return res.status(202).json({
                     success: false,
                     message: 'Email is already deactivated.'
                 });
@@ -203,13 +203,13 @@ module.exports = {
                     isActive: false
                 }, function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Account deactivated.'
                         });
