@@ -119,8 +119,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -134,25 +134,25 @@ module.exports = {
     join: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!cr) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request does not exist.'
                 });
             }
             else if (cr.creator == req.user._id) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Can not join Course request that created by your own.'
                 });
             }
             else if (cr.status != 'Public') {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request is not public.'
                 });
@@ -166,15 +166,15 @@ module.exports = {
                     }
                 }, function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
-                            message: 'Successfully joined Course request.'
+                            message: 'Successfully join Course request.'
                         });
                     }
                 });
