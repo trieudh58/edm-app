@@ -34,13 +34,13 @@ module.exports = function (req, res, next) {
                         });
                     }
                     else if (!user) {
-                        return res.json({
+                        return res.status(400).json({
                             success: false,
                             message: 'Failed to authenticate. Invalid user.'
                         });
                     }
                     else if (!user.isActive) {
-                        return res.json({
+                        return res.status(400).json({
                             success: false,
                             message: 'Failed to authenticate. The account is deactivated.'
                         });

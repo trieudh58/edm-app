@@ -48,13 +48,13 @@ module.exports = {
                 });
             }
             if (!user) {
-                return res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Failed to authenticate.'
                 });
             }
             else if (!user.isActive) {
-                return res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Failed to authenticate. The account is deactivated.'
                 });
@@ -68,7 +68,7 @@ module.exports = {
                         });
                     }
                     else if (!isMatch) {
-                        return res.json({
+                        return res.status(400).json({
                             success: false,
                             message: 'Failed to authenticate.'
                         });
@@ -216,21 +216,21 @@ module.exports = {
             email: req.body.email
         }, function (err, user) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!user) {
-                res.json({
+                return res.status(400).json({
                     success: false,
-                    message: 'Unacceptable email.'
+                    message: 'Invalid email.'
                 });
             }
             else if (user && user.isActive) {
-                res.json({
+                return res.status(400).json({
                     success: false,
-                    message: 'Email exists or account by this email is activated.'
+                    message: 'Email exists or account is activated.'
                 });
             }
             else {
@@ -244,7 +244,7 @@ module.exports = {
                     upsert: true
                 }, function (err, result) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
@@ -270,13 +270,13 @@ module.exports = {
                         };
                         transporter.sendMail(mailOptions, function (err, info) {
                             if (err) {
-                                res.status(500).json({
+                                return res.status(500).json({
                                     success: false,
                                     err: err
                                 });
                             }
                             else {
-                                res.json({
+                                return res.json({
                                     success: true,
                                     message: 'Activation link sent.'
                                 });
