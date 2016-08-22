@@ -183,8 +183,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -204,27 +204,27 @@ module.exports = {
             }
         }
         if (!flag) {
-            res.json({
+            return res.status(400).json({
                 success: false,
-                message: 'Notification does not exist or access denied.'
+                message: 'Notification does not exist.'
             });
         }
         else {
-            models.Notification.findById(req.query.notificationId, '-__v').populate('creator', '-_id email').populate('targetGroups.group', '-_id name').exec(function (err, notification) {
+            models.Notification.findById(req.query.notificationId).populate('creator', 'email').populate('targetGroups.group', 'name').exec(function (err, notification) {
                 if (err) {
-                    res.status(500).json({
+                    return res.status(500).json({
                         success: false,
                         message: err
                     });
                 }
                 else if (!notification || !notification.isSent) {
-                    res.json({
+                    return res.status(400).json({
                         success: false,
                         message: 'Notification does not exist.'
                     });
                 }
                 else {
-                    res.json({
+                    return res.json({
                         success: true,
                         data: notification
                     });
