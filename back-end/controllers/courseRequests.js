@@ -320,8 +320,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -330,17 +330,17 @@ module.exports = {
     getAllPublicCRs: function (req, res) {
         models.CourseRequest.find({
             status: 'Public'
-        }, '-__v').populate('courseInfo.subject', 'code name').populate('creator', 'email').sort({
+        }).populate('courseInfo.subject', 'code name').populate('creator', 'email').sort({
             updatedAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: crs
                 });
