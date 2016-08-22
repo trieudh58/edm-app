@@ -313,8 +313,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -343,7 +343,7 @@ module.exports = {
                     }
                 }).exec();
             }
-            res.json({
+            return res.json({
                 success: true,
                 message: 'All notifications marked as read.'
             });
