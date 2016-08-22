@@ -4,7 +4,13 @@ var config = require('../config/index');
 
 module.exports = function (req, res, next) {
     /* Get access token from request */
-    var accessToken = req.body.token || req.query.token || req.headers['x-access-token'];
+    var accessToken = req.headers.authorization.split(' ')[1];
+    if (req.headers.authorization.split(' ')[0] !== 'Bearer') {
+        return res.status(403).json({
+            success: false,
+            message: 'Invalid authorization.'
+        });
+    }
     if (!accessToken) {
         return res.status(403).json({
             success: false,
