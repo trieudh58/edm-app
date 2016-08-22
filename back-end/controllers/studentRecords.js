@@ -1,4 +1,4 @@
-var StudentRecord = require('../models').StudentRecord;
+var models = require('../models');
 
 module.exports = {
 
@@ -19,35 +19,35 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      */
     /* Get student record */
     get: function (req, res) {
-        StudentRecord.findOne({
+        models.StudentRecord.findOne({
             studentCode: req.user.studentCode
         }, function (err, studentRecord) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!studentRecord) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Record does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: studentRecord
                 });
             }
         });
     }
-}
+};
