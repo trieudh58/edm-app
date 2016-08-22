@@ -40,10 +40,10 @@ module.exports = {
                     message: err
                 });
             }
-            else if (!stack.notificationStack.length || !stack) {
-                return res.json({
+            else if (!stack) {
+                return res.status(400).json({
                     success: false,
-                    message: 'Notification stack is empty.'
+                    message: 'Invalid user.'
                 });
             }
             else {
