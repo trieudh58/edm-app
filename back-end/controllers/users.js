@@ -149,7 +149,6 @@ module.exports = {
                                 });
                             }
                         });
-
                     }
                 });
             }
@@ -167,31 +166,23 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [token]
      *          paramType: header
      *          required: true
      *          dataType: string
      */
     /* Return user data */
     get: function (req, res) {
-        models.User.findById(req.user._id, '-updatedAt -createdAt -password -notificationStack').populate('personalInfo.groups.group', 'name').exec(function (err, result) {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: err
-                });
+        return res.json({
+            success: true,
+            data: {
+                email: req.user.email,
+                studentCode: req.user.studentCode,
+                personalInfo: req.user.personalInfo,
+                isAdmin: req.user.isAdmin,
+                isActive: req.user.isActive
             }
-            else if (!result) {
-                return res.json({
-                    success: false,
-                    message: 'User does not exist.'
-                });
-            }
-            return res.json({
-                success: true,
-                data: result
-            })
         });
     },
 
