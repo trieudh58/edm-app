@@ -244,8 +244,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -261,9 +261,15 @@ module.exports = {
             }
         }).exec(function (err, stack) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
+                });
+            }
+            else if (!stack) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid user.'
                 });
             }
             else {
@@ -285,7 +291,7 @@ module.exports = {
                         break;
                     }
                 }
-                res.json({
+                return res.json({
                     success: true,
                     data: {
                         latest: arrOf5Latest,
