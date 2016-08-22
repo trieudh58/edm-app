@@ -18,8 +18,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -45,13 +45,13 @@ module.exports = {
             _id: req.body.subjectId
         }, 'code', function (err, subject) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!subject) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Invalid subject id.'
                 });
@@ -76,7 +76,7 @@ module.exports = {
                     status: 'Pending'
                 }, function (err, courseRequest) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
@@ -90,13 +90,13 @@ module.exports = {
                             }
                         }, function (err) {
                             if (err) {
-                                res.status(500).json({
+                                return res.status(500).json({
                                     success: false,
                                     message: err
                                 });
                             }
                             else {
-                                res.json({
+                                return res.json({
                                     success: true,
                                     message: 'Course request created.'
                                 });
