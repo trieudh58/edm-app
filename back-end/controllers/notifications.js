@@ -69,8 +69,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -86,15 +86,15 @@ module.exports = {
             }
         }).exec(function (err, stack) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!stack) {
-                res.json({
+                return res.json({
                     success: false,
-                    message: 'Important notification stack is empty.'
+                    message: 'Invalid user.'
                 });
             }
             else {
@@ -107,7 +107,7 @@ module.exports = {
                 var sortedUnreadStack = importantStack.sort(function(a, b) {
                     return new Date(b.createdAt) - new Date(a.createdAt);
                 });
-                res.json({
+                return res.json({
                     success: true,
                     data: sortedUnreadStack
                 });
