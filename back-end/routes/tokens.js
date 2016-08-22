@@ -5,4 +5,7 @@ var TokenController = require('../controllers/tokens');
 /* Refresh token */
 router.get('/refresh', TokenController.refresh);
 
+/* Revoke tokens */
+router.post('/revoke', TokenController.revoke);
+
 module.exports = router;
