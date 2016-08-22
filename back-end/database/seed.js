@@ -15,7 +15,8 @@ seeder.connect(config.mongodb.host, function () {
         'models/EPDetail.js',
         'models/StudentGroup.js',
         'models/BlackListToken.js',
-        'models/Notification.js'
+        'models/Notification.js',
+        'models/UserToken.js'
     ]);
     /* Clear models' data */
     seeder.clearModels([
@@ -28,7 +29,8 @@ seeder.connect(config.mongodb.host, function () {
         'EPDetail',
         'StudentGroup',
         'Notification',
-        'BlackListToken'
+        'BlackListToken',
+        'UserToken'
     ], function () {
         console.log('Connected to mongodb.');
         seeder.populateModels(data);

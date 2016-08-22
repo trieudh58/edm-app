@@ -274,21 +274,10 @@ module.exports = {
                                                     });
                                                 }
                                                 else {
-                                                    userToken.tokens.forEach(function (token) {
-                                                        models.BlackListToken.create({
-                                                            tokenId: token
-                                                        }, function (err) {
-                                                            if (err) {
-                                                                return res.status(500).json({
-                                                                    success: false,
-                                                                    message: err
-                                                                });
-                                                            }
-                                                        });
-                                                    });
+                                                    var oldTokens = userToken.tokens;
                                                     userToken.update({
                                                         $set: {
-                                                            tokens: []
+                                                            tokens: [{ tokenId: refreshTokenId }]
                                                         }
                                                     }, function (err) {
                                                         if (err) {
@@ -298,6 +287,18 @@ module.exports = {
                                                             });
                                                         }
                                                         else {
+                                                            oldTokens.forEach(function (token) {
+                                                                models.BlackListToken.create({
+                                                                    tokenId: token
+                                                                }, function (err) {
+                                                                    if (err) {
+                                                                        return res.status(500).json({
+                                                                            success: false,
+                                                                            message: err
+                                                                        });
+                                                                    }
+                                                                });
+                                                            });
                                                             return res.json({
                                                                 success: true,
                                                                 accessToken: accessToken,
