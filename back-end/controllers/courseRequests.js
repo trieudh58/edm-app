@@ -274,8 +274,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -287,21 +287,21 @@ module.exports = {
      */
     /* Return one public/own Course request (by id) */
     getById: function (req, res) {
-        models.CourseRequest.findById(req.query.courseRequestId, '-__v').populate('courseInfo.subject', 'code name').populate('creator', 'email').exec(function (err, cr) {
+        models.CourseRequest.findById(req.query.courseRequestId).populate('courseInfo.subject', 'code name').populate('creator', 'email').exec(function (err, cr) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (cr.creator == req.user._id || cr.status == 'Public') {
-                res.json({
+                return res.json({
                     success: true,
                     data: cr
                 });
             }
             else {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request is not public or not created by you.'
                 });
