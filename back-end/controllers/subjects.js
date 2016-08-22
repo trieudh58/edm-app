@@ -53,8 +53,8 @@ module.exports = {
      *      consumes:
      *        - application/x-www-form-urlencoded
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -68,21 +68,21 @@ module.exports = {
     getInfo: function (req, res) {
         Subject.findOne({
             code: req.query.subjectCode
-        }, '-_id -updatedAt -createdAt -__v', function (err, subj) {
+        }, '-updatedAt -createdAt', function (err, subj) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!subj) {
-                res.json({
+                return res.json({
                     success: false,
                     message: 'Subject does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: subj
                 });
