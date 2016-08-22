@@ -575,14 +575,14 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
+     *        - name: Authorization
      *          description: Your token
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: notificationIds
      *          description: Notification ids (separated by comma)
-     *          paramType: query
+     *          paramType: body
      *          required: true
      *          dataType: string
      */
@@ -600,13 +600,13 @@ module.exports = {
             }
         }, function (err) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     message: 'Notifications deleted.'
                 });

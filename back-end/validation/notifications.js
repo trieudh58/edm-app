@@ -4,7 +4,7 @@ var validation = {};
 
 validation.deleteNotifications = function (req, res, next) {
     Joi.validate({
-        notificationIds: req.query.notificationIds
+        notificationIds: req.body.notificationIds
     }, {
         notificationIds: Joi.string().required()
     }, function (err) {
