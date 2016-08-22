@@ -20,7 +20,7 @@ module.exports = function (req, res, next) {
     else {
         jwt.verify(accessToken, config.jwt.secret, function (err, decoded) {
             if (err || decoded.type !== 'accessToken') {
-                return res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Failed to authenticate. Invalid token.'
                 });
