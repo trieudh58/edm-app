@@ -102,11 +102,7 @@ App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window){
     else if(seconds<86400*6)
         outtime=Math.round(seconds/86400)+' ngày trước';
     else
-<<<<<<< HEAD
         outtime=date.getDate() + '-' + (date.getMonth() + 1) + '-' +  date.getFullYear();
-=======
-        outtime=date.toISOString().slice(0,10);
->>>>>>> origin/auth-rebuild
     return outtime;
   }
   $rootScope.readNotification=function($index,isread){
@@ -119,6 +115,7 @@ App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window){
     $rootScope.userInfor=response.data;
   })
 });
+
 App.controller('verify',function($http,$scope,$routeParams,$location){
   var qs = $location.search();
   $http({
@@ -133,7 +130,7 @@ App.controller('verify',function($http,$scope,$routeParams,$location){
       $scope.response='request fail!';
   });
 });
-<<<<<<< HEAD
+
 
 
 App.controller('ProfileController', function($scope,getStudentInfor){
@@ -154,11 +151,6 @@ App.controller('ProfileController', function($scope,getStudentInfor){
     $scope.updateInfo=function(){
       ///////////
     }
-=======
-App.controller('ProfileController', function($scope,$http){
-    //////profile
->>>>>>> origin/auth-rebuild
-});
 
 App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
 
@@ -709,14 +701,7 @@ App.factory('courseRequest',function($http){
     getOneById:function(id){
       return $http({
         method:'GET',
-<<<<<<< HEAD
-        url:originPath+'/api/v1/course-requests/get-by-id',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        },
-=======
         url:originPath+'/api/v1/course-requests/get-own-denied',
->>>>>>> origin/auth-rebuild
         params:{
           courseRequestId:id
         }
@@ -754,7 +739,6 @@ App.factory('courseRequest',function($http){
   }
 });
 
-<<<<<<< HEAD
 App.factory('processFunction',function($route){
   return{
     expectimeConvert:function(time){
@@ -770,7 +754,7 @@ App.factory('processFunction',function($route){
     }
   }
 })
-=======
+
 App.factory('refreshToken',function($http){
     return{
         refreshToken:function(){
@@ -788,7 +772,7 @@ App.factory('refreshToken',function($http){
         }
     }
 });
->>>>>>> origin/auth-rebuild
+
   // app.controller('BarCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   //   $scope.options = { scaleShowVerticalLines: false };
   //   $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
