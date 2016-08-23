@@ -10,7 +10,7 @@ App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvi
       controller:'verify'
     })
     .when('/profile',{
-        templateUrl: 'templates/profile.html',
+        templateUrl: 'templates/profile.view.html',
         controller:'ProfileController',
         resolve:{
             //home page
@@ -33,7 +33,7 @@ App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvi
       templateUrl:'templates/notification.view.html'
     })
     .when('/courserequest',{
-      controller:'courseRequest',
+      controller:'createCourseRequest',
       templateUrl:'templates/create.course.request.view.html'
     })
     .when('/courserequestview/:id',{
@@ -151,7 +151,7 @@ App.controller('ProfileController', function($scope,getStudentInfor){
     $scope.updateInfo=function(){
       ///////////
     }
-
+});
 App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
 
     var res=getSubjectNameAndCredits.get();
@@ -302,6 +302,7 @@ App.controller('notification',function($scope,$rootScope,getNotification,$routeP
 
 App.controller('createCourseRequest',function($scope,$route,courseRequest,getSubjectNameAndCredits){
     getSubjectNameAndCredits.get().then(function(response){
+      console.log('dsgsd',response.subjects)
       $scope.subjects=response.subjects;
     })
     $scope.courseData={};
@@ -432,7 +433,6 @@ App.factory('getSubjectNameAndCredits',function($http){
         method : "GET",
         url : originPath+"/api/v1/subjects/get-names-and-credits"
     }).then(function(response){
-      // console.log(response.data);
       return response.data;
     },
      function myError() {

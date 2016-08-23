@@ -2,7 +2,6 @@
     var App = angular.module('app',['ngRoute','ngStorage','angular-jwt']);
     var originPath='http://localhost:3001';
 	// configure our routes
-	App.controller('LoginController', function($scope,$rootScope,$http,$location,$localStorage,$window,jwtHelper) {
     App.config(function Config($httpProvider,jwtOptionsProvider) {
     // Please note we're annotating the function so that the $injector works when the file is minified
     jwtOptionsProvider.config({
@@ -86,4 +85,4 @@
                 })
             }
         }
-    })
+    });
