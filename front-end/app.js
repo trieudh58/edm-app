@@ -4,22 +4,6 @@
     var App = angular.module('app',['ngRoute','ngStorage','angular-jwt']);
     var originPath='http://127.0.0.1:3001';
 	// configure our routes
-
-	// App.config(function($routeProvider,ChartJsProvider,jwtOptionsProvider) {
- //        //sent id_token in every request
- //        jwtOptionsProvider.config({
- //            tokenGetter: function() {
- //                return localStorage.getItem('id_token');
- //            },
- //            //For Cross domain request
- //            whiteListedDomains: ['myapp.com', 'localhost']     
- //        });
-
- //        $httpProvider.interceptors.push('jwtInterceptor');
- //    }
-
-	// create the controller and inject Angular's $scope
-
 	App.controller('LoginController', function($scope,$rootScope,$http,$location,$localStorage,$window,jwtHelper) {
         $scope.message={}
         $scope.login =function() {
@@ -31,10 +15,6 @@
                 }).then(function mySuccess(response) {
                     if(response.data.success){
                         $localStorage.access_token=response.data.token;
-                        // console.log(jwtHelper.decodeToken($localStorage.access_token));
-                        // console.log(jwtHelper.getTokenExpirationDate($localStorage.access_token));
-                        // console.log(jwtHelper.isTokenExpired($localStorage.access_token));
-                        // console.log($localStorage.getItem(access_token));
 			            $window.open('/home', "_self");
                     }
                 }, function myError(response) {
