@@ -13,7 +13,7 @@
     <section class="content" style="height:100%;">
         <div class="box box-default">
           <div class="box-header with-border">
-            <h3 class="box-title">Don xin mo lop cua thuongdv_58 <b ng-cloak>{{emailTrim(notification.creator.email)}}</b></h3>
+            <h3 class="box-title">Đơn xin mở lớp <b ng-cloak>{{courseInfo.courseInfo.subject.name.vi}}</b></h3>
 
             <div class="box-tools pull-right">
               <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -22,11 +22,10 @@
           </div>
           <div class="box-body no-padding">
             <div class="mailbox-read-info">
-              <h3 ng-cloak>{{notification.title}}</h3>
-                <span class="mailbox-read-time pull-right" ng-cloak>{{timeConvert(notification.createdAt)}}</span></h5>
-            </div>
-            <div class="mailbox-read-message">
-              <p ng-cloak>{{notification.body}}</p>
+              <h5 ng-cloak>Người tạo: <b>{{emailTrim(courseInfo.creator.email)}}</b></h5>
+              <span class="mailbox-read-time pull-right" ng-cloak>{{timeConvert(courseInfo.createdAt)}}</span>
+              <br>
+              <h6>Thời gian mong muốn: <b>{{expectimeConvert(courseInfo.courseInfo.expectedTime)}}</b></h6>
             </div>
           </div>
         </div>
@@ -34,7 +33,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Danh sách sinh viên tham gia</h3>
+              <h3 class="box-title">Danh sách sinh viên:</h3>
 
               <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
@@ -51,16 +50,16 @@
               <table class="table table-hover">
                 <tr>
                   <th>STT</th>
-                  <th>Masinhvien</th>
-                  <th>ngay sinh</th>
-                  <th>ten</th>
-                  <th>thoi gian</th>
+                  <th>Mã sinh viên</th>
+                  <th>Tên</th>
+                  <th>Ngày sinh</th>
+                  <th>Thời gian</th>
                 </tr>
-                <tr ng-repeat="joiner in joiners">
+                <tr ng-repeat="joiner in courseInfo.joiners">
                   <td>1</td>
                   <td>01242141</td>
-                  <td>11-7-2014</td>
                   <td><span class="label label-success">dv thuong</span></td>
+                  <td>11-7-2014</td>
                   <td>Hom qua</td>
                 </tr>
               </table>
@@ -71,4 +70,5 @@
         </div>
       </div>
       <button type="button" class="btn btn-primary" style="width: 20%;" ng-click='join()'>Muốn Học</button>
+      <button type="button" class="btn btn-danger" style="width: 20%;" ng-click='unjoin()'>Bỏ</button>
     </section>
