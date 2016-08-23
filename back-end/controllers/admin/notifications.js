@@ -1,4 +1,4 @@
-var models = require('../../models/index');
+var models = require('../../models');
 
 module.exports = {
     /**
@@ -18,8 +18,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -41,52 +41,36 @@ module.exports = {
      */
     /* Return created notification */
     createNew: function (req, res) {
-        if (!req.body.title || !req.body.body || !req.body.targetGroupIds) {
-            res.json({
-                success: false,
-                message: 'Missing required fields.'
+        // Remove all space in this query string.
+        req.body.targetGroupIds = req.body.targetGroupIds.replace(/\s+/g, '');
+
+        var parsedTargetGroups = req.body.targetGroupIds.split(',');
+        var groups = [];
+        for (var i = 0; i < parsedTargetGroups.length; i++) {
+            groups.push({
+                group: parsedTargetGroups[i]
             });
         }
-        else {
-            // Remove all space in this query string.
-            req.body.targetGroupIds = req.body.targetGroupIds.replace(/\s+/g, '');
-
-            var parsedTargetGroups = req.body.targetGroupIds.split(',');
-            var groups = [];
-            for (var i = 0; i < parsedTargetGroups.length; i++) {
-                groups.push({
-                    group: parsedTargetGroups[i]
+        models.Notification.create({
+            title: req.body.title,
+            body: req.body.body,
+            creator: req.user._id,
+            targetGroups: groups
+        }, function (err, createdNotification) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
                 });
             }
-            models.Notification.create({
-                title: req.body.title,
-                body: req.body.body,
-                creator: req.user._id,
-                targetGroups: groups
-            }, function (err, createdNotification) {
-                if (err) {
-                    res.status(500).json({
-                        success: false,
-                        message: err
-                    });
-                }
-                else {
-                    res.json({
-                        success: true,
-                        message: 'Notification created.',
-                        data: {
-                            _id: createdNotification._id,
-                            title: createdNotification.title,
-                            body: createdNotification.body,
-                            creator: req.user.email,
-                            createdAt: createdNotification.createdAt,
-                            targetGroups: createdNotification.targetGroups,
-                            isSent: createdNotification.isSent
-                        }
-                    });
-                }
-            });
-        }
+            else {
+                return res.json({
+                    success: true,
+                    message: 'Notification created.',
+                    data: createdNotification
+                });
+            }
+        });
     },
 
     /**
@@ -100,8 +84,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -115,19 +99,19 @@ module.exports = {
     sendCreated: function (req, res) {
         models.Notification.findById(req.body.notificationId, 'targetGroups', function (err, notification) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!notification) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Notification does not exist.'
                 });
             }
             else if (notification.isSent) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Notification is already sent.'
                 });
@@ -135,7 +119,7 @@ module.exports = {
             else {
                 models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
@@ -159,7 +143,7 @@ module.exports = {
                                             }
                                         }, function (err) {
                                             if (err) {
-                                                res.status(500).json({
+                                                return res.status(500).json({
                                                     success: false,
                                                     message: err
                                                 });
@@ -174,13 +158,13 @@ module.exports = {
                             isSent: true
                         }).exec(function (err) {
                             if (err) {
-                                res.status(500).json({
+                                return res.status(500).json({
                                     success: false,
                                     message: err
                                 });
                             }
                             else {
-                                res.json({
+                                return res.json({
                                     success: true,
                                     message: 'Notification is sent.'
                                 });
@@ -189,7 +173,6 @@ module.exports = {
                     }
                 });
             }
-
         });
     },
 
@@ -204,8 +187,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -227,115 +210,107 @@ module.exports = {
      */
     /* Return sent notification */
     createAndSend: function (req, res) {
-        if (!req.body.title || !req.body.body || !req.body.targetGroupIds) {
-            res.json({
-                success: false,
-                message: 'Missing required fields.'
-            });
-        }
-        else {
-            // Remove all space in this query string.
-            req.body.targetGroupIds = req.body.targetGroupIds.replace(/\s+/g, '');
+        // Remove all space in this query string.
+        req.body.targetGroupIds = req.body.targetGroupIds.replace(/\s+/g, '');
 
-            var parsedTargetGroups = req.body.targetGroupIds.split(',');
-            var validGroups = [];
-            models.StudentGroup.find({}, '_id', function (err, groups) {
-                if (err) {
-                    res.status(500).json({
+        var parsedTargetGroups = req.body.targetGroupIds.split(',');
+        var validGroups = [];
+        models.StudentGroup.find({}, '_id', function (err, groups) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                groups.forEach(function (group) {
+                    var matchAt = parsedTargetGroups.indexOf(group._id.toString());
+                    if (matchAt != -1) {
+                        validGroups.push({
+                            group: parsedTargetGroups[matchAt]
+                        });
+                    }
+                });
+                if (validGroups.length == 0) {
+                    return res.status(400).json({
                         success: false,
-                        message: err
+                        message: 'Invalid group id(s).'
                     });
                 }
                 else {
-                    groups.forEach(function (group) {
-                        var matchAt = parsedTargetGroups.indexOf(group._id.toString());
-                        if (matchAt != -1) {
-                            validGroups.push({
-                                group: parsedTargetGroups[matchAt]
+                    models.Notification.create({
+                        title: req.body.title,
+                        body: req.body.body,
+                        creator: req.user._id,
+                        targetGroups: validGroups
+                    }, function (err, createdNotification) {
+                        if (err) {
+                            return res.status(500).json({
+                                success: false,
+                                message: err
                             });
                         }
-                    });
-                    if (validGroups.length == 0) {
-                        res.json({
-                            success: false,
-                            message: 'Invalid group id(s).'
-                        });
-                    }
-                    else {
-                        models.Notification.create({
-                            title: req.body.title,
-                            body: req.body.body,
-                            creator: req.user._id,
-                            targetGroups: validGroups
-                        }, function (err, createdNotification) {
-                            if (err) {
-                                res.status(500).json({
-                                    success: false,
-                                    message: err
-                                });
-                            }
-                            else {
-                                models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
-                                    if (err) {
-                                        res.status(500).json({
-                                            success: false,
-                                            message: err
-                                        });
-                                    }
-                                    else {
-                                        var targetGroups = [];
-                                        for (var i = 0; i < createdNotification.targetGroups.length; i++) {
-                                            if (typeof createdNotification.targetGroups[i].group != 'undefined') {
-                                                targetGroups.push(createdNotification.targetGroups[i].group.toString());
-                                            }
+                        else {
+                            models.User.find({}, 'notificationStack personalInfo.groups', function (err, users) {
+                                if (err) {
+                                    return res.status(500).json({
+                                        success: false,
+                                        message: err
+                                    });
+                                }
+                                else {
+                                    var targetGroups = [];
+                                    for (var i = 0; i < createdNotification.targetGroups.length; i++) {
+                                        if (typeof createdNotification.targetGroups[i].group != 'undefined') {
+                                            targetGroups.push(createdNotification.targetGroups[i].group.toString());
                                         }
-                                        for (var k = 0; k< users.length; k++) {
-                                            if (users[k].personalInfo.groups.length) {
-                                                for (var j = 0; j < users[k].personalInfo.groups.length; j++) {
-                                                    if (targetGroups.indexOf(users[k].personalInfo.groups[j].group.toString()) != -1) {
-                                                        users[k].update({
-                                                            $push: {
-                                                                notificationStack: {
-                                                                    notification: createdNotification._id
-                                                                }
+                                    }
+                                    for (var k = 0; k< users.length; k++) {
+                                        if (users[k].personalInfo.groups.length) {
+                                            for (var j = 0; j < users[k].personalInfo.groups.length; j++) {
+                                                if (targetGroups.indexOf(users[k].personalInfo.groups[j].group.toString()) != -1) {
+                                                    users[k].update({
+                                                        $push: {
+                                                            notificationStack: {
+                                                                notification: createdNotification._id
                                                             }
-                                                        }, function (err) {
-                                                            if (err) {
-                                                                res.status(500).json({
-                                                                    success: false,
-                                                                    message: err
-                                                                });
-                                                            }
-                                                        });
-                                                        break;
-                                                    }
+                                                        }
+                                                    }, function (err) {
+                                                        if (err) {
+                                                            return res.status(500).json({
+                                                                success: false,
+                                                                message: err
+                                                            });
+                                                        }
+                                                    });
+                                                    break;
                                                 }
                                             }
                                         }
-                                        createdNotification.update({
-                                            isSent: true
-                                        }).exec(function (err) {
-                                            if (err) {
-                                                res.status(500).json({
-                                                    success: false,
-                                                    message: err
-                                                });
-                                            }
-                                            else {
-                                                res.json({
-                                                    success: true,
-                                                    message: 'Notification is sent.'
-                                                });
-                                            }
-                                        });
                                     }
-                                });
-                            }
-                        });
-                    }
+                                    createdNotification.update({
+                                        isSent: true
+                                    }).exec(function (err) {
+                                        if (err) {
+                                            return res.status(500).json({
+                                                success: false,
+                                                message: err
+                                            });
+                                        }
+                                        else {
+                                            return res.json({
+                                                success: true,
+                                                message: 'Notification is sent.'
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
     },
 
     /**
@@ -349,23 +324,23 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      */
     /* Return all notifications (newest-to-oldest order) */
     getAll: function (req, res) {
-        models.Notification.find({}, '-__v -body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
+        models.Notification.find({}, '-body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: notifications
                 });
@@ -384,8 +359,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -394,15 +369,15 @@ module.exports = {
     getAllSent: function (req, res) {
         models.Notification.find({
             isSent: true
-        }, '-__v -body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
+        }, '-body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: notifications
                 });
@@ -421,8 +396,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -431,15 +406,15 @@ module.exports = {
     getAllUnsent: function (req, res) {
         models.Notification.find({
             isSent: false
-        }, '-__v -body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
+        }, '-body').populate('creator', 'email').populate('targetGroups.group', 'name').sort({updatedAt: 'desc'}).exec(function (err, notifications) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: notifications
                 });
@@ -458,8 +433,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -471,7 +446,7 @@ module.exports = {
      */
     /* Return selected notification */
     getOneById: function (req, res) {
-        models.Notification.findById(req.query.notificationId, '-__v').populate({
+        models.Notification.findById(req.query.notificationId).populate({
             path: 'creator',
             select: 'email -_id'
         }).populate({
@@ -479,19 +454,19 @@ module.exports = {
             select: 'name'
         }).exec(function (err, selectedNotification) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success:false,
                     message: err
                 });
             }
             else if (!selectedNotification) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Notification does not exist.'
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: selectedNotification
                 });
@@ -510,27 +485,27 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: notificationId
      *          description: Notification id
-     *          paramType: query
+     *          paramType: form
      *          required: true
      *          dataType: string
      */
     deleteOneById: function (req, res) {
         models.Notification.findById(req.query.notificationId, 'isSent', function (err, notification) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!notification) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Notification does not exist.'
                 });
@@ -538,13 +513,13 @@ module.exports = {
             else if (!notification.isSent) {
                 notification.remove(function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Notification deleted.'
                         });
@@ -568,7 +543,7 @@ module.exports = {
                             }
                         }).exec(function (err) {
                             if (err) {
-                                res.status(500).json({
+                                return res.status(500).json({
                                     success: false,
                                     message: err
                                 });
@@ -577,13 +552,13 @@ module.exports = {
                     }
                     notification.remove(function (err) {
                         if (err) {
-                            res.status(500).json({
+                            return res.status(500).json({
                                 success: false,
                                 message: err
                             });
                         }
                         else {
-                            res.json({
+                            return res.json({
                                 success: true,
                                 message: 'Notification deleted.'
                             });
@@ -605,14 +580,14 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
      *        - name: notificationIds
      *          description: Notification ids (separated by comma)
-     *          paramType: query
+     *          paramType: form
      *          required: true
      *          dataType: string
      */
@@ -622,13 +597,13 @@ module.exports = {
             for (var i = 0; i < idArr.length; i++) {
                 models.Notification.findById(idArr[i], 'isSent', function (err, notification) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else if (!notification) {
-                        res.json({
+                        return res.status(400).json({
                             success: false,
                             message: 'Notification does not exist.'
                         });
@@ -636,7 +611,7 @@ module.exports = {
                     else if (!notification.isSent) {
                         notification.remove(function (err) {
                             if (err) {
-                                res.status(500).json({
+                                return res.status(500).json({
                                     success: false,
                                     message: err
                                 });
@@ -660,7 +635,7 @@ module.exports = {
                                     }
                                 }).exec(function (err) {
                                     if (err) {
-                                        res.status(500).json({
+                                        return res.status(500).json({
                                             success: false,
                                             message: err
                                         });
@@ -669,7 +644,7 @@ module.exports = {
                             }
                             notification.remove(function (err) {
                                 if (err) {
-                                    res.status(500).json({
+                                    return res.status(500).json({
                                         success: false,
                                         message: err
                                     });
@@ -679,13 +654,13 @@ module.exports = {
                     }
                 });
             }
-            res.json({
+            return res.json({
                 success: true,
                 message: 'Notifications deleted.'
             });
         }
         catch (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 success: false,
                 message: err
             });
