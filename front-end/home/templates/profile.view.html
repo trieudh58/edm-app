@@ -75,6 +75,7 @@
             <ul class="nav nav-tabs" ng-init="tab=1">
               <li ng-class="{true:'active',false:''}[tab===1]"><a data-toggle="tab" ng-click="tab=1">Thông tin cơ bản</a></li>
               <li ng-class="{true:'active',false:''}[tab===2]"><a data-toggle="tab" ng-click="tab=2">Thông tin khác</a></li>
+              <li ng-class="{true:'active',false:''}[tab===3]"><a data-toggle="tab" ng-click="tab=3">Cài đặt</a></li>
             </ul>
             <div class="tab-content">
               <div ng-class="{true:'tab-pane active',false:'tab-pane'}[tab===1]" id="settings" ng-show="tab===1">
@@ -174,6 +175,11 @@
                     </div>
                   </div>
                 </form>
+              </div>
+              <div ng-class="{true:'tab-pane active',false:'tab-pane'}[tab===3]" id="advancedInfo" ng-show="tab===3">
+                <label for="revoke-button">Revoke: </label>
+                <button type="submit" class="btn btn-danger"  id='revoke-button' ng-click="revoke()">Revoke</button>
+                <span ng-if="revoked"> revoked! </span>
               </div>
               <!-- /.tab-pane -->
             </div>

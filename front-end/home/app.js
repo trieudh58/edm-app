@@ -133,7 +133,7 @@ App.controller('verify',function($http,$scope,$routeParams,$location){
 
 
 
-App.controller('ProfileController', function($scope,getStudentInfor){
+App.controller('ProfileController', function($scope,getStudentInfor,revoke){
     getStudentInfor.get().then(response=>{
       $scope.userInformation=response.data;
       var birthDay=new Date(response.data.personalInfo.DOB);
@@ -150,6 +150,13 @@ App.controller('ProfileController', function($scope,getStudentInfor){
     });
     $scope.updateInfo=function(){
       ///////////
+    }
+    $scope.revoke=function(){
+      revoke.revoke().then(response=>{
+        localStorage.setItem('id_token',response.accessToken);
+        localStorage.setItem('refresh_token',response.refreshToken);
+        $scope.revoked= true;
+      },err=> {console.log('revoke fail!')});
     }
 });
 App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
@@ -772,7 +779,23 @@ App.factory('refreshToken',function($http){
         }
     }
 });
-
+App.factory('revoke',function($http){
+    return{
+    revoke:function(){
+        return $http({
+            method:'POST',
+            url:originPath+'/api/v1/tokens/revoke',
+            headers:{
+                Authorization:'Bearer '+localStorage.getItem('refresh_token')
+            }
+        }).then(response=> {
+            return response.data;
+        },err=>{
+            console.log('get revoke tokens fail!');
+        })
+    }
+  }
+})
   // app.controller('BarCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   //   $scope.options = { scaleShowVerticalLines: false };
   //   $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
