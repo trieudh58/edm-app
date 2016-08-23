@@ -18,8 +18,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -28,17 +28,17 @@ module.exports = {
     getAllPublic: function (req, res) {
         models.CourseRequest.find({
             status: 'Public'
-        }, '-__v').populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
+        }).populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
             createdAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: crs
                 });
@@ -57,8 +57,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -67,17 +67,17 @@ module.exports = {
     getAllPending: function (req, res) {
         models.CourseRequest.find({
             status: 'Pending'
-        }, '-__v').populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
+        }).populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
             createdAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: crs
                 });
@@ -96,8 +96,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -106,17 +106,17 @@ module.exports = {
     getAllDenied: function (req, res) {
         models.CourseRequest.find({
             status: 'Denied'
-        }, '-__v').populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
+        }).populate('creator', 'email').populate('courseInfo.subject', 'name').populate('joiners.joiner', 'email').sort({
             createdAt: 'desc'
         }).exec(function (err, crs) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else {
-                res.json({
+                return res.json({
                     success: true,
                     data: crs
                 });
@@ -135,8 +135,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -150,19 +150,19 @@ module.exports = {
     publicOne: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!cr) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request does not exist.'
                 });
             }
             else if (cr.status == 'Public') {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request is already public.'
                 });
@@ -172,13 +172,13 @@ module.exports = {
                     status: 'Public'
                 }, function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Course request is now public'
                         });
@@ -199,8 +199,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -214,19 +214,19 @@ module.exports = {
     addToPending: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!cr) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request does not exist.'
                 });
             }
             else if (cr.status == 'Pending') {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request is already pending.'
                 });
@@ -236,13 +236,13 @@ module.exports = {
                     status: 'Pending'
                 }, function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Course request is now pending'
                         });
@@ -263,8 +263,8 @@ module.exports = {
      *      consumes:
      *        - text/html
      *      parameters:
-     *        - name: x-access-token
-     *          description: Your token
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
      *          paramType: header
      *          required: true
      *          dataType: string
@@ -278,19 +278,19 @@ module.exports = {
     denyOne: function (req, res) {
         models.CourseRequest.findById(req.body.courseRequestId, function (err, cr) {
             if (err) {
-                res.status(500).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
             }
             else if (!cr) {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request does not exist.'
                 });
             }
             else if (cr.status == 'Denied') {
-                res.json({
+                return res.status(400).json({
                     success: false,
                     message: 'Course request is already denied.'
                 });
@@ -300,13 +300,13 @@ module.exports = {
                     status: 'Denied'
                 }, function (err) {
                     if (err) {
-                        res.status(500).json({
+                        return res.status(500).json({
                             success: false,
                             message: err
                         });
                     }
                     else {
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Course request is now denied'
                         });
