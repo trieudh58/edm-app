@@ -1,108 +1,110 @@
 ﻿// create the module and name it scotchApp
-var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap']);
+var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap','angular-jwt']);
 // var originPath='http://127.0.0.1:3001';
 var originPath='http://localhost:3001';
 // configure our routes
-App.config(function($routeProvider,ChartJsProvider) {
-
-$routeProvider
-
-  .when('/verify',{
-    templateUrl:'templates/verify.html',
-    controller:'verify'
-  })
-  .when('/profile',{
-      templateUrl: 'templates/profile.html',
-      controller:'ProfileController',
-      resolve:{
-          //home page
-          //logged in
-      }
-  })
-  .when('/studentscore',{
-      templateUrl:'templates/student.score.view.html'
-  })
-  .when('/subjects',{
-    controller:'subjects',
-    templateUrl:'templates/subject.view.html'
-  })
-  .when('/allnotifications',{
-    controller:'allnotifications',
-    templateUrl:'templates/all.notifications.view.html'
-  })
-  .when('/notification/:id',{
-    controller:'notification',
-    templateUrl:'templates/notification.view.html'
-  })
-  .when('/courserequest',{
-    controller:'courseRequest',
-    templateUrl:'templates/create.course.request.view.html'
-  })
-  .when('/courserequestview/:id',{
-    controller:'courseRequestReview',
-    templateUrl:'templates/course.request.view.html'
-  })
-  .when('/courserequestlist',{
-    controller:'courseRequestList',
-    templateUrl:'templates/course.request.list.html'
-  });
-  // #$locationProvider.html5Mode(true);
-	//.otherwise({ redirectTo: '/' });
-  ChartJsProvider.setOptions({
-  colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
-  responsive: true
-  });
-  // Configure all doughnut charts
-  ChartJsProvider.setOptions('Doughnut', {
-    animateScale: true
-  });
-});
-App.run(function($rootScope,getStudentInfor,getNotifications,$http,$localStorage,$window){
-  $rootScope.logout=function(){
-    $http({
-            method : "POST",
-            url : originPath+"/api/v1/users/logout",
-            data:{token:$localStorage.access_token}
-        }).then(function mySuccess(response) {
-            if(response.data.success){
-                $localStorage.access_token=undefined;
-                $window.open('/', "_self");
+App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvider) {
+  $routeProvider
+    .when('/verify',{
+      templateUrl:'templates/verify.html',
+      controller:'verify'
+    })
+    .when('/profile',{
+        templateUrl: 'templates/profile.html',
+        controller:'ProfileController',
+        resolve:{
+            //home page
+            //logged in
+        }
+    })
+    .when('/studentscore',{
+        templateUrl:'templates/student.score.view.html'
+    })
+    .when('/subjects',{
+      controller:'subjects',
+      templateUrl:'templates/subject.view.html'
+    })
+    .when('/allnotifications',{
+      controller:'allnotifications',
+      templateUrl:'templates/all.notifications.view.html'
+    })
+    .when('/notification/:id',{
+      controller:'notification',
+      templateUrl:'templates/notification.view.html'
+    })
+    .when('/courserequest',{
+      controller:'courseRequest',
+      templateUrl:'templates/create.course.request.view.html'
+    })
+    .when('/courserequestview/:id',{
+      controller:'courseRequestReview',
+      templateUrl:'templates/course.request.view.html'
+    })
+    .when('/courserequestlist',{
+      controller:'courseRequestList',
+      templateUrl:'templates/course.request.list.html'
+    });
+    // #$locationProvider.html5Mode(true);
+  	//.otherwise({ redirectTo: '/' });
+    ChartJsProvider.setOptions({
+    colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+    responsive: true
+    });
+    // Configure all doughnut charts
+    ChartJsProvider.setOptions('Doughnut', {
+      animateScale: true
+    });
+    //auto authentication by token
+    jwtOptionsProvider.config({
+        tokenGetter: ['refreshToken','jwtHelper', function(refreshToken,jwtHelper) {
+            if(localStorage.id_token&&jwtHelper.isTokenExpired(localStorage.id_token)){
+                return refreshToken.refreshToken().then(function(response){
+                    localStorage.setItem('id_token',response.accessToken);
+                    localStorage.setItem('refresh_token',response.refreshToken);
+                    return response.accessToken;
+                });
             }
-        }, function myError(response) {
-            console.log('request fail to logout');
-        });
-    }
-
+            else if(localStorage.id_token) return localStorage.getItem('id_token');
+                else return null;
+        }],
+        whiteListedDomains: ['myapp.com', 'localhost','127.0.0.1']    
+    });
+  $httpProvider.interceptors.push('jwtInterceptor');
+});
+App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window){
+  $rootScope.logout=function(){
+      localStorage.clear();
+      $window.open('/', "_self");
+  };
   $rootScope.reloadHeadbarNotification = function (isread){
       getNotifications.getSomeNewNotifications().then(function(res){
         $rootScope.newNotifications=res.data.latest;
         $rootScope.unReadNotification=res.data.unread;
       });
-  } 
-
+  }; 
   $rootScope.reloadHeadbarNotification();
   $rootScope.emailTrim =function(email){
     if(email)
     return email.split('@')[0];
-  }
+  };
 
   $rootScope.timeConvert=function(inputdate){
-  var datecurrent=new Date($.now());
-  var date= new Date(inputdate);
-  var seconds= (datecurrent-date)/1000;
-  var outtime=''
-  if(seconds<60)
-      outtime='vài giây trước';
-  else if(seconds<3600)
-      outtime= Math.round(seconds/60) + ' phút trước';
-  else if(seconds<86400)
-      outtime= Math.round(seconds/3600)+ ' giờ trước';
-  else if(seconds<86400*6)
-      outtime=Math.round(seconds/86400)+' ngày trước';
-  else
-      outtime=date.toISOString().slice(0,10);
-  return outtime;
-}
+    var datecurrent=new Date($.now());
+    var date= new Date(inputdate);
+    var seconds= (datecurrent-date)/1000;
+    var outtime=''
+    if(seconds<60)
+        outtime='vài giây trước';
+    else if(seconds<3600)
+        outtime= Math.round(seconds/60) + ' phút trước';
+    else if(seconds<86400)
+        outtime= Math.round(seconds/3600)+ ' giờ trước';
+    else if(seconds<86400*6)
+        outtime=Math.round(seconds/86400)+' ngày trước';
+    else
+        outtime=date.toISOString().slice(0,10);
+    return outtime;
+  }
   $rootScope.readNotification=function($index,isread){
     if(!isread){
       $rootScope.newNotifications[$index].isRead=true;
@@ -111,26 +113,23 @@ App.run(function($rootScope,getStudentInfor,getNotifications,$http,$localStorage
   }
   getStudentInfor.get().then(function(response){
     $rootScope.userInfor=response.data;
-})
-})
+  })
+});
 App.controller('verify',function($http,$scope,$routeParams,$location){
-   var qs = $location.search();
+  var qs = $location.search();
   $http({
     method:'PUT',
     url:originPath+'/api/v1/users/verify-email',
     params:{
-          'token': qs.token,
           'email':qs.email
-      }
+    }
   }).then(function success(response){
     $scope.response=response.data;
   },function error(response){
       $scope.response='request fail!';
   });
-})
-
-
-App.controller('ProfileController', function($scope,$http,$localStorage){
+});
+App.controller('ProfileController', function($scope,$http){
     //////profile
 });
 
@@ -271,7 +270,6 @@ App.controller('allnotifications',function($scope,$rootScope,$route,$location,ge
     deleteNotification.delete(idList.join(','));
     $rootScope.reloadHeadbarNotification();
   }
-
 });
 
 App.controller('notification',function($scope,$rootScope,getNotification,$routeParams,markAsRead){
@@ -411,15 +409,12 @@ App.controller('RadarCtrl', function ($scope) {
   };
 });
 
-App.factory('getSubjectNameAndCredits',function($http,$localStorage){
+App.factory('getSubjectNameAndCredits',function($http){
   return{
     get:function(){
       return $http({
         method : "GET",
-        url : originPath+"/api/v1/subjects/get-names-and-credits",
-        params:{
-            'token':$localStorage.access_token
-        }
+        url : originPath+"/api/v1/subjects/get-names-and-credits"
     }).then(function(response){
       // console.log(response.data);
       return response.data;
@@ -431,15 +426,12 @@ App.factory('getSubjectNameAndCredits',function($http,$localStorage){
   };
 })
 
-App.factory('getStudentRecord',function($http,$localStorage){
+App.factory('getStudentRecord',function($http){
   return{
     get:function(){
       return $http({
         method : "GET",
-        url : originPath+"/api/v1/student-records/get",
-        params:{
-            'token':$localStorage.access_token
-        }
+        url : originPath+"/api/v1/student-records/get"
     }).then(function mySuccess(response) {
         return response.data;
     }, function myError() {
@@ -449,36 +441,29 @@ App.factory('getStudentRecord',function($http,$localStorage){
   };
 })
 
-App.factory('getStudentInfor',function($http,$localStorage){
+App.factory('getStudentInfor',function($http){
   return{
     get:function(){
       return $http({
         method:'GET',
-        url :originPath+'/api/v1/users/get',
-        params:{
-          token:$localStorage.access_token
-        }
+        url :originPath+'/api/v1/users/get'
       }).then(function(response){
         return response.data;
       },function(){
-        /////////???!
+        return 'Request Fail' ////////////
       });
     }
   };
 })
 
-App.factory('deleteNotification',function($http,$localStorage){
+App.factory('deleteNotification',function($http){
   return{
     delete:function(IDs){
       return $http({
         method:'DELETE',
         url:originPath+'/api/v1/notifications/delete',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        },
         params:{
           notificationIds:IDs,
-          // token:$localStorage.access_token
         }
       }).then(function(response){
         return response.data;
@@ -488,14 +473,14 @@ App.factory('deleteNotification',function($http,$localStorage){
     }
   }
 });
-App.factory('notitificationStateChange',function($http,$localStorage){
+
+App.factory('notitificationStateChange',function($http){
   return{
     putMarkAsUnImportant:function(id){
       return $http({
         method:'PUT',
         url:originPath+'/api/v1/notifications/mark-one-as-unimportant',
         data:{
-          token:$localStorage.access_token,
           notificationId:id
         }
       }).then(function(response){
@@ -509,7 +494,6 @@ App.factory('notitificationStateChange',function($http,$localStorage){
         method:'PUT',
         url:originPath+'/api/v1/notifications/mark-one-as-important',
         data:{
-          token:$localStorage.access_token,
           notificationId:id
         }
       }).then(function(response){
@@ -523,7 +507,6 @@ App.factory('notitificationStateChange',function($http,$localStorage){
         method:'PUT',
         url:originPath+'/api/v1/notifications/mark-one-as-unread',
         data:{
-          token:$localStorage.access_token,
           notificationId:id
         }
       }).then(function(response){
@@ -537,7 +520,6 @@ App.factory('notitificationStateChange',function($http,$localStorage){
         method:'PUT',
         url:originPath+'/api/v1/notifications/mark-one-as-read',
         data:{
-          token:$localStorage.access_token,
           notificationId:id
         }
       }).then(function(response){
@@ -550,9 +532,6 @@ App.factory('notitificationStateChange',function($http,$localStorage){
       return $http({
         method:'PUT',
         url:originPath+'/api/v1/notifications/mark-all-as-read',
-        data:{
-          token:$localStorage.access_token
-        }
       }).then(function(response){
         return response.data;
       },function(response){
@@ -562,15 +541,12 @@ App.factory('notitificationStateChange',function($http,$localStorage){
   }
 });
 
-App.factory('getNotifications',function($http,$localStorage){
+App.factory('getNotifications',function($http){
   return{
     getImportantNotification:function(){
       return $http({
         method:'GET',
-        url:originPath+'/api/v1/notifications/get-important-titles',
-        params:{
-          token:$localStorage.access_token
-        }
+        url:originPath+'/api/v1/notifications/get-important-titles'
       }).then(function(response){
         return response.data;
       },function(response){
@@ -580,10 +556,7 @@ App.factory('getNotifications',function($http,$localStorage){
     getUnread:function(){
       return $http({
         method:'GET',
-        url:originPath+'/api/v1/notifications/get-unread-titles',
-        params:{
-          token:$localStorage.access_token
-        }
+        url:originPath+'/api/v1/notifications/get-unread-titles'
       }).then(function(response){
         return response.data;
       },function(response){
@@ -593,10 +566,7 @@ App.factory('getNotifications',function($http,$localStorage){
     getAllNotifications:function(){
       return $http({
         method:'GET',
-        url:originPath+'/api/v1/notifications/get-titles',
-        params:{
-          token:$localStorage.access_token
-        }
+        url:originPath+'/api/v1/notifications/get-titles'
       }).then(function(response){
         return response.data;
       },function(response){
@@ -607,9 +577,6 @@ App.factory('getNotifications',function($http,$localStorage){
       return $http({
         method:'GET',
         url:originPath+'/api/v1/notifications/get-5-latest-titles',
-        params:{
-          token:$localStorage.access_token
-        }
       }).then(function(response){
         return response.data;
       },function(response){
@@ -618,15 +585,13 @@ App.factory('getNotifications',function($http,$localStorage){
   };
 });
 
-
-App.factory('getNotification',function($http,$localStorage){
+App.factory('getNotification',function($http){
   return{
     get:function(ID){
       return $http({
         method:'GET',
         url:originPath+'/api/v1/notifications/get-by-id',      /////// lost
         params:{
-          token:$localStorage.access_token,
           notificationId:ID
         }
       }).then(function(response){
@@ -638,14 +603,13 @@ App.factory('getNotification',function($http,$localStorage){
   };
 })
 
-App.factory('markAsRead',function($http,$localStorage){
-    return{
+App.factory('markAsRead',function($http){
+  return{
     put:function(ID){
       return $http({
         method:'PUT',
         url:originPath+'/api/v1/notifications/mark-one-as-read',      /////// lost
         data:{
-          token:$localStorage.access_token,
           notificationId :ID
         }
       }).then(function(response){
@@ -655,22 +619,18 @@ App.factory('markAsRead',function($http,$localStorage){
       });
     }
   };
-})
+});
 
-App.factory('courseRequest',function($http,$localStorage){
+App.factory('courseRequest',function($http){
   return{
     createCourseRequest:function(reason,subjectID,expectedtime){
       return $http({
         method:'POST',
         url:originPath+'/api/v1/course-requests/create',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        },
         data:{
           subjectId:subjectID,
           expectedTime:expectedtime,
           reason:reason
-          // token:$localStorage.access_token
         }
       }).then(function(response){
         return response.data;
@@ -684,10 +644,7 @@ App.factory('courseRequest',function($http,$localStorage){
     getPublicCourseRequests:function(){
       return $http({
         method:'GET',
-        url:originPath+'/api/v1/course-requests/get-all-public',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        }
+        url:originPath+'/api/v1/course-requests/get-all-public'
       }).then(function(response){
         return response.data;
       });
@@ -696,10 +653,7 @@ App.factory('courseRequest',function($http,$localStorage){
     getOwnRequestCreated:function(){
       return $http({
         method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-created',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        }
+        url:originPath+'/api/v1/course-requests/get-own-created'
       }).then(function(response){
         return response.data;
       })
@@ -707,10 +661,7 @@ App.factory('courseRequest',function($http,$localStorage){
     getOwnRequestPublic:function(){
       return $http({
         method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-public',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        }
+        url:originPath+'/api/v1/course-requests/get-own-public'
       }).then(function(response){
         return response.data;
       })
@@ -719,9 +670,6 @@ App.factory('courseRequest',function($http,$localStorage){
       return $http({
         method:'GET',
         url:originPath+'/api/v1/course-requests/get-own-pending',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        }
       }).then(function(response){
         return response.data;
       })
@@ -730,9 +678,6 @@ App.factory('courseRequest',function($http,$localStorage){
       return $http({
         method:'GET',
         url:originPath+'/api/v1/course-requests/get-own-denied',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        }
       }).then(function(response){
         return response.data;
       })
@@ -741,9 +686,6 @@ App.factory('courseRequest',function($http,$localStorage){
       return $http({
         method:'GET',
         url:originPath+'/api/v1/course-requests/get-own-denied',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        },
         params:{
           courseRequestId:id
         }
@@ -755,9 +697,6 @@ App.factory('courseRequest',function($http,$localStorage){
       return $http({
         method:'DELETE',
         url:originPath+'/api/v1/course-requests/delete-one',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        },
         params:{
           courseRequestId:id
         }
@@ -767,9 +706,6 @@ App.factory('courseRequest',function($http,$localStorage){
       return $http({
         method:'PUT',
         url:originPath+'/api/v1/course-requests/join',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        },
         data:{
           courseRequestId:id
         }
@@ -779,17 +715,31 @@ App.factory('courseRequest',function($http,$localStorage){
       return $http({
         method:'DELETE',
         url:originPath+'/api/v1/course-requests/undo-join',
-        headers:{
-          'x-access-token':$localStorage.access_token
-        },
         data:{
           courseRequestId:id
         }
       })
     }
   }
-})
+});
 
+App.factory('refreshToken',function($http){
+    return{
+        refreshToken:function(){
+            return $http({
+                method:'GET',
+                url:originPath+'/api/v1/tokens/refresh',
+                headers:{
+                    Authorization:'Bearer '+localStorage.getItem('refresh_token')
+                }
+            }).then(response=> {
+                return response.data;
+            },err=>{
+                console.log('get refresh tokens fail!');
+            })
+        }
+    }
+});
   // app.controller('BarCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   //   $scope.options = { scaleShowVerticalLines: false };
   //   $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
@@ -911,7 +861,7 @@ App.factory('courseRequest',function($http,$localStorage){
   //   }
   // }]);
 
-function loginRequired($q, $location,$localStorage) {           ///////////window instead
+function loginRequired($q, $location) {           ///////////window instead
   var deferred = $q.defer();
   if ($localStorage.access_token!==undefined) {
     deferred.resolve();
@@ -921,7 +871,7 @@ function loginRequired($q, $location,$localStorage) {           ///////////windo
   return deferred.promise;
 }
 
-function notLoginRequired($q, $location,$localStorage){
+function notLoginRequired($q, $location){
   var deferred = $q.defer();
   if ($localStorage.access_token==undefined) {
     deferred.resolve();

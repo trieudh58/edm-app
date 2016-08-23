@@ -1,8 +1,8 @@
 	// create the module and name it scotchApp
-	var App = angular.module('app', ['ngRoute','ngStorage']);
+	var App = angular.module('app', ['ngRoute','ngStorage','angular-jwt']);
 	var originPath='http://localhost:3001';
 	// configure our routes
-	App.config(function($routeProvider) {
+	App.config(function($routeProvider,$httpProvider,jwtOptionsProvider) {
 		$routeProvider
             .when('/notification/:id',{
                 controller:'notification',
@@ -28,26 +28,27 @@
                 controller:'courseRequest',
                 templateUrl:'templates/notification.view.html'
             });
-			// .otherwise({ redirectTo: '/' });
+        jwtOptionsProvider.config({
+            tokenGetter: ['refreshToken','jwtHelper', function(refreshToken,jwtHelper) {
+                if(localStorage.id_token&&jwtHelper.isTokenExpired(localStorage.id_token)){
+                    return refreshToken.refreshToken().then(function(response){
+                        localStorage.setItem('id_token',response.accessToken);
+                        localStorage.setItem('refresh_token',response.refreshToken);
+                        return response.accessToken;
+                    });
+                }
+                else if(localStorage.id_token) return localStorage.getItem('id_token');
+                    else return null;
+            }],
+            whiteListedDomains: ['myapp.com', 'localhost','127.0.0.1']    
+        });
+        $httpProvider.interceptors.push('jwtInterceptor');
 	});
-
-	// create the controller and inject Angular's $scope
-    App.run(function($rootScope,$location,deleteNotification,$http,$localStorage,$route){
+    App.run(function($rootScope,$location,deleteNotification,$http,$route,$window){
         $rootScope.logout=function(){
-            console.log('logout');
-            $http({
-                    method : "POST",
-                    url : originPath+"/api/v1/users/logout",
-                    data:{token:$localStorage.access_token}
-                }).then(function mySuccess(response) {
-                    if(response.data.success){
-                        $localStorage.access_token=undefined;
-                        $location.path('/');
-                    }
-                }, function myError(response) {
-                    console.log('fail');
-                });
-        };
+            localStorage.clear();
+            $window.open('/admin', "_self");
+        }
         $rootScope.emailTrim =function(email){
             if(email)
             return email.split('@')[0];
@@ -99,16 +100,12 @@
             return outtime;
           }
     });
-
-    App.factory('courseRequestService',function($http ,$localStorage){
+    App.factory('courseRequestService',function($http){
         return{
             getPublicRequests:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+'/api/v1/admin/course-requests/get-all-public',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    }
+                    url:originPath+'/api/v1/admin/course-requests/get-all-public'
                 }).then(function(response){
                     return response.data;
                 },function(){
@@ -124,10 +121,7 @@
             getDeniedRequests:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+'/api/v1/admin/course-requests/get-all-denied',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    }
+                    url:originPath+'/api/v1/admin/course-requests/get-all-denied'
                 }).then(function(response){
                     return response.data;
                 });
@@ -135,10 +129,7 @@
             getPendingRequests:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+'/api/v1/admin/course-requests/get-all-pending',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    }
+                    url:originPath+'/api/v1/admin/course-requests/get-all-pending'
                 }).then(function(response){
                     return response.data;
                 },function(){
@@ -150,7 +141,6 @@
                     method:'PUT',
                     url:originPath+'/api/v1/admin/course-requests/deny-one',
                     data:{
-                        token:$localStorage.access_token,
                         courseRequestId:id
                     }
                 }).then(function(response){
@@ -162,7 +152,6 @@
                     method:'PUT',
                     url:originPath+'/api/v1/admin/course-requests/public-one',
                     data:{
-                        token:$localStorage.access_token,
                         courseRequestId:id
                     }
                 }).then(function(response){
@@ -170,20 +159,15 @@
                 });
             }
          }
-        });
-
-    App.factory('deleteNotification',function($http,$localStorage){
+    });
+    App.factory('deleteNotification',function($http){
           return{
             delete:function(IDs){
               return $http({
                 method:'DELETE',
                 url:originPath+'/api/v1/admin/notifications/delete-by-ids',
-                headers:{
-                  'x-access-token':$localStorage.access_token
-                },
                 params:{
                   notificationIds:IDs,
-                  // token:$localStorage.access_token
                 }
               }).then(function(response){
                 return response.data;
@@ -192,62 +176,49 @@
               });
             }
           }
-    })
-    App.factory('getDrafts',function($http,$localStorage){
+    });
+    App.factory('getDrafts',function($http){
         return{
             get:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+'/api/v1/admin/notifications/get-all-unsent',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    }
+                    url:originPath+'/api/v1/admin/notifications/get-all-unsent'
                 }).then(function(response){
                     return response.data;
                 })
             }
         };
     });
-
-    App.factory('getSentNotifications',function($http,$localStorage){
+    App.factory('getSentNotifications',function($http){
         return{
             get:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+'/api/v1/admin/notifications/get-all-sent',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    }
+                    url:originPath+'/api/v1/admin/notifications/get-all-sent'
                 }).then(function(response){
                     return response.data;
                 })
             }
         };
     });
-    App.factory('getStudentGroup',function($http,$localStorage){
+    App.factory('getStudentGroup',function($http){
         return{
             get:function(){
                 return $http({
                     method:'GET',
-                    url:originPath+'/api/v1/admin/student-groups/get-all',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    }
+                    url:originPath+'/api/v1/admin/student-groups/get-all'
                 }).then(function(response){
                     return response.data;
                 })
             }
         }
-    })
-    App.factory('notificationService',function($http,$localStorage){
+    });
+    App.factory('notificationService',function($http){
         return {
             createNotification:function(targetGroupIds,title,body){
                 return $http({
                     method:'POST',
                     url:originPath+'/api/v1/admin/notifications/create',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    },
                     data:{
                         targetGroupIds:targetGroupIds,
                         title:title,
@@ -261,9 +232,6 @@
                 return $http({
                     method:'POST',
                     url:originPath+'/api/v1/admin/notifications/create-and-send',
-                    headers:{
-                        'x-access-token':$localStorage.access_token
-                    },
                     data:{
                         targetGroupIds:targetGroupIds,
                         title:title,
@@ -274,8 +242,24 @@
                 })
             }
         }
-    })
-
+    });
+    App.factory('refreshToken',function($http){
+        return{
+            refreshToken:function(){
+                return $http({
+                    method:'GET',
+                    url:originPath+'/api/v1/tokens/refresh',
+                    headers:{
+                        Authorization:'Bearer '+localStorage.getItem('refresh_token')
+                    }
+                }).then(response=> {
+                    return response.data;
+                },err=>{
+                    console.log('get refresh tokens fail!');
+                })
+            }
+        }
+    });
     App.controller('createNotification',function(notificationService,getStudentGroup,$scope,$route,$rootScope){
         getStudentGroup.get().then(function(res){
             $scope.studentGroups=res.data;
@@ -292,10 +276,7 @@
             notificationService.sendNotification($scope.notificationData.studentGroups.join(','),$scope.notificationData.title,$scope.notificationData.body);
             $rootScope.refresh();
         }
-        
-
     });
-
 	App.controller('draftNotifications', function($scope,getDrafts) {
 
         getDrafts.get().then(function(response){
@@ -307,12 +288,8 @@
             $scope.sentNotification=response.data;
         });
     });
-
-
     App.controller('courseRequest',function($scope,courseRequestService){
-
     });
-
     App.controller('courseRequestList',function($scope,courseRequestService){
         courseRequestService.getPendingRequests().then(function(response){
             $scope.requestList=response.data;
