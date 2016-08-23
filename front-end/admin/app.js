@@ -1,29 +1,45 @@
 	// create the module and name it scotchApp
-	var App = angular.module('app', ['ngRoute','ngStorage']);
+	var App = angular.module('app', ['ngRoute','ngStorage','angular-jwt']);
 	var originPath='http://localhost:3001';
 	// configure our routes
-	App.config(function($routeProvider) {
+	App.config(function($routeProvider,$httpProvider,jwtOptionsProvider) {
 		$routeProvider
 			.when('/', {
 				templateUrl : 'templates/login.view.html',
 				controller  : 'LoginController'
 			});
-            // .otherwise({ redirectTo: '/' });
+        jwtOptionsProvider.config({
+            tokenGetter: ['refreshToken','jwtHelper', function(refreshToken,jwtHelper) {
+                if(localStorage.id_token&&jwtHelper.isTokenExpired(localStorage.id_token)){
+                    return refreshToken.refreshToken().then(function(response){
+                        localStorage.setItem('id_token',response.accessToken);
+                        localStorage.setItem('refresh_token',response.refreshToken);
+                        return response.accessToken;
+                    });
+                }
+                else if(localStorage.id_token) return localStorage.getItem('id_token');
+                    else return null;
+            }],
+            whiteListedDomains: ['myapp.com', 'localhost','127.0.0.1']    
+        });
+
+        $httpProvider.interceptors.push('jwtInterceptor');
 	});
 
-	App.controller('LoginController', function($scope,$http,$rootScope,$location,$localStorage,$window) {
-        $scope.message={};
+    App.controller('LoginController', function($scope,$rootScope,$http,$location,$window) {
+        $scope.message={}
         $scope.login =function() {
                 $http({
                     method : "POST",
                     url : originPath+"/api/v1/users/authenticate",
+                    skipAuthorization: true,
                     data:{email:$scope.email,
                         password:$scope.password}
                 }).then(function mySuccess(response) {
-                    $scope.myWelcome = response.data;
                     if(response.data.success){
-                        $localStorage.access_token=response.data.token;
-			            $window.open('/admin/home', "_self");
+                        localStorage.id_token=response.data.accessToken;
+                        localStorage.refresh_token=response.data.refreshToken;
+                        $window.open('/admin/home', "_self");
                     }
                 }, function myError(response) {
                     $scope.myWelcome = response.statusText;
@@ -31,4 +47,23 @@
                     console.log('fail');
                 });
         };
-	});
+    });
+
+
+    App.factory('refreshToken',function($http){
+        return{
+            refreshToken:function(){
+                return $http({
+                    method:'GET',
+                    url:originPath+'/api/v1/tokens/refresh',
+                    headers:{
+                        Authorization:'Bearer '+localStorage.getItem('refresh_token')
+                    }
+                }).then(response=> {
+                    return response.data;
+                },err=>{
+                    console.log('get refresh tokens fail!');
+                })
+            }
+        }
+    })
