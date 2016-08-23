@@ -2,15 +2,12 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>EDM</title>
-
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <!-- Custom CSS -->
@@ -24,49 +21,32 @@
     <script src="/bower_components/ngstorage/ngStorage.min.js"></script>
     <script src="https://code.angularjs.org/1.2.13/angular-cookies.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"></script>
     <script src="app.js"></script>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 </head>
 
 <body>
-
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top"  style="height: 80px; box-shadow: 0px 4px 2px -2px rgb(75, 75, 75); background-color: #FFF;border-color: #E1C5C5;" >
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <a class="navbar-brand head-bar-brand icon-lg ion-social-pinterest" href="#" style="position: relative;
-    top: -10px;"></a>
+                <a class="navbar-brand head-bar-brand icon-lg ion-social-pinterest" href="#" style="position: relative;top: -10px;"></a>
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>
-                
+                </button>  
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse head-bar-brand" id="bs-example-navbar-collapse-1" style="float:right;">
                 <ul class="nav navbar-nav" >
-                    <li>
-                        <a href="#about">Giới thiệu</a>
-                    </li>
-                    <li>
-                        <a href="#services">Chức năng</a>
-                    </li>
-                    <li>
-                        <a href="#contact">Liên hệ</a>
-                    </li>
-                     <li>
-                         <a href="#" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-log-in"></i></a>
-                    </li>
+                        <li><a href="#about">Giới thiệu</a></li>
+                        <li><a href="#services">Chức năng</a></li>
+                        <li><a href="#contact">Liên hệ</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-log-in"></i></a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -92,8 +72,7 @@
         <!-- First Featurette -->
         <div class="featurette" id="about">
             <img class="featurette-image img-circle img-responsive pull-right img-circle-reformat" src="http://patentimages.storage.googleapis.com/US20060136284A1/US20060136284A1-20060622-D00004.png">
-            <h2 class="featurette-heading">Thông tin về hệ thống
-            </h2> 
+            <h2 class="featurette-heading">Thông tin về hệ thống</h2> 
             <p class="lead">fffff fffffff ffffff ffffffffffff ffffff ffffffffff ffffff ffffffff fffff fffff fffff fff fffffff.ffffff ffffffff ffffff fffffff fffff fffffff ffffffff ffffffff ffffffff fffffff fffff fffffff.</p>
         </div>
 
@@ -102,142 +81,105 @@
         <!-- Second Featurette -->
         <div class="featurette" id="services">
             <img class="featurette-image img-circle img-responsive pull-left img-circle-reformat" src="http://www.kernix.com/doc/1_graph_user93_links.png">
-            <h2 class="featurette-heading">Chức năng của hệ thống blah blah
-            </h2>
+            <h2 class="featurette-heading">Chức năng của hệ thống blah blah</h2>
             <p class="lead">Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blahblah blah blah blah blah blah blah blah blah blah blah blah blah.</p>
         </div>
 
         <hr class="featurette-divider">
-
         <!-- Third Featurette -->
         <div class="featurette" id="contact">
-                <img class="featurette-image img-circle img-responsive pull-right img-circle-reformat" src="https://lacpoissonblanc.ca/wp-content/uploads/2015/03/question.png">
-            <h2 class="featurette-heading">Liên hệ
-            </h2>
+            <img class="featurette-image img-circle img-responsive pull-right img-circle-reformat" src="https://lacpoissonblanc.ca/wp-content/uploads/2015/03/question.png">
+            <h2 class="featurette-heading">Liên hệ</h2>
             <p class="lead">Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah  blah blah blah blah blah blah blah blah blah blah blah blah blah blah.</p>
         </div>
 
         <hr class="featurette-divider">
 
         <!-- Footer -->
-<footer id="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xs-6 col-sm-3 column">
-                    <h4>Information</h4>
-                    <ul class="list-unstyled">
-                        <li><a href="">Products</a></li>
-                        <li><a href="">Services</a></li>
-                        <li><a href="">Benefits</a></li>
-                        <li><a href="">Developers</a></li>
-                    </ul>
-                </div>
-                <div class="col-xs-6 col-sm-3 column">
-                    <h4>About</h4>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Delivery Information</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms &amp; Conditions</a></li>
-                    </ul>
-                </div>
-                <div class="col-xs-12 col-sm-3 column">
-                    <h4>Stay Posted</h4>
-                    <form>
-                        <div class="form-group">
-                          <input type="text" class="form-control" title="No spam, we promise!" placeholder="Tell us your email">
+        <footer id="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-3 column">
+                            <h4>Information</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="">Products</a></li>
+                                <li><a href="">Services</a></li>
+                                <li><a href="">Benefits</a></li>
+                                <li><a href="">Developers</a></li>
+                            </ul>
                         </div>
-                        <div class="form-group">
-                          <button class="btn btn-primary" data-toggle="modal" data-target="#alertModal" type="button">Subscribe for updates</button>
+                        <div class="col-xs-6 col-sm-3 column">
+                            <h4>About</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Delivery Information</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                                <li><a href="#">Terms &amp; Conditions</a></li>
+                            </ul>
                         </div>
-                    </form>
-                </div>
-                <div class="col-xs-12 col-sm-3 text-right">
-                    <h4>Follow</h4>
-                    <ul class="list-inline">
-                      <li><a rel="nofollow" href="" title="Twitter"><i class="icon-lg ion-social-twitter-outline"></i></a>&nbsp;</li>
-                      <li><a rel="nofollow" href="" title="Facebook"><i class="icon-lg ion-social-facebook-outline"></i></a>&nbsp;</li>
-                      <li><a rel="nofollow" href="" title="Dribble"><i class="icon-lg ion-social-dribbble-outline"></i></a></li>
-                    </ul>
-                </div>
-            </div>
-            <br/>
-        </div>
-    </footer>
-     <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-app="app" ng-controller="LoginController">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h2 class="text-center">Đăng Nhập</h2>
-                </div>
-                <div class="modal-body row">
-                    <h6 class="text-center">ẤN ĐĂNG KÝ NẾU CHƯA CÓ TÀI KHOẢN</h6>
-
-            <p ng-show="message.error" class="text-center text-danger" >{{message.error}}</p>
-                    <form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" name="form" ng-submit="login()">
-            <div class="form-group" ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email" ng-model="email" required />
-                        <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Yêu cầu email</span>
-                        <span ng-show="form.email.$dirty && form.email.$error.email" class="help-block">Yêu cầu email</span>
-                </div>
-
-                    <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
-                        <label for="password">Mật khẩu</label>
-                        <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" ng-model="password" required />
-                        <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Yêu cầu mật khẩu</span>
+                        <div class="col-xs-12 col-sm-3 column">
+                            <h4>Stay Posted</h4>
+                            <form>
+                                <div class="form-group">
+                                  <input type="text" class="form-control" title="No spam, we promise!" placeholder="Tell us your email">
+                                </div>
+                                <div class="form-group">
+                                  <button class="btn btn-primary" data-toggle="modal" data-target="#alertModal" type="button">Subscribe for updates</button>
+                                </div>
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <button type ="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="form.$invalid">Đăng Nhập</button>
-                            <span class="pull-right"><a href="/#/register">Đăng ký</a></span><span><a href="#">Trợ giúp?</a></span>
+                        <div class="col-xs-12 col-sm-3 text-right">
+                            <h4>Follow</h4>
+                            <ul class="list-inline">
+                              <li><a rel="nofollow" href="" title="Twitter"><i class="icon-lg ion-social-twitter-outline"></i></a>&nbsp;</li>
+                              <li><a rel="nofollow" href="" title="Facebook"><i class="icon-lg ion-social-facebook-outline"></i></a>&nbsp;</li>
+                              <li><a rel="nofollow" href="" title="Dribble"><i class="icon-lg ion-social-dribbble-outline"></i></a></li>
+                            </ul>
                         </div>
-                    </form>
+                    </div>
+                    <br/>
+                </div>
+        </footer>
+        <!--/footer-->
+        <!--login Modal-->
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-app="app" ng-controller="LoginController">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h2 class="text-center">Đăng Nhập</h2>
+                    </div>
+                    <div class="modal-body row">
+                        <h6 class="text-center">ẤN ĐĂNG KÝ NẾU CHƯA CÓ TÀI KHOẢN</h6>
+                        <p ng-show="message.error" class="text-center text-danger" >{{message.error}}</p>
+                        <!--login form-->
+                        <form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" name="form" ng-submit="login()">
+                            <div class="form-group" ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email" ng-model="email" required />
+                                <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Yêu cầu email</span>
+                                <span ng-show="form.email.$dirty && form.email.$error.email" class="help-block">Yêu cầu email</span>
+                            </div>
 
-                </div>
-                <div class="modal-footer">
-                    <h6 class="text-center"><a href="">Privacy is important to us. Click here to read why.</a></h6>
-                </div>
-            </div>
-        </div>
-    </div>
-         <div id="myModalRegister" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-app="app" ng-controller="LoginController">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h2 class="text-center">Đăng ký</h2>
-                </div>
-                <div class="modal-body row">
-                    <h6 class="text-center">ẤN Đăng ký ĐỂ ĐĂNG KÝ NẾU CHƯA CÓ TÀI KHOẢN</h6>
-
-            <p ng-show="message.error" class="text-center text-danger" >{{message.error}}</p>
-                    <form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" name="form" ng-submit="login()">
-            <div class="form-group" ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email" ng-model="email" required />
-                        <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
-                        <span ng-show="form.email.$dirty && form.email.$error.email" class="help-block">Email is invalid</span>
-                </div>
-
-                    <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" ng-model="password" required />
-                        <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
-                        </div>
-                        <div class="form-group">
-                            <button type ="submit" class="btn btn-danger btn-lg btn-block" ng-disabled="form.$invalid">Sign In</button>
-                            <span class="pull-right"><a href="/#/register">Register</a></span><span><a href="#">Need help?</a></span>
-                        </div>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <h6 class="text-center"><a href="">Privacy is important to us. Click here to read why.</a></h6>
+                            <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+                                <label for="password">Mật khẩu</label>
+                                <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" ng-model="password" required />
+                                <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Yêu cầu mật khẩu</span>
+                            </div>
+                            <div class="form-group">
+                                <button type ="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="form.$invalid">Đăng Nhập</button>
+                                <span class="pull-right"><a href="/#/register">Đăng ký</a></span><span><a href="#">Trợ giúp?</a></span>
+                            </div>
+                        </form>
+                        <!--/login form-->
+                    </div>
+                    <div class="modal-footer">
+                        <h6 class="text-center"><a href="">Privacy is important to us. Click here to read why.</a></h6>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <!--/login Modal-->
     </div>
     
 </body>

@@ -1,12 +1,10 @@
-﻿// create the module and name it scotchApp
+﻿// create the module and name it
 var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap']);
-// var originPath='http://127.0.0.1:3001';
 var originPath='http://localhost:3001';
 // configure our routes
 App.config(function($routeProvider,ChartJsProvider) {
 
 $routeProvider
-
   .when('/verify',{
     templateUrl:'templates/verify.html',
     controller:'verify'
