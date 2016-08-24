@@ -1,51 +1,54 @@
 // create the module and name it scotchApp
-var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap','angular-jwt']);
+var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap','angular-jwt','course.requests','notification.services','user.services','subject.services','student.records','token.services','recommendation.services','education.programs']);
 // var originPath='http://127.0.0.1:3001';
 var originPath='http://localhost:3001';
-// configure our routes
+// configure our routes, token in every request and chart.js configure
 App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvider) {
+
   $routeProvider
     .when('/verify',{
-      templateUrl:'templates/verify.html',
+      templateUrl:'templates/verify/verify.html',
       controller:'verify'
     })
     .when('/profile',{
-        templateUrl: 'templates/profile.view.html',
+        templateUrl: 'templates/studentInfo/profile.view.html',
         controller:'ProfileController',
         resolve:{
             //home page
             //logged in
         }
     })
-    .when('/studentscore',{
-        templateUrl:'templates/student.score.view.html'
+    .when('/student-score',{
+        templateUrl:'templates/studentInfo/student.score.view.html'
     })
     .when('/subjects',{
       controller:'subjects',
-      templateUrl:'templates/subject.view.html'
+      templateUrl:'templates/subjects/subject.view.html'
     })
-    .when('/allnotifications',{
+    .when('/all-notifications',{
       controller:'allnotifications',
-      templateUrl:'templates/all.notifications.view.html'
+      templateUrl:'templates/notifications/all.notifications.view.html'
     })
     .when('/notification/:id',{
       controller:'notification',
-      templateUrl:'templates/notification.view.html'
+      templateUrl:'templates/notifications/notification.view.html'
     })
-    .when('/courserequest',{
+    .when('/course-request',{
       controller:'createCourseRequest',
-      templateUrl:'templates/create.course.request.view.html'
+      templateUrl:'templates/courseRequest/create.course.request.view.html'
     })
-    .when('/courserequestview/:id',{
+    .when('/course-request-view/:id',{
       controller:'courseRequestReview',
-      templateUrl:'templates/course.request.view.html'
+      templateUrl:'templates/courseRequest/course.request.view.html'
     })
-    .when('/courserequestlist',{
+    .when('/course-request-list',{
       controller:'courseRequestList',
-      templateUrl:'templates/course.request.list.html'
+      templateUrl:'templates/courseRequest/course.request.list.html'
+    })
+    .when('/study-path-recommend',{
+      controller:'studyPathRecommend',
+      templateUrl:'templates/recommendation/study.path.view.html'
     });
-    // #$locationProvider.html5Mode(true);
-  	//.otherwise({ redirectTo: '/' });
     ChartJsProvider.setOptions({
     colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
     responsive: true
@@ -69,8 +72,10 @@ App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvi
         }],
         whiteListedDomains: ['myapp.com', 'localhost','127.0.0.1']    
     });
+
   $httpProvider.interceptors.push('jwtInterceptor');
 });
+
 App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window){
   $rootScope.logout=function(){
       localStorage.clear();
@@ -131,8 +136,6 @@ App.controller('verify',function($http,$scope,$routeParams,$location){
   });
 });
 
-
-
 App.controller('ProfileController', function($scope,getStudentInfor,revoke){
     getStudentInfor.get().then(response=>{
       $scope.userInformation=response.data;
@@ -151,6 +154,12 @@ App.controller('ProfileController', function($scope,getStudentInfor,revoke){
     $scope.updateInfo=function(){
       ///////////
     }
+    $scope.updateAdvancedInfo=function(){
+      ////
+    }
+    $scope.changePassword=function(){
+      ////
+    }
     $scope.revoke=function(){
       revoke.revoke().then(response=>{
         localStorage.setItem('id_token',response.accessToken);
@@ -159,6 +168,7 @@ App.controller('ProfileController', function($scope,getStudentInfor,revoke){
       },err=> {console.log('revoke fail!')});
     }
 });
+
 App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredits,getStudentRecord){
 
     var res=getSubjectNameAndCredits.get();
@@ -170,7 +180,7 @@ App.controller("studentscore",function($scope,$rootScope,getSubjectNameAndCredit
             $scope.records=studentRecordInSenmester(res.data.record);  // rootscope //////////// need to sort the semester !!!
             //semester GPA line chart data
             $scope.linelabels = listSemester($scope.records);
-            $scope.lineseries = ['Trung binh tich luy'];
+            $scope.lineseries = ['Trung bình tích lũy'];
             $scope.linedata = GPASemesterList($scope.records,$scope.subjectCredits);
             //A B C D percentage pie chart data
             [$scope.ABCDPielabels,$scope.ABCDPiedata] = ABCDPieChartData($scope.records,$scope.subjectCredits);
@@ -298,18 +308,17 @@ App.controller('allnotifications',function($scope,$rootScope,$route,$location,ge
   }
 });
 
-App.controller('notification',function($scope,$rootScope,getNotification,$routeParams,markAsRead){
+App.controller('notification',function($scope,$rootScope,getNotification,$routeParams,notitificationStateChange){
   // console.log($routeParams.id);
   var request=getNotification.get($routeParams.id);
   request.then(function(res){
     $rootScope.notification=res.data;
   });
-  markAsRead.put($routeParams.id);
+  notitificationStateChange.putMarkAsRead($routeParams.id);
 });
 
 App.controller('createCourseRequest',function($scope,$route,courseRequest,getSubjectNameAndCredits){
     getSubjectNameAndCredits.get().then(function(response){
-      console.log('dsgsd',response.subjects)
       $scope.subjects=response.subjects;
     })
     $scope.courseData={};
@@ -389,7 +398,6 @@ App.controller('courseRequestReview',function($scope,$routeParams,courseRequest,
       processFunction.refreshRoute();
     }
 });
-
 // Simulate async data update
 App.controller('LineCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   // $scope.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -433,317 +441,11 @@ App.controller('RadarCtrl', function ($scope) {
   };
 });
 
-App.factory('getSubjectNameAndCredits',function($http){
-  return{
-    get:function(){
-      return $http({
-        method : "GET",
-        url : originPath+"/api/v1/subjects/get-names-and-credits"
-    }).then(function(response){
-      return response.data;
-    },
-     function myError() {
-        //
-    });
-    }
-  };
-})
-
-App.factory('getStudentRecord',function($http){
-  return{
-    get:function(){
-      return $http({
-        method : "GET",
-        url : originPath+"/api/v1/student-records/get"
-    }).then(function mySuccess(response) {
-        return response.data;
-    }, function myError() {
-         ////////!
-    });
-    }
-  };
-})
-
-App.factory('getStudentInfor',function($http){
-  return{
-    get:function(){
-      return $http({
-        method:'GET',
-        url :originPath+'/api/v1/users/get'
-      }).then(function(response){
-        return response.data;
-      },function(){
-        return 'Request Fail' ////////////
-      });
-    }
-  };
-})
-
-App.factory('deleteNotification',function($http){
-  return{
-    delete:function(IDs){
-      return $http({
-        method:'DELETE',
-        url:originPath+'/api/v1/notifications/delete',
-        params:{
-          notificationIds:IDs,
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-
-      });
-    }
-  }
-});
-
-App.factory('notitificationStateChange',function($http){
-  return{
-    putMarkAsUnImportant:function(id){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/notifications/mark-one-as-unimportant',
-        data:{
-          notificationId:id
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-
-      });
-    },
-    putMarkAsImportant:function(id){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/notifications/mark-one-as-important',
-        data:{
-          notificationId:id
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-
-      });
-    },
-    putMarkAsUnRead:function(id){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/notifications/mark-one-as-unread',
-        data:{
-          notificationId:id
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-
-      });
-    },
-    putMarkAsRead:function(id){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/notifications/mark-one-as-read',
-        data:{
-          notificationId:id
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-
-      });
-    },
-    putMarkAllAsRead:function(){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/notifications/mark-all-as-read',
-      }).then(function(response){
-        return response.data;
-      },function(response){
-
-      });
-    }
-  }
-});
-
-App.factory('getNotifications',function($http){
-  return{
-    getImportantNotification:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/notifications/get-important-titles'
-      }).then(function(response){
-        return response.data;
-      },function(response){
-        //////////// fail
-      });
-    },
-    getUnread:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/notifications/get-unread-titles'
-      }).then(function(response){
-        return response.data;
-      },function(response){
-        //////////// fail
-      });
-    },
-    getAllNotifications:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/notifications/get-titles'
-      }).then(function(response){
-        return response.data;
-      },function(response){
-        //////////// fail
-      });
-    },
-    getSomeNewNotifications: function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/notifications/get-5-latest-titles',
-      }).then(function(response){
-        return response.data;
-      },function(response){
-      });
-    }
-  };
-});
-
-App.factory('getNotification',function($http){
-  return{
-    get:function(ID){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/notifications/get-by-id',      /////// lost
-        params:{
-          notificationId:ID
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-        //////////// fail
-      });
-    }
-  };
-})
-
-App.factory('markAsRead',function($http){
-  return{
-    put:function(ID){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/notifications/mark-one-as-read',      /////// lost
-        data:{
-          notificationId :ID
-        }
-      }).then(function(response){
-        return response.data;
-      },function(response){
-        //////////// fail
-      });
-    }
-  };
-});
-
-App.factory('courseRequest',function($http){
-  return{
-    createCourseRequest:function(reason,subjectID,expectedtime){
-      return $http({
-        method:'POST',
-        url:originPath+'/api/v1/course-requests/create',
-        data:{
-          subjectId:subjectID,
-          expectedTime:expectedtime,
-          reason:reason
-        }
-      }).then(function(response){
-        return response.data;
-      },function(){
-        return {
-          success:false,
-          message:'Create Request Fail!'
-        };
-      });
-    },
-    getPublicCourseRequests:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/course-requests/get-all-public'
-      }).then(function(response){
-        return response.data;
-      });
-      /////////////////////////////////////////////////////////////
-    },
-    getOwnRequestCreated:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-created'
-      }).then(function(response){
-        return response.data;
-      })
-    },
-    getOwnRequestPublic:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-public'
-      }).then(function(response){
-        return response.data;
-      })
-    },
-    getOwnRequestPending:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-pending',
-      }).then(function(response){
-        return response.data;
-      })
-    },
-    getOwnRequestDenied:function(){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-denied',
-      }).then(function(response){
-        return response.data;
-      })
-    },
-    getOneById:function(id){
-      return $http({
-        method:'GET',
-        url:originPath+'/api/v1/course-requests/get-own-denied',
-        params:{
-          courseRequestId:id
-        }
-      }).then(function(response){
-        return response.data;
-      })
-    },
-    deleteOneById:function(id){
-      return $http({
-        method:'DELETE',
-        url:originPath+'/api/v1/course-requests/delete-one',
-        params:{
-          courseRequestId:id
-        }
-      })
-    },
-    putJoinOneById:function(id){
-      return $http({
-        method:'PUT',
-        url:originPath+'/api/v1/course-requests/join',
-        data:{
-          courseRequestId:id
-        }
-      })
-    },
-    putUnJoinOneById:function(id){
-      return $http({
-        method:'DELETE',
-        url:originPath+'/api/v1/course-requests/undo-join',
-        data:{
-          courseRequestId:id
-        }
-      })
-    }
-  }
+App.controller('studyPathRecommend',function($scope,recommendationServices){
+  console.log('dsfdgsdg');
+  recommendationServices.studyPath().then(response=>{
+    $scope.path=response.data;
+  });
 });
 
 App.factory('processFunction',function($route){
@@ -760,42 +462,9 @@ App.factory('processFunction',function($route){
       $route.reload();
     }
   }
-})
-
-App.factory('refreshToken',function($http){
-    return{
-        refreshToken:function(){
-            return $http({
-                method:'GET',
-                url:originPath+'/api/v1/tokens/refresh',
-                headers:{
-                    Authorization:'Bearer '+localStorage.getItem('refresh_token')
-                }
-            }).then(response=> {
-                return response.data;
-            },err=>{
-                console.log('get refresh tokens fail!');
-            })
-        }
-    }
 });
-App.factory('revoke',function($http){
-    return{
-    revoke:function(){
-        return $http({
-            method:'POST',
-            url:originPath+'/api/v1/tokens/revoke',
-            headers:{
-                Authorization:'Bearer '+localStorage.getItem('refresh_token')
-            }
-        }).then(response=> {
-            return response.data;
-        },err=>{
-            console.log('get revoke tokens fail!');
-        })
-    }
-  }
-})
+
+
   // app.controller('BarCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   //   $scope.options = { scaleShowVerticalLines: false };
   //   $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
