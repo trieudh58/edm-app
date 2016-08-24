@@ -50,6 +50,7 @@ app.use(swagger.init(app, {
         './controllers/notifications.js',
         './controllers/courseRequests.js',
         './controllers/tokens.js',
+        './controllers/educationPrograms.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
@@ -75,5 +76,5 @@ app.listen(app.get('port'), function () {
     // Line 2
     //require('./database/seed');
 
-    console.log('Server is running on port ' + app.get('port'));
+    //console.log('Server is running on port ' + app.get('port'));
 });

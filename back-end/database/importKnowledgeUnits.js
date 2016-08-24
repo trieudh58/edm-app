@@ -9,7 +9,7 @@ var csvSubjectStream = csv.parse({delimiter: ';'}).on('data', function (data) {
 }).on('finish', function () {
     for (var i = 0; i < kU.length; i++) {
         models.KnowledgeUnit.create({
-            code: kU[i][0],
+            kuCode: kU[i][0],
             name: kU[i][1]
         }, function (err) {
             if (err) {

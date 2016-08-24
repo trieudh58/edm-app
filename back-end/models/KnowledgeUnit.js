@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var KnowledgeUnitSchema = new mongoose.Schema({
-    code: {
+    kuCode: {
         type: Number,
         unique: true,
         required: true

@@ -8,12 +8,12 @@ var csvSubjectStream = csv.parse({delimiter: ';'}).on('data', function (data) {
     EPD.push(data);
 }).on('finish', function () {
     for (var i = 0; i < EPD.length; i++) {
-        var subjectList = EPD[i][3].split(',');
+        var subjectCodeList = EPD[i][3].split(',');
         models.EPDetail.create({
             epCode: EPD[i][0],
             kuCode: EPD[i][1],
             totalCreditsByKU: EPD[i][2],
-            subjects: subjectList
+            subjects: subjectCodeList
         }, function (err) {
             if (err) {
                 throw err;
