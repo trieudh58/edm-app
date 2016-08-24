@@ -125,5 +125,59 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/education-programs/get-ep-subjects-by-code
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get education program subjects
+     *      notes: Return education program subjects
+     *      nickname: Get education program subjects
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: epCode
+     *          description: Education program code (from 1 to 6)
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Return education program subjects (by code) */
+    getEPSubjectsByCode: function (req, res) {
+        models.EPDetail.find({
+            epCode: req.query.epCode
+        }).sort({
+            kuCode: 'asc'
+        }).exec(function (err, epDetail) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else if (!epDetail || !epDetail.length) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid code.'
+                });
+            }
+            else {
+                var allSubjects = [];
+                for (var i = 0; i < epDetail.length; i++) {
+                    allSubjects = allSubjects.concat(epDetail[i].subjects);
+                }
+                return res.json({
+                    success: true,
+                    data: allSubjects
+                });
+            }
+        });
     }
 };

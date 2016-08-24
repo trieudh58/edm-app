@@ -13,4 +13,7 @@ router.get('/get-kus', authentication, EducationProgramController.getKUs);
 /* Get education program detail */
 router.get('/get-ep-detail-by-code', validation.getEPDetailByCode, authentication, EducationProgramController.getEPDetailByCode);
 
+/* Get education program subjects */
+router.get('/get-ep-subjects-by-code', validation.getEPSubjectsByCode, authentication, EducationProgramController.getEPSubjectsByCode);
+
 module.exports = router;
