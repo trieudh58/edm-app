@@ -13,4 +13,10 @@ router.get('/get-by-lecturer', authentication, ScienceResearchDirectionControlle
 /* Get science research direction by workplace */
 router.get('/get-by-workplace', authentication, ScienceResearchDirectionController.getByWorkplace);
 
+/* Get lecturers */
+router.get('/get-lecturers', authentication, ScienceResearchDirectionController.getLecturers);
+
+/* Get workplaces */
+router.get('/get-workplaces', authentication, ScienceResearchDirectionController.getWorkplaces);
+
 module.exports = router;

@@ -136,5 +136,85 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/science-research-directions/get-lecturers
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get lecturers
+     *      notes: Get lecturers
+     *      nickname: Get lecturers
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get science lecturers */
+    getLecturers: function (req, res) {
+        models.SRDirection.find({}, '-_id lecturer').sort({
+            lecturer: 'asc'
+        }).exec(function (err, SRDirections) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                return res.json({
+                    success: true,
+                    data: SRDirections
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/science-research-directions/get-workplaces
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get workplaces
+     *      notes: Get workplaces
+     *      nickname: Get workplaces
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get workplaces */
+    getWorkplaces: function (req, res) {
+        models.SRDirection.find({}, '-_id workplace').sort({
+            workplace: 'asc'
+        }).exec(function (err, SRDirections) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                var workplaces = [];
+                for (var i = 0; i < SRDirections.length; i++) {
+                    if (workplaces.indexOf(SRDirections[i].workplace) == -1) {
+                        workplaces.push(SRDirections[i].workplace);
+                    }
+                }
+                return res.json({
+                    success: true,
+                    data: workplaces
+                });
+            }
+        });
     }
 };
