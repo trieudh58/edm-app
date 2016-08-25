@@ -29,7 +29,10 @@
                 templateUrl:'templates/notification.view.html'
             });
         jwtOptionsProvider.config({
-            tokenGetter: ['refreshToken','jwtHelper', function(refreshToken,jwtHelper) {
+            tokenGetter: ['refreshToken','jwtHelper','options', function(refreshToken,jwtHelper,options) {
+                if (options.url.substr(options.url.length - 5) == '.html' || options.url.substr(options.url.length - 3) == '.js' || options.url.substr(options.url.length - 4) == '.css' ) {
+                    return null;
+                }
                 if(localStorage.id_token&&jwtHelper.isTokenExpired(localStorage.id_token)){
                     return refreshToken.refreshToken().then(function(response){
                         localStorage.setItem('id_token',response.accessToken);
