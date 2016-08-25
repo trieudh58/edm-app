@@ -7,4 +7,7 @@ var authentication = require('../middleware/authentication');
 /* Return study path */
 router.get('/get-study-path', authentication, RecommendationController.getStudyPath);
 
+/* Return next semester subjects */
+router.get('/get-next-semester-subjects', authentication, RecommendationController.getNextSemesterSubjects);
+
 module.exports = router;

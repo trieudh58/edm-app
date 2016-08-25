@@ -62,5 +62,41 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/recommendations/get-next-semester-subjects
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get next semester subjects
+     *      notes: Return next semester subjects (provided by suggestion)
+     *      nickname: Get next semester subjects
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Return next semester subjects */
+    getNextSemesterSubjects: function (req, res) {
+        // Hard-coded. Need to be enhanced
+        models.Subject.find({}, '-createdAt -updatedAt').limit(7).exec(function (err, subjects) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                return res.json({
+                    success: true,
+                    data: subjects
+                });
+            }
+        });
     }
 };
