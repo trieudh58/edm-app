@@ -1,0 +1,109 @@
+<!--       <script>
+      $(function(){
+
+        var cy = window.cy = cytoscape({
+          container: document.getElementById('cy'),
+
+          boxSelectionEnabled: false,
+          autounselectify: true,
+          
+          layout: {
+            name: 'cose-bilkent'
+          },
+
+          style: [
+            {
+              selector: 'node',
+              style: {
+                'border-width':3,
+                'border-color':'red',
+                'width':20,
+                'height':20,
+                'background-color': 'red',
+                'border-opacity':0.4,
+                'content': 'data(id)',
+                'background-opacity':0.5,
+                
+              }
+            },
+
+            {
+              selector: 'edge',
+              style: {
+                'width': 4,
+                'line-color': 'green'
+              }
+            },
+            {
+              selector:'.senmester-connect',
+              style:{
+                'line-color': 'red'
+              }
+            }
+          ],
+          
+          elements: [
+
+    {"data":{"id":"sen 1"},"position":{"x":1452.639173965406,"y":609.3619416544145}},{"data":{"id":"sen 2",'name':'ooohdfsdffds'}},{"data":{"id":"sen 3",'name':'ooodsfdhfds'}},{"data":{"id":"sen 4",'name':'ooohfsfdfds'}},{"data":{"id":"sen 5",'name':'ooohfdsffds'}},{"data":{"id":"sen 6",'name':'ooohfds'}},{"data":{"id":"sen 7",'name':'ooohffdsfds'}},{"data":{"id":"sen 8",'name':'oofdsohfds'},},{"data":{"id":"e27","source":"sen 1","target":"sen 2"}, 'classes':'senmester-connect'},{"data":{"id":"e7","source":"sen 2","target":"sen 3"}, 'classes':'senmester-connect'},{"data":{"id":"e57","source":"sen 3","target":"sen 4"}, 'classes':'senmester-connect'},{"data":{"id":"e2","source":"sen 4","target":"sen 5"}, 'classes':'senmester-connect'},{"data":{"id":"e23","source":"sen 5","target":"sen 6"}, 'classes':'senmester-connect'},{"data":{"id":"e24","source":"sen 6","target":"sen 7"}, 'classes':'senmester-connect'},{"data":{"id":"e25","source":"sen 7","target":"sen 8"}, 'classes':'senmester-connect'}
+]
+        });
+    
+      });
+    </script>
+    <style>
+      body {
+        font-family: helvetica;
+        font-size: 14px;
+      }
+
+      #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 999;
+      }
+
+      h1 {
+        opacity: 0.5;
+        font-size: 1em;
+      }
+/*      .hoho{
+        background-color: blue;
+      }*/
+    </style>
+ -->
+
+    <section class="content-header">
+      <h1>
+        Gợi ý lộ trình
+        <small>review</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Gợi ý lộ trình</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <table class="table table-bordered table-background">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã MH</th>
+              <th>Môn học</th>
+            </tr>
+          </thead>
+          <tbody ng-repeat="(semester,subjects) in studyPath">
+            <tr><th colspan= '42' style="text-align:left;">semester: {{1 *semester+1}}</th></tr>
+            <tr ng-repeat='(index,subject) in subjects'>
+              <th scope="row">{{index +1}}</th>
+              <td>{{subject.subjectCode}}</td>
+              <td>{{subject.subjectName}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- <div id="cy"></div> -->
+    </section>

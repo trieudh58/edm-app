@@ -1,0 +1,38 @@
+    <section class="content-header">
+      <h1>
+        Những môn nên học kỳ tới
+        <small>review</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Môn nên học</li>
+      </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <table class="table table-bordered table-background">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Mã MH</th>
+              <th>Môn học</th>
+              <th>T/C</th>
+              <th>TH</th>
+              <th>LT</th>
+              <th>Tiên quyết</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(index,subject) in nextSemesterSubjects">
+              <th scope="row">{{index +1}}</th>
+              <td>{{subject.code}}</td>
+              <td>{{subject.name.vi}}</td>
+              <td>{{subject.details.credits}}</td>
+              <td>{{subject.details.practiceHour}}</td>
+              <td>{{subject.details.onClassHour}}</td>
+              <td <span ng-repeat="subject in subject.details.prerequisites">{{subject}}</span> </td>
+            </tr>
+          </tbody>
+        </table>
+    </section>
