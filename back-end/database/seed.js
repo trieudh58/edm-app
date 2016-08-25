@@ -16,7 +16,8 @@ seeder.connect(config.mongodb.host, function () {
         'models/StudentGroup.js',
         'models/BlackListToken.js',
         'models/Notification.js',
-        'models/UserToken.js'
+        'models/UserToken.js',
+        'models/SRDirection.js'
     ]);
     /* Clear models' data */
     seeder.clearModels([
@@ -30,7 +31,8 @@ seeder.connect(config.mongodb.host, function () {
         'StudentGroup',
         'Notification',
         'BlackListToken',
-        'UserToken'
+        'UserToken',
+        'SRDirection'
     ], function () {
         console.log('Connected to mongodb.');
         seeder.populateModels(data);
@@ -52,6 +54,9 @@ seeder.connect(config.mongodb.host, function () {
 
         /* Create student groups */
         require('./createStudentGroups.js');
+
+        /* Import science research directions */
+        require('./importScienceResearch.js');
     });
 });
 
