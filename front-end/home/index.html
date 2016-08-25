@@ -160,7 +160,7 @@ desired effect
         <li><a href="#/student-score"><i class="fa fa-link"></i> <span>Kết quả học tập</span></a></li>
         <li><a href="#/study-path-recommend"><i class="fa fa-link"></i><span>Tư vấn lộ trình</span></a>
         </li>
-        <li><a href="#/education-program"><i class="fa fa-link"></i><span>Chương trình đào tạo</span></a>
+        <li><a href="#/education-programs"><i class="fa fa-link"></i><span>Chương trình đào tạo</span></a>
         </li>
         <li class="treeview">
           <a href=""><i class="fa fa-link"></i><span>Gợi ý NCKH & KLTN</span>
@@ -171,20 +171,20 @@ desired effect
           <ul class="treeview-menu">
             <li><a href="#">Nghiên cứu khoa học</a><li>
             <li><a href="#">Khóa luận tốt nghiệp</a></li>
-            <li><a href="#">Thông tin</a></li>
+            <li><a href="#/research-thesis-info">Thông tin</a></li>
           </ul>
         </li>
         <li class="treeview">
-          <a href="#"><i class="fa fa-link"></i> <span>Tư vấn môn học</span>
+          <a href=""><i class="fa fa-link"></i> <span>Tư vấn môn học</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#/">Gợi ý MH kỳ tới</a></li>
+            <li><a href="#/next-semester-recommend">Gợi ý MH kỳ tới</a></li>
             <li><a href="#/course-request">Xin Mở Lớp</a></li>
             <li><a href="#/course-request-list">Yêu cầu hiện tại</a></li>
-            <li><a href="#">#</a></li>
+            <li><a href="#/subject-info">Thông tin môn học</a></li>
           </ul>
         </li>
       </ul>
@@ -248,12 +248,15 @@ desired effect
   <script src="scripts/services/tokenServices.js"></script>
   <script src="scripts/services/studentRecords.js"></script>
   <script src="scripts/services/subjectServices.js"></script>
+  <script src="scripts/services/scienceResearchDirections.js"></script>
   <!--app controller-->
   <!-- <script src="scripts/controllers/"></script> -->
   <!-- home angularjs code -->
   <script src="app.js"></script>
   <!-- <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script> -->
   <script src="dist/js/app.min.js"></script>
-
+  <script src="scripts/cytoscape.min.js"></script>
+  <script src="scripts/cytoscape-cose-bilkent.js"></script>
+ 
 </body>
 </html>

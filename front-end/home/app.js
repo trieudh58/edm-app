@@ -1,5 +1,5 @@
 // create the module and name it scotchApp
-var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap','angular-jwt','course.requests','notification.services','user.services','subject.services','student.records','token.services','recommendation.services','education.programs']);
+var App = angular.module('app',['ngRoute','ngStorage','chart.js', 'ui.bootstrap','angular-jwt','course.requests','notification.services','user.services','subject.services','student.records','token.services','recommendation.services','education.programs','science.research.directions']);
 // var originPath='http://127.0.0.1:3001';
 var originPath='http://localhost:3001';
 // configure our routes, token in every request and chart.js configure
@@ -15,7 +15,7 @@ App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvi
         controller:'ProfileController',
         resolve:{
             //home page
-            //logged in
+            // loginRequired
         }
     })
     .when('/student-score',{
@@ -45,9 +45,25 @@ App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvi
       controller:'courseRequestList',
       templateUrl:'templates/courseRequest/course.request.list.html'
     })
+    .when('/subject-info',{
+      controller:'subjectInfo',
+      templateUrl:'templates/subjects/subject.view.html'
+    })
+    .when('/education-programs',{
+      controller:'educationPrograms',
+      templateUrl:'templates/educationPrograms/education.program.view.html'
+    })
+    .when('/next-semester-recommend',{
+      controller:'nextSemesterRecommend',
+      templateUrl:'templates/recommendation/next.semester.subjects.view.html'
+    })
     .when('/study-path-recommend',{
       controller:'studyPathRecommend',
       templateUrl:'templates/recommendation/study.path.view.html'
+    })
+    .when('/research-thesis-info',{
+      controller:'researchThesisInfo',
+      templateUrl:'templates/scienceResearchDirections/thesis&ScienceResearch.info.view.html'
     });
     ChartJsProvider.setOptions({
     colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
@@ -79,9 +95,7 @@ App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvi
   $httpProvider.interceptors.push('jwtInterceptor');
 });
 
-App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window,authManager){
-  authManager.redirectWhenUnauthenticated();
-
+App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window,$location){
   $rootScope.logout=function(){
       localStorage.clear();
       $window.open('/', "_self");
@@ -415,6 +429,7 @@ App.controller('LineCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
   $scope.onClick = function (points, evt) {
     console.log(points, evt);
   };
+
   $scope.onHover = function (points) {
     if (points.length > 0) {
       console.log('Point', points[0].value);
@@ -446,13 +461,48 @@ App.controller('RadarCtrl', function ($scope) {
   };
 });
 
-App.controller('studyPathRecommend',function($scope,recommendationServices){
-  console.log('dsfdgsdg');
+App.controller('studyPathRecommend',function($scope,recommendationServices,getSubjectNameAndCredits,getSubjectInfo){
   recommendationServices.studyPath().then(response=>{
-    $scope.path=response.data;
+    var subjects=response.data;
+    getSubjectNameAndCredits.get().then(response=>{
+      $scope.studyPath=getStudyPathDict(subjects,subjectDictViet(response.subjects));
+    }); 
   });
+
 });
 
+App.controller('subjectInfo',function($scope,getSubjectNameAndCredits,getSubjectInfo){
+  getSubjectNameAndCredits.get().then(response=>{
+    $scope.subjectList=response.subjects;
+  })
+});
+
+App.controller('educationPrograms',function($scope,educationPrograms,getSubjectNameAndCredits){
+  var res=getSubjectNameAndCredits.get();
+    res.then(function(response){
+    $scope.subjectsNameDictViet=subjectDictViet(response.subjects);
+    $scope.subjecCredits=subjectCredit(response.subjects);
+  });
+  educationPrograms.getEducationProgramDetails(1).then(response=>{
+    var program=response.data;
+    educationPrograms.getKnowledgeUnitDetails().then(response=>{
+      $scope.program=educationProgramsDict(program,response.data);
+  })
+  })
+
+});
+
+App.controller('nextSemesterRecommend',function($scope,recommendationServices){
+  recommendationServices.nextSemesterStudy().then(function(response){
+    $scope.nextSemesterSubjects=response.data;
+  })
+});
+
+App.controller('researchThesisInfo',function($scope,scienceResearchDirections){
+  scienceResearchDirections.researchThesisInfo().then(response=>{
+    $scope.scienceResearchDirections=response.data;
+  })
+})
 App.factory('processFunction',function($route){
   return{
     expectimeConvert:function(time){
@@ -593,17 +643,17 @@ App.factory('processFunction',function($route){
 
 function loginRequired($q, $location) {           ///////////window instead
   var deferred = $q.defer();
-  if ($localStorage.access_token!==undefined) {
+  if (localStorage.id_token!==undefined) {
     deferred.resolve();
   } else {
-    $location.path('/login');
+    $location.absUrl(originPath);
   }
   return deferred.promise;
 }
 
 function notLoginRequired($q, $location){
   var deferred = $q.defer();
-  if ($localStorage.access_token==undefined) {
+  if (localStorage.access_token==undefined) {
     deferred.resolve();
   } else {
     $location.path('/home');    ///////////////////// home.html
@@ -621,7 +671,6 @@ function subjectDictViet(subjectJsonData){
     for (i=0;i<subjectJsonData.length;i++){
       result[subjectJsonData[i].code]=subjectJsonData[i].name.vi;
     }
-    // console.log(result);
     return result;
   }
 function subjectDictEng(subjectJsonData){
@@ -763,3 +812,26 @@ function studentRecordChar(score){
       return 'F';
 
   }
+
+function getStudyPathDict (data,subjectName){
+    result={};
+    for(i=0;i<data.length;i++){
+        var semester=data[i].semester;
+        if(semester in result){
+          result[semester].push({'subjectCode':data[i].subject,'subjectName':subjectName[data[i].subject]});
+        }
+        else{
+          result[semester]=[];
+          result[semester].push({'subjectCode':data[i].subject,'subjectName':subjectName[data[i].subject]});
+        }
+    }
+    return result;
+}
+
+function educationProgramsDict(program,ku){
+  result={};
+  for(i=0;i<program.length;i++){
+    result[ku[i].name]=program[i].subjects;
+  }
+  return result;
+}
