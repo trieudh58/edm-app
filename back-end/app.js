@@ -52,6 +52,7 @@ app.use(swagger.init(app, {
         './controllers/tokens.js',
         './controllers/educationPrograms.js',
         './controllers/recommendations.js',
+        './controllers/scienceResearchDirections.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
