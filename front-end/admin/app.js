@@ -3,11 +3,6 @@
 	var originPath='http://localhost:3001';
 	// configure our routes
 	App.config(function($routeProvider,$httpProvider,jwtOptionsProvider) {
-		$routeProvider
-			.when('/', {
-				templateUrl : 'templates/login.view.html',
-				controller  : 'LoginController'
-			});
         jwtOptionsProvider.config({
             tokenGetter: ['refreshToken','jwtHelper','options', function(refreshToken,jwtHelper,options) {
                 if (options.url.substr(options.url.length - 5) == '.html' || options.url.substr(options.url.length - 3) == '.js' || options.url.substr(options.url.length - 4) == '.css' ) {
