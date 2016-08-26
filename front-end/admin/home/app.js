@@ -1,32 +1,32 @@
 	// create the module and name it scotchApp
-	var App = angular.module('app', ['ngRoute','ngStorage','angular-jwt']);
+	var App = angular.module('app', ['ngRoute','ngStorage','angular-jwt','course.request','notification.service','token.services']);
 	var originPath='http://localhost:3001';
 	// configure our routes
 	App.config(function($routeProvider,$httpProvider,jwtOptionsProvider) {
 		$routeProvider
             .when('/notification/:id',{
                 controller:'notification',
-                templateUrl:'templates/notification.view.html'
+                templateUrl:'templates/notifications/notification.view.html'
             })
             .when('/draftnotifications',{
                 controller:'draftNotifications',
-                templateUrl:'templates/draft.view.html'
+                templateUrl:'templates/notifications/draft.view.html'
             })
             .when('/sentnotification',{
                 controller:'sentNotification',
-                templateUrl:'templates/sentnotifications.view.html'
+                templateUrl:'templates/notifications/sentnotifications.view.html'
             }).
             when('/createnotification',{
                 controller:'createNotification',
-                templateUrl:'templates/create.notification.html'
+                templateUrl:'templates/notifications/create.notification.html'
             })
             .when('/courserequestlist',{
                 controller:'courseRequestList',
-                templateUrl:'templates/course.request.view.list.html'
+                templateUrl:'templates/courseRequests/course.request.view.list.html'
             })
             .when('/courserequest/:id',{
                 controller:'courseRequest',
-                templateUrl:'templates/notification.view.html'
+                templateUrl:'templates/notifications/notification.view.html'
             });
         jwtOptionsProvider.config({
             tokenGetter: ['refreshToken','jwtHelper','options', function(refreshToken,jwtHelper,options) {
@@ -102,166 +102,6 @@
                 outtime=date.toISOString().slice(0,10);
             return outtime;
           }
-    });
-    App.factory('courseRequestService',function($http){
-        return{
-            getPublicRequests:function(){
-                return $http({
-                    method:'GET',
-                    url:originPath+'/api/v1/admin/course-requests/get-all-public'
-                }).then(function(response){
-                    return response.data;
-                },function(){
-
-                });
-            },
-            getOneCourseRequest:function(id){
-                return $http({
-                    method:'GET',
-                    url: originPath +'/api/v1/admin/course-requests/get-all-denied'
-                });
-            },
-            getDeniedRequests:function(){
-                return $http({
-                    method:'GET',
-                    url:originPath+'/api/v1/admin/course-requests/get-all-denied'
-                }).then(function(response){
-                    return response.data;
-                });
-            },
-            getPendingRequests:function(){
-                return $http({
-                    method:'GET',
-                    url:originPath+'/api/v1/admin/course-requests/get-all-pending'
-                }).then(function(response){
-                    return response.data;
-                },function(){
-
-                });
-            },
-            putDenyRequest:function(id){
-                return $http({
-                    method:'PUT',
-                    url:originPath+'/api/v1/admin/course-requests/deny-one',
-                    data:{
-                        courseRequestId:id
-                    }
-                }).then(function(response){
-                    return response.data;
-                });
-            },
-            putPublicRequest:function(id){
-                return $http({
-                    method:'PUT',
-                    url:originPath+'/api/v1/admin/course-requests/public-one',
-                    data:{
-                        courseRequestId:id
-                    }
-                }).then(function(response){
-                    return response.data;
-                });
-            }
-         }
-    });
-    App.factory('deleteNotification',function($http){
-          return{
-            delete:function(IDs){
-              return $http({
-                method:'DELETE',
-                url:originPath+'/api/v1/admin/notifications/delete-by-ids',
-                params:{
-                  notificationIds:IDs,
-                }
-              }).then(function(response){
-                return response.data;
-              },function(response){
-
-              });
-            }
-          }
-    });
-    App.factory('getDrafts',function($http){
-        return{
-            get:function(){
-                return $http({
-                    method:'GET',
-                    url:originPath+'/api/v1/admin/notifications/get-all-unsent'
-                }).then(function(response){
-                    return response.data;
-                })
-            }
-        };
-    });
-    App.factory('getSentNotifications',function($http){
-        return{
-            get:function(){
-                return $http({
-                    method:'GET',
-                    url:originPath+'/api/v1/admin/notifications/get-all-sent'
-                }).then(function(response){
-                    return response.data;
-                })
-            }
-        };
-    });
-    App.factory('getStudentGroup',function($http){
-        return{
-            get:function(){
-                return $http({
-                    method:'GET',
-                    url:originPath+'/api/v1/admin/student-groups/get-all'
-                }).then(function(response){
-                    return response.data;
-                })
-            }
-        }
-    });
-    App.factory('notificationService',function($http){
-        return {
-            createNotification:function(targetGroupIds,title,body){
-                return $http({
-                    method:'POST',
-                    url:originPath+'/api/v1/admin/notifications/create',
-                    data:{
-                        targetGroupIds:targetGroupIds,
-                        title:title,
-                        body:body
-                    }
-                }).then(function(response){
-                    return response.data;
-                })
-            },
-            sendNotification:function(targetGroupIds,title,body){
-                return $http({
-                    method:'POST',
-                    url:originPath+'/api/v1/admin/notifications/create-and-send',
-                    data:{
-                        targetGroupIds:targetGroupIds,
-                        title:title,
-                        body:body
-                    }
-                }).then(function(response){
-                    return response.data;
-                })
-            }
-        }
-    });
-    App.factory('refreshToken',function($http){
-        return{
-            refreshToken:function(){
-                return $http({
-                    method:'GET',
-                    url:originPath+'/api/v1/tokens/refresh',
-                    headers:{
-                        Authorization:'Bearer '+localStorage.getItem('refresh_token')
-                    }
-                }).then(response=> {
-                    return response.data;
-                },err=>{
-                    console.log('get refresh tokens fail!');
-                })
-            }
-        }
     });
     App.controller('createNotification',function(notificationService,getStudentGroup,$scope,$route,$rootScope){
         getStudentGroup.get().then(function(res){
