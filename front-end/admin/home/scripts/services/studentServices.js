@@ -1,4 +1,4 @@
-	var App.module('student.services',[]);
+	var App=angular.module('student.services',[]);
 	App.factory('getStudentGroup',function($http){
         return{
             get:function(){

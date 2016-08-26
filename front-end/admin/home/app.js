@@ -1,5 +1,5 @@
 	// create the module and name it scotchApp
-	var App = angular.module('app', ['ngRoute','ngStorage','angular-jwt','course.request','notification.service','token.services']);
+	var App = angular.module('app', ['ngRoute','ngStorage','angular-jwt','course.request','notification.service','token.services','student.services']);
 	var originPath='http://localhost:3001';
 	// configure our routes
 	App.config(function($routeProvider,$httpProvider,jwtOptionsProvider) {
@@ -111,7 +111,7 @@
 
         $scope.createNotification=function(){
             console.log('create');
-            notificationService.createnotification($scope.notificationData.studentGroups.join(','),$scope.notificationData.title,$scope.notificationData.body);
+            notificationService.createNotification($scope.notificationData.studentGroups.join(','),$scope.notificationData.title,$scope.notificationData.body);
             $rootScope.refresh();
         }
         $scope.sendNotification=function(){
