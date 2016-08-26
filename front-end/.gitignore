@@ -1,2 +1,4 @@
 # Frontend ignored files go here
 bower_components/
+node_modules/
+plugins/
