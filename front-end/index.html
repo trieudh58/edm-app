@@ -228,18 +228,20 @@
             </div>
         </div>
         <!-- email verify response message -->
-        <div class="modal fade" id="verifyModal" role="dialog">
+        <div class="modal fade" id="verifyModal" role="dialog" ng-controller="verifyCtrl">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Modal Header</h4>
+                  <h3 class="modal-title text-success" ng-if="verify_message_success">SUCCESS!</h3>
+                  <h3 class="modal-title text-danger" ng-if="verify_message_fail">FAIL!</h3>
                 </div>
                 <div class="modal-body">
-                  <p>Some text in the modal.</p>
+                    <h5 class="text-success" ng-if="verify_message_success">{{verify_message_success}}</h5>
+                    <h5 class="text-danger" ng-if="verify_message_fail">{{verify_message_fail}}</h5>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
                 </div>
               </div>
               

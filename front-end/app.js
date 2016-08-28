@@ -2,11 +2,9 @@
     var originPath='http://localhost:3001';
 	// configure our routes
     App.config(function Config($httpProvider,$routeProvider,jwtOptionsProvider) {
-
         $routeProvider
         .when('/verify',{
-          controller:'verifyCtrl'
-        });
+        })
         jwtOptionsProvider.config({
             tokenGetter: ['refreshToken','jwtHelper','options', function(refreshToken,jwtHelper,options) {
                 if (options.url.substr(options.url.length - 5) == '.html' || options.url.substr(options.url.length - 3) == '.js' || options.url.substr(options.url.length - 4) == '.css' ) {
@@ -116,18 +114,20 @@
 
     App.controller('verifyCtrl',function($http,$scope,$routeParams,$location){
         var qs = $location.search();
-        $http({
-            method:'PUT',
-            url:originPath+'/api/v1/users/verify-email',
-            data:{
-                'email':qs.email,
-                'token':qs.token
-            }
-        }).then(function success(response){
-             $scope.response=response.data;
-        },function error(response){
-            $scope.response='Request fail!';
-        });
-        var Modal=angular.element('#verifyModal');
-        Modal.modal('show');
+        if(qs.token&&qs.email){
+            $http({
+                method:'PUT',
+                url:originPath+'/api/v1/users/verify-email',
+                data:{
+                    'email':qs.email,
+                    'token':qs.token
+                }
+                }).then(function success(response){
+                    $scope.verify_message_success="Tài khoản của bạn đã được kích hoạt nhấp đăng nhập để vào hệ thống!";
+                },function error(response){
+                    $scope.verify_message_fail='Kích hoạt thất bại có thể tài khoản đã tồn tại hoặc token không hợp lệ xin bạn thử lại sau!';
+                });
+            var Modal=angular.element('#verifyModal');
+            Modal.modal('show');
+        }
     });
