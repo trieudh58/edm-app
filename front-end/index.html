@@ -16,7 +16,7 @@
     <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
     <!-- Bootstrap 3.3.7 -->
     <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    
+
     <script src="/bower_components/angular/angular.min.js"></script>
     <script src="/bower_components/ngstorage/ngStorage.min.js"></script>
     <script src="https://code.angularjs.org/1.2.13/angular-cookies.js"></script>
@@ -210,11 +210,12 @@
 
                             <div class="form-group" ng-class="{ 'has-error': form.repassword.$dirty && form.repassword.$invalid }">
                                 <label for="repassword">Gõ lại mật khẩu</label>
-                                <input type="password" name="repassword" id="repassword" class="form-control input-lg" placeholder="Confirm password" ng-model="repassword" data-match="#password" data-match-error="Chưa phải mật khẩu của bạn" required />
+                                <input type="password" name="repassword" id="repassword" class="form-control input-lg" placeholder="Confirm password" ng-model="repassword" required />
                                 <span ng-show="form.repassword.$dirty && form.repassword.$error.required" class="help-block">Yêu cầu gõ lại mật khẩu</span>
+                                <span ng-show="form.repassword.$dirty && password!=repassword" class="help-block">Chưa phải mật khẩu của bạn</span>
                             </div>
                             <div class="form-group">
-                                <button type ="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="form.$invalid">Đăng Ký</button>
+                                <button type ="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="form.$invalid || password!=repassword">Đăng Ký</button>
                                 <span class="pull-right"><a href="" ng-click="loginToggle()">Đăng nhập</a></span><span><a href="#">Trợ giúp?</a></span>
                             </div>
                         </form>
