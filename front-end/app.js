@@ -1,29 +1,32 @@
-﻿    // create the module and name it
-    var App = angular.module('app',['ngRoute','ngStorage','angular-jwt']);
+﻿    var App = angular.module('app',['ngRoute','ngStorage','angular-jwt']);
     var originPath='http://localhost:3001';
 	// configure our routes
-    App.config(function Config($httpProvider,jwtOptionsProvider) {
-    // Please note we're annotating the function so that the $injector works when the file is minified
-    jwtOptionsProvider.config({
-        tokenGetter: ['refreshToken','jwtHelper','options', function(refreshToken,jwtHelper,options) {
-            if (options.url.substr(options.url.length - 5) == '.html' || options.url.substr(options.url.length - 3) == '.js' || options.url.substr(options.url.length - 4) == '.css' ) {
-              return null;
-            }
-            if(localStorage.id_token&&jwtHelper.isTokenExpired(localStorage.id_token)){
-                return refreshToken.refreshToken().then(function(response){
-                    localStorage.setItem('id_token',response.accessToken);
-                    localStorage.setItem('refresh_token',response.refreshToken);
-                    return response.accessToken;
-                });
-            }
-            else if(localStorage.id_token) return localStorage.getItem('id_token');
-                else return null;
-        }],
-        whiteListedDomains: ['myapp.com', 'localhost','127.0.0.1']    
-    });
+    App.config(function Config($httpProvider,$routeProvider,jwtOptionsProvider) {
+
+        $routeProvider
+        .when('/verify',{
+          controller:'verifyCtrl'
+        });
+        jwtOptionsProvider.config({
+            tokenGetter: ['refreshToken','jwtHelper','options', function(refreshToken,jwtHelper,options) {
+                if (options.url.substr(options.url.length - 5) == '.html' || options.url.substr(options.url.length - 3) == '.js' || options.url.substr(options.url.length - 4) == '.css' ) {
+                  return null;
+                }
+                if(localStorage.id_token&&jwtHelper.isTokenExpired(localStorage.id_token)){
+                    return refreshToken.refreshToken().then(function(response){
+                        localStorage.setItem('id_token',response.accessToken);
+                        localStorage.setItem('refresh_token',response.refreshToken);
+                        return response.accessToken;
+                    });
+                }
+                else if(localStorage.id_token) return localStorage.getItem('id_token');
+                    else return null;
+            }],
+            whiteListedDomains: ['myapp.com', 'localhost','127.0.0.1']    
+        });
 
         $httpProvider.interceptors.push('jwtInterceptor');
-    })
+    });
     
     App.controller('LoginController', function($scope,$rootScope,$http,$location,$window) {
         $scope.message={}
@@ -40,19 +43,26 @@
                         localStorage.refresh_token=response.data.refreshToken;
                         $window.open('/home', "_self");
                     }
+                    else{
+                        $scope.message.error='Email hoặc mật khẩu không đúng!';
+                    }
                 }, function myError(response) {
-                    $scope.myWelcome = response.statusText;
-                    $scope.message.error='request fail';
-                    console.log('fail');
+                    if(response.status == 400){
+                        $scope.message.error="Email hoặc mật khẩu không đúng!";
+                    }
+                    else
+                        $scope.message.error='Request fail!';
                 });
         };
-        $scope.loginShow=true;
-        $scope.toggle=function(){
-        $scope.loginShow=!$scope.loginShow;
-        }
+        $scope.registerToggle=function(){
+            var loginModal=angular.element('#loginModal');
+            var registerModal=angular.element('#registerModal');
+            loginModal.modal('hide');
+            registerModal.modal('show');
+        };
     });
 
-    App.controller('RegisterController', function($scope,$http) {
+    App.controller('RegisterCtrl', function($scope,$http) {
         // $scope.message = 'Everyone come and see how good I look! register';
             $scope.message={}
             $scope.register=function() {
@@ -63,13 +73,27 @@
                         password:$scope.password}
                 }).then(function mySuccess(response) {
                     $scope.myWelcome = response.data;
-                    if(!response.data.success)
+                    if(!response.data.success){
                         $scope.message.error=response.data.message;
+                    }
+                    else{
+                        $scope.message.success='Đăng ký thành công! Kiểm tra mail để kích hoạt tài khoản';
+                    }
                 }, function myError(response) {
-                    $scope.myWelcome = response.statusText;
-                    $scope.message.error='request fail';
+                    if(response.status == 400){
+                        $scope.message.error="Email không hợp lệ!";
+                    }
+                    else{
+                        $scope.message.error='Request fail!';
+                    }
                 });
             }
+            $scope.loginToggle=function(){
+            var loginModal=angular.element('#loginModal');
+            var registerModal=angular.element('#registerModal');
+            registerModal.modal('hide');
+            loginModal.modal('show');
+        }
     });
 
     App.factory('refreshToken',function($http){
@@ -88,4 +112,22 @@
                 })
             }
         }
+    });
+
+    App.controller('verifyCtrl',function($http,$scope,$routeParams,$location){
+        var qs = $location.search();
+        $http({
+            method:'PUT',
+            url:originPath+'/api/v1/users/verify-email',
+            data:{
+                'email':qs.email,
+                'token':qs.token
+            }
+        }).then(function success(response){
+             $scope.response=response.data;
+        },function error(response){
+            $scope.response='Request fail!';
+        });
+        var Modal=angular.element('#verifyModal');
+        Modal.modal('show');
     });

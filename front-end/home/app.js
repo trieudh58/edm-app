@@ -6,10 +6,6 @@ var originPath='http://localhost:3001';
 App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvider) {
 
   $routeProvider
-    .when('/verify',{
-      templateUrl:'templates/verify/verify.html',
-      controller:'verify'
-    })
     .when('/profile',{
         templateUrl: 'templates/studentInfo/profile.view.html',
         controller:'ProfileController',
@@ -140,21 +136,6 @@ App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window,$loca
   })
 });
 
-App.controller('verify',function($http,$scope,$routeParams,$location){
-  var qs = $location.search();
-  $http({
-    method:'PUT',
-    url:originPath+'/api/v1/users/verify-email',
-    params:{
-          'email':qs.email
-    }
-  }).then(function success(response){
-    $scope.response=response.data;
-  },function error(response){
-      $scope.response='request fail!';
-  });
-});
-
 App.controller('ProfileController', function($scope,getStudentInfor,revoke){
     getStudentInfor.get().then(response=>{
       $scope.userInformation=response.data;
@@ -241,7 +222,6 @@ App.controller('allnotifications',function($scope,$rootScope,$route,$location,ge
     angular.element('.notificationCheckbox').attr('checked',false);
     allChecker.toggleClass('fa-square-o');
     allChecker.toggleClass('fa-check-square-o');
-    
   };
 
   $scope.starClickToggle =function ($event,$index,notificationId,isImportant) {

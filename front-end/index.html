@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,25 +8,26 @@
     <meta name="author" content="">
     <title>EDM</title>
     <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <!-- Custom CSS -->
-    <link href="styles/one-page-wonder.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/one-page-wonder.css">
+    <link rel="stylesheet" href="/styles/login-page.css">
     <link rel="stylesheet" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
     <script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
     <!-- Bootstrap 3.3.7 -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <script src="/bower_components/angular/angular.min.js"></script>
     <script src="/bower_components/ngstorage/ngStorage.min.js"></script>
     <script src="https://code.angularjs.org/1.2.13/angular-cookies.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
     <script src="/bower_components/angular-jwt/dist/angular-jwt.js"></script>
-    <script src="app.js"></script>
+    <script src="/app.js"></script>
 </head>
 
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top"  style="height: 80px; box-shadow: 0px 4px 2px -2px rgb(75, 75, 75); background-color: #FFF;border-color: #E1C5C5;" >
+    <nav class="navbar navbar-inverse navbar-fixed-top navbar-manual-config">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -46,7 +46,7 @@
                         <li><a href="#about">Giới thiệu</a></li>
                         <li><a href="#services">Chức năng</a></li>
                         <li><a href="#contact">Liên hệ</a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-log-in"></i></a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#loginModal"><i class="glyphicon glyphicon-log-in"></i></a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -59,13 +59,13 @@
         <div class="headline">
             <div class="container">
                 <h2>Hệ Thống Gợi Ý Môn Học</h2>
-                <a href="#" class="btn btn-primary btn-lg btn-huge lato" data-toggle="modal" data-target="#myModal">Đăng nhập</a>
+                <a href="#" class="btn btn-primary btn-lg btn-huge lato" data-toggle="modal" data-target="#loginModal">Đăng nhập</a>
             </div>
         </div>
     </header>
 
     <!-- Page Content -->
-    <div class="container">
+    <div class="container" ng-app="app">
 
         <hr class="featurette-divider ht-new-format" >
 
@@ -142,7 +142,7 @@
         </footer>
         <!--/footer-->
         <!--login Modal-->
-        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-app="app" ng-controller="LoginController">
+        <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="LoginController">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -154,21 +154,21 @@
                         <p ng-show="message.error" class="text-center text-danger" >{{message.error}}</p>
                         <!--login form-->
                         <form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" name="form" ng-submit="login()">
-                            <div class="form-group" ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
+                            <div class="form-group" ng-class="{ 'has-error': form.email.$dirty && form.email.$invalid}">
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email" ng-model="email" required />
                                 <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Yêu cầu email</span>
-                                <span ng-show="form.email.$dirty && form.email.$error.email" class="help-block">Yêu cầu email</span>
+                                <span ng-show="form.email.$dirty && form.email.$error.email" class="help-block">Yêu cầu email đúng format</span>
                             </div>
 
-                            <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+                            <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$invalid }">
                                 <label for="password">Mật khẩu</label>
                                 <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" ng-model="password" required />
                                 <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Yêu cầu mật khẩu</span>
                             </div>
                             <div class="form-group">
                                 <button type ="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="form.$invalid">Đăng Nhập</button>
-                                <span class="pull-right"><a href="/#/register">Đăng ký</a></span><span><a href="#">Trợ giúp?</a></span>
+                                <span class="pull-right"><a href="" ng-click="registerToggle()">Đăng ký</a></span><span><a href="#">Trợ giúp?</a></span>
                             </div>
                         </form>
                         <!--/login form-->
@@ -179,9 +179,78 @@
                 </div>
             </div>
         </div>
-        <!--/login Modal-->
+        <!-- register modal-->
+        <div id="registerModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="RegisterCtrl">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h2 class="text-center">Đăng Ký</h2>
+                    </div>
+                    <div class="modal-body row">
+                        <h6 class="text-center">ĐĂNG KÝ BẰNG VNU MAIL</h6>
+                        <p ng-show="message.success" class="text-center text-success" >{{message.success}}</p>
+                        <p ng-show="message.error" class="text-center text-danger" >{{message.error}}</p>
+                        <!--login form-->
+                        <form class="col-md-10 col-md-offset-1 col-xs-12 col-xs-offset-0" name="form" ng-submit="register()">
+                            <div class="form-group" ng-class="{ 'has-error': form.email.$dirty && form.email.$invalid}">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email" ng-model="email" required />
+                                <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Yêu cầu email </span>
+                                <span ng-show="form.email.$dirty && form.email.$error.email" class="help-block">Yêu cầu email đúng format</span>
+                            </div>
+
+                            <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$invalid }">
+                                <label for="password">Mật khẩu</label>
+                                <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" ng-model="password" ng-minlength="8" ng-maxlength="14" required />
+                                <p ng-show="form.password.$error.minlength" class="help-block">Password is too short.</p>
+                                <p ng-show="form.password.$error.maxlength" class="help-block">Password is too long.</p>
+                                <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Yêu cầu mật khẩu</span>
+                            </div>
+
+                            <div class="form-group" ng-class="{ 'has-error': form.repassword.$dirty && form.repassword.$invalid }">
+                                <label for="repassword">Gõ lại mật khẩu</label>
+                                <input type="password" name="repassword" id="repassword" class="form-control input-lg" placeholder="Confirm password" ng-model="repassword" data-match="#password" data-match-error="Chưa phải mật khẩu của bạn" required />
+                                <span ng-show="form.repassword.$dirty && form.repassword.$error.required" class="help-block">Yêu cầu gõ lại mật khẩu</span>
+                            </div>
+                            <div class="form-group">
+                                <button type ="submit" class="btn btn-primary btn-lg btn-block" ng-disabled="form.$invalid">Đăng Ký</button>
+                                <span class="pull-right"><a href="" ng-click="loginToggle()">Đăng nhập</a></span><span><a href="#">Trợ giúp?</a></span>
+                            </div>
+                        </form>
+                        <!--/login form-->
+                    </div>
+                    <div class="modal-footer">
+                        <h6 class="text-center"><a href="">Privacy is important to us. Click here to read why.</a></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- email verify response message -->
+        <div class="modal fade" id="verifyModal" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Some text in the modal.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+              
+            </div>
+        </div>
+
     </div>
     
 </body>
 
 </html>
+
+
+
+
