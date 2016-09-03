@@ -54,4 +54,22 @@ validation.verifyEmail = function (req, res, next) {
     });
 };
 
+validation.changePassoword = function (req, res, next) {
+    Joi.validate({
+        oldPassword: req.body.oldPassword,
+        newPassword: req.body.newPassword
+    }, {
+        oldPassword: Joi.string().min(6).required(),
+        newPassword: Joi.string().min(6).required()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 module.exports = validation;

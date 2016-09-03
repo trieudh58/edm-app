@@ -16,4 +16,7 @@ router.post('/register', validation.register, UserController.register);
 /* Verify email with remember token */
 router.put('/verify-email', validation.verifyEmail, UserController.verifyEmail);
 
+/* Change password */
+router.put('/change-password', validation.changePassoword, authentication, UserController.changePassword);
+
 module.exports = router;

@@ -350,5 +350,94 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/change-password
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Change password
+     *      notes: Change password (require old + new password )
+     *      nickname: Change password
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: oldPassword
+     *          description: Your old password
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: password
+     *        - name: newPassword
+     *          description: Your new password
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *          format: password
+     */
+    /* Change password */
+    changePassword: function (req, res) {
+        if (req.body.oldPassword === req.body.newPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Two input passwords are the same.'
+            });
+        }
+        else {
+            bcrypt.compare(req.body.oldPassword, req.user.password, function (err, isMatch) {
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: err
+                    });
+                }
+                else if (!isMatch) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Wrong password.'
+                    });
+                }
+                else {
+                    models.User.findById(req.user._id, function (err, user) {
+                        if (err) {
+                            return res.status(500).json({
+                                success: false,
+                                message: err
+                            });
+                        }
+                        else if (!user) {
+                            return res.status(400).json({
+                                success: false,
+                                message: 'User not found.'
+                            });
+                        }
+                        else {
+                            user.update({
+                                password: bcrypt.hashSync(req.body.newPassword, config.bcrypt.saltRounds)
+                            }, function (err) {
+                                if (err) {
+                                    return res.status(500).json({
+                                        success: false,
+                                        message: err
+                                    });
+                                }
+                                else {
+                                    return res.json({
+                                        success: true,
+                                        message: 'Password changed.'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     }
 };
