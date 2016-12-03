@@ -260,8 +260,8 @@ module.exports = {
                         });
 
                         var receiver = req.body.email;
-                        var frontEndFullURL = config.frontEnd.url + ':' + config.frontEnd.port;
-                        var activationLink = frontEndFullURL + '/#/verify/?email=' + receiver + '&token=' + rememberToken;
+                        var frontEndFullURL = config.frontEnd.url;
+                        var activationLink = frontEndFullURL + '/access?action=verify&email=' + receiver + '&token=' + rememberToken;
                         console.log(activationLink);
                         var mailOptions = {
                             from: config.mailer.sender,

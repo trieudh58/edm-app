@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var swagger = require('swagger-express');
 var config = require('./config');
+var http = require('http');
+var cors = require('cors');
 
 /* Import models */
 var models = require('./models');
@@ -11,7 +13,8 @@ var models = require('./models');
 /* Import routes */
 var routes = require('./routes');
 
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 2052);
+app.set('host', config.app.url);
 
 /* Body parser configurations */
 app.use(bodyParser.urlencoded({extended: false}));
@@ -20,10 +23,13 @@ app.use(bodyParser.json());
 /* Use morgan to log requests to console */
 app.use(morgan('dev'));
 
+//app.use(cors());
+
 /* Enable CORS */
 app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, api_key, Accept, Authorization');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     next();
 });
@@ -38,7 +44,7 @@ app.use(swagger.init(app, {
     swaggerURL: '/swagger',
     swaggerJSON: '/swagger.json',
     swaggerUI: './public/swagger/',
-    basePath: config.app.url,
+    basePath: config.app.url + ':2052',
     info: {
         title: 'EDM API',
         description: 'EDM API'
@@ -61,9 +67,11 @@ app.use(swagger.init(app, {
         './controllers/admin/courseRequests.js'
     ]
 }));
+app.get('/',function(req,res){res.end("Hello")});
+server = http.createServer(app);
 
 /* Server starts */
-app.listen(app.get('port'), function () {
+server.listen(app.get('port'), function () {
     /*
     * Seed data to mongodb
     * COMMENT "Line 2" if you had imported it before,
