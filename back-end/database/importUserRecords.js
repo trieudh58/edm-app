@@ -49,7 +49,7 @@ var csvScoreStream = csv.parse({delimiter: ';'}).on('data', function (data) {
                     }
 
                     models.User.create({
-                        email: studentRecords[i][0] + '@vnu.edu.vn',
+                        email: studentRecords[i][0] + '@gmail.com',
                         password: bcrypt.hashSync('123456', 1),
                         studentCode: studentRecords[i][0],
                         personalInfo: {
