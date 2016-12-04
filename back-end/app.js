@@ -62,12 +62,13 @@ app.use(swagger.init(app, {
         './controllers/educationPrograms.js',
         './controllers/recommendations.js',
         './controllers/scienceResearchDirections.js',
+        './controllers/scorePredictions.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
         './controllers/admin/notifications.js',
         './controllers/admin/studentGroups.js',
-        './controllers/admin/courseRequests.js'
+        './controllers/admin/courseRequests.js',
     ]
 }));
 

@@ -53,7 +53,9 @@ module.exports = {
                 for (var j = 0; j < allSubjects.length; j++) {
                     semesters.push({
                         subject: allSubjects[j],
-                        semester: j%8
+                        name: 'Tín hiệu và hệ thống',
+                        credit: 3,
+                        semester: j%8 + 1
                     });
                 }
                 return res.json({
