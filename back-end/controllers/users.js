@@ -493,5 +493,59 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/update-skills
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Update skills
+     *      notes: Each interest must be separated by a comma
+     *      nickname: Update skills
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: skills
+     *          description: Your new skills
+     *          paramType: form
+     *          required: false
+     *          dataType: string
+     */
+    /* Update skills */
+    updateSkills: function updateSkills (req, res) {
+        // if 'undefined' -> assign to ''
+        req.body.skills = req.body.skills || '';
+        // if '' -> assign to []
+        let newSkills = req.body.skills ? req.body.skills.split(',') : [];
+        // trim all spaces in each skill string
+        newSkills.forEach(function (skill, idx) {
+            newSkills[idx] = newSkills[idx].trim();
+        });
+        // Update to DB
+        models.User.update({
+            _id: req.user._id
+        }, {
+            $set: {
+                'personalInfo.skills': newSkills
+            }
+        }, function (err) {
+            if (err) {
+                res.status(400).json({
+                    success: false,
+                    message: err
+                });
+            } else {
+                res.json({
+                    success: true,
+                    message: 'Skills updated.'
+                });
+            }
+        });
     }
 };

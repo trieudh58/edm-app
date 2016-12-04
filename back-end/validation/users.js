@@ -88,4 +88,20 @@ validation.updateInterests = function updateInterests (req, res, next) {
     });
 };
 
+validation.updateSkills = function updateSkills (req, res, next) {
+    Joi.validate({
+        skills: req.body.skills,
+    }, {
+        skills: Joi.string()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 module.exports = validation;

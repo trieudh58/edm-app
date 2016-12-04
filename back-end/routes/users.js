@@ -22,4 +22,7 @@ router.put('/change-password', validation.changePassoword, authentication, UserC
 /* Update interests */
 router.put('/update-interests', validation.updateInterests, authentication, UserController.updateInterests);
 
+/* Update skills */
+router.put('/update-skills', validation.updateSkills, authentication, UserController.updateSkills);
+
 module.exports = router;
