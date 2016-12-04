@@ -50,8 +50,10 @@ module.exports = {
                     data: {
                         subjectCode: subject.code,
                         subjectName: subject.name,
-                        predictedScore: 8.5,
-                        confidence: 0.99
+                        prediction: {
+                            score: 8.5,
+                            confidence: 0.99
+                        }
                     }
                 });
             }
