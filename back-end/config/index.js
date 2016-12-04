@@ -1,9 +1,9 @@
 module.exports = {
     app: {
-        url: 'http://trieudh.me'
+        url: 'http://localhost'
     },
     frontEnd: {
-        url: 'http://edm.tiaset.net',
+        url: 'http://localhost',
         port: '80'
     },
     mongodb: {

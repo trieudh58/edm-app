@@ -25,4 +25,5 @@ module.exports = {
         pass: 'teamedm123!@#',
         sender: 'MDN-EDM Team <mdn.edm.team@gmail.com>'
     }
+
 };
