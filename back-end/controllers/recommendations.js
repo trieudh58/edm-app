@@ -94,9 +94,22 @@ module.exports = {
                 });
             }
             else {
+                let subjectList = [];
+                subjects.forEach(function (subject, idx) {
+                    subjectList.push({
+                        subjectCode: subject.code,
+                        subjectName: subject.name,
+                        subjectDetails: subject.details,
+                        prediction: {
+                            score: 8.5,
+                            confidence: 0.99
+                        }
+                    });
+                });
+                console.log(subjectList[0]);
                 return res.json({
                     success: true,
-                    data: subjects
+                    data: subjectList
                 });
             }
         });
