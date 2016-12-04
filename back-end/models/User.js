@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var config = require('../config');
 
 var UserSchema = new mongoose.Schema({
     email: {
@@ -20,6 +21,12 @@ var UserSchema = new mongoose.Schema({
         DOB: {
             type: Date
         },
+        profilePicture: {
+            type: String,
+            default: config.app.url + ':' + config.app.port + '/images/default.jpg' 
+        },
+        interests: [String],
+        skills: [String],
         className: {
             type: String
         },

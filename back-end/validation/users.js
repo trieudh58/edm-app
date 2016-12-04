@@ -72,4 +72,20 @@ validation.changePassoword = function (req, res, next) {
     });
 };
 
+validation.updateInterests = function updateInterests (req, res, next) {
+    Joi.validate({
+        interests: req.body.interests,
+    }, {
+        interests: Joi.string()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 module.exports = validation;

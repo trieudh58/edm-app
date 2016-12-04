@@ -19,4 +19,7 @@ router.put('/verify-email', validation.verifyEmail, UserController.verifyEmail);
 /* Change password */
 router.put('/change-password', validation.changePassoword, authentication, UserController.changePassword);
 
+/* Update interests */
+router.put('/update-interests', validation.updateInterests, authentication, UserController.updateInterests);
+
 module.exports = router;

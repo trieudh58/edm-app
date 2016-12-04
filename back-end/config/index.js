@@ -1,6 +1,7 @@
 module.exports = {
     app: {
-        url: 'http://localhost'
+        url: 'http://localhost',
+        port: 2052
     },
     frontEnd: {
         url: 'http://localhost',

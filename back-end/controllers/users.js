@@ -439,5 +439,59 @@ module.exports = {
                 }
             });
         }
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/update-interests
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Update interests
+     *      notes: Each interest must be separated by a comma
+     *      nickname: Update interests
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: interests
+     *          description: Your new interests
+     *          paramType: form
+     *          required: false
+     *          dataType: string
+     */
+    /* Update interests */
+    updateInterests: function updateInterests (req, res) {
+        // if 'undefined' -> assign to ''
+        req.body.interests = req.body.interests || '';
+        // if '' -> assign to []
+        let newInterests = req.body.interests ? req.body.interests.split(',') : [];
+        // trim all spaces in each interest string
+        newInterests.forEach(function (interest, idx) {
+            newInterests[idx] = newInterests[idx].trim();
+        });
+        // Update to DB
+        models.User.update({
+            _id: req.user._id
+        }, {
+            $set: {
+                'personalInfo.interests': newInterests
+            }
+        }, function (err) {
+            if (err) {
+                res.status(400).json({
+                    success: false,
+                    message: err
+                });
+            } else {
+                res.json({
+                    success: true,
+                    message: 'Interests updated.'
+                });
+            }
+        });
     }
 };

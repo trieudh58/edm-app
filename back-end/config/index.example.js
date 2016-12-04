@@ -1,6 +1,7 @@
 module.exports = {
     app: {
-        url: 'http://trieudh.me'
+        url: 'http://trieudh.me',
+        port: 2052
     },
     frontEnd: {
         url: 'http://edm.tiaset.net',
