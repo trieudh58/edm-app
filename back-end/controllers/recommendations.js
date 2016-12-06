@@ -106,7 +106,6 @@ module.exports = {
                         }
                     });
                 });
-                console.log(subjectList[0]);
                 return res.json({
                     success: true,
                     data: subjectList
