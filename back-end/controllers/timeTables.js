@@ -56,6 +56,7 @@ module.exports = {
                         },
                         practice: [
                             {
+                                groupId: 0,
                                 lecturer: 'CN. Vương Thị Hải Yến',
                                 classTime: {
                                     weekday: 2,
@@ -67,6 +68,7 @@ module.exports = {
                                 auditorium: '208 G2'
                             },
                             {
+                                groupId: 1,
                                 lecturer: 'CN. Dương Quang Vũ',
                                 classTime: {
                                     weekday: 2,
@@ -85,6 +87,45 @@ module.exports = {
                     data: timeTable
                 });
             }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/time-tables/create-personal-time-table
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Create personal time table
+     *      notes: Return result (success or not)
+     *      nickname: Create personal time table
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: classInfoList
+     *          description: stringify of list contains classCode and groupId
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Create personal time table */
+    createPersonalTimeTable: function createPersonalTimeTable (req, res) {
+        try {
+            var classInfoList = JSON.parse(req.body.classInfoList);
+            console.log(classInfoList);
+        } catch (err) {
+            return res.status(500).json({
+                success: false,
+                message: err
+            });
+        }
+        return res.json({
+            success: true,
+            message: 'Personal time table created.'
         });
     }
 };
