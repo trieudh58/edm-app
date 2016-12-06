@@ -127,5 +127,42 @@ module.exports = {
             success: true,
             message: 'Personal time table created.'
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/time-tables/get-personal-time-table
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get personal time table
+     *      notes: Return personal time table
+     *      nickname: Get personal time table
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get personal time table */
+    getPersonalTimeTable: function getPersonalTimeTable (req, res) {
+        return res.json({
+            success: true,
+            data: [
+                {
+                    classCode: 'INT2203 4',
+                    groupId: 2
+                },
+                {
+                    classCode: 'INT3052 2'
+                },
+                {
+                    classCode: 'INT2203 4',
+                    groupId: 0
+                },
+            ]
+        });
     }
 };
