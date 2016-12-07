@@ -10,4 +10,7 @@ router.get('/get-study-path', authentication, RecommendationController.getStudyP
 /* Return next semester subjects */
 router.get('/get-next-semester-subjects', authentication, RecommendationController.getNextSemesterSubjects);
 
+/* Return recommended thesis */
+router.get('/get-recommended-thesis', authentication, RecommendationController.getRecommendedThesis);
+
 module.exports = router;
