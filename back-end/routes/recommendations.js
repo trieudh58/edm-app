@@ -13,4 +13,7 @@ router.get('/get-next-semester-subjects', authentication, RecommendationControll
 /* Return recommended thesis */
 router.get('/get-recommended-thesis', authentication, RecommendationController.getRecommendedThesis);
 
+/* Return recommended research topics */
+router.get('/get-recommended-research-topics', authentication, RecommendationController.getRecommendedResearchTopics);
+
 module.exports = router;
