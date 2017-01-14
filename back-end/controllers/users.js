@@ -439,5 +439,165 @@ module.exports = {
                 }
             });
         }
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/update-interests
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Update interests
+     *      notes: Each interest must be separated by a comma
+     *      nickname: Update interests
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: interests
+     *          description: Your new interests
+     *          paramType: form
+     *          required: false
+     *          dataType: string
+     */
+    /* Update interests */
+    updateInterests: function updateInterests (req, res) {
+        // if 'undefined' -> assign to ''
+        req.body.interests = req.body.interests || '';
+        // if '' -> assign to []
+        let newInterests = req.body.interests ? req.body.interests.split(',') : [];
+        // trim all spaces in each interest string
+        newInterests.forEach(function (interest, idx) {
+            newInterests[idx] = newInterests[idx].trim();
+        });
+        // Update to DB
+        models.User.update({
+            _id: req.user._id
+        }, {
+            $set: {
+                'personalInfo.interests': newInterests
+            }
+        }, function (err) {
+            if (err) {
+                res.status(400).json({
+                    success: false,
+                    message: err
+                });
+            } else {
+                res.json({
+                    success: true,
+                    message: 'Interests updated.'
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/update-skills
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Update skills
+     *      notes: Each interest must be separated by a comma
+     *      nickname: Update skills
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: skills
+     *          description: Your new skills
+     *          paramType: form
+     *          required: false
+     *          dataType: string
+     */
+    /* Update skills */
+    updateSkills: function updateSkills (req, res) {
+        // if 'undefined' -> assign to ''
+        req.body.skills = req.body.skills || '';
+        // if '' -> assign to []
+        let newSkills = req.body.skills ? req.body.skills.split(',') : [];
+        // trim all spaces in each skill string
+        newSkills.forEach(function (skill, idx) {
+            newSkills[idx] = newSkills[idx].trim();
+        });
+        // Update to DB
+        models.User.update({
+            _id: req.user._id
+        }, {
+            $set: {
+                'personalInfo.skills': newSkills
+            }
+        }, function (err) {
+            if (err) {
+                res.status(400).json({
+                    success: false,
+                    message: err
+                });
+            } else {
+                res.json({
+                    success: true,
+                    message: 'Skills updated.'
+                });
+            }
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/upload-avatar
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Upload avatar of a user
+     *      notes: Return message
+     *      nickname: Upload avatar
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: avatar
+     *          description: Your profile picture
+     *          paramType: formData
+     *          required: true
+     *          dataType: file
+     */
+    /* Upload avatar of a user. Return a message when successful */
+    uploadAvatar: function (req, res) {
+        if (req.file) {
+            models.User.update({
+                _id: req.user._id
+            }, {
+                'personalInfo.profilePicture': config.app.url + ':' + config.app.port + '/images/' + req.file.filename
+            }, function (err, result) {
+                if (err) {
+                    return res.status(500).json({
+                        success: true,
+                        message: err
+                    });
+                }
+                else {
+                    return res.json({
+                        success: true,
+                        message: 'Avatar uploaded.'
+                    });
+                }
+            });
+        }
+        else {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid file type or file size'
+            });
+        }
     }
 };

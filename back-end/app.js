@@ -13,8 +13,11 @@ var models = require('./models');
 /* Import routes */
 var routes = require('./routes');
 
-app.set('port', process.env.PORT || 2052);
+app.set('port', config.app.port || 2052);
 app.set('host', config.app.url);
+
+/* Set up static files */
+app.use(express.static('public'));
 
 /* Body parser configurations */
 app.use(bodyParser.urlencoded({extended: false}));
@@ -59,15 +62,17 @@ app.use(swagger.init(app, {
         './controllers/educationPrograms.js',
         './controllers/recommendations.js',
         './controllers/scienceResearchDirections.js',
+        './controllers/scorePredictions.js',
+        './controllers/timeTables.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
         './controllers/admin/notifications.js',
         './controllers/admin/studentGroups.js',
-        './controllers/admin/courseRequests.js'
+        './controllers/admin/courseRequests.js',
     ]
 }));
-app.get('/',function(req,res){res.end("Hello")});
+
 server = http.createServer(app);
 
 /* Server starts */

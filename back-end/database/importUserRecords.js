@@ -59,7 +59,7 @@ var csvScoreStream = csv.parse({delimiter: ';'}).on('data', function (data) {
                             className: studentRecords[i][2],
                             groups: studentGroups
                         },
-                        isActive: false
+                        isActive: true
                     }, function (err, user) {
                         if (err) {
                             throw err;
