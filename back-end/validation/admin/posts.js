@@ -37,4 +37,22 @@ validation.updatePostHeader = function (req, res, next) {
     });
 };
 
+validation.updatePostBody = function (req, res, next) {
+    Joi.validate({
+        postId: req.body.postId,
+        newBody: req.body.newBody
+    }, {
+        postId: Joi.string().required(),
+        newBody: Joi.string().required().min(20)
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 module.exports = validation;

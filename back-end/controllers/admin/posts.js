@@ -95,6 +95,53 @@ module.exports = {
                 });
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/posts/update-body
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin update a post body
+     *      notes: Return result
+     *      nickname: Update post body
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: postId
+     *          description: Post id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *        - name: newBody
+     *          description: New post body
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Update a post body */
+    updatePostBody: function (req, res) {
+        models.Post.findById(req.body.postId, function (err, post) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!post)
+                return handleUserErrorWithCustomMessage(res, 'Invalid post id');
+            return post.update({
+                body: req.body.newBody
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Post body updated'
+                });
+            });
+        });
     }
 };
 

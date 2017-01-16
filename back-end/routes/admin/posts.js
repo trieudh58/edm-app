@@ -11,4 +11,7 @@ adminRouter.post('/create', validation.create, authentication, adminPermission, 
 /* Admins edit a post header */
 adminRouter.put('/update-header', validation.updatePostHeader, authentication, adminPermission, AdminPostController.updatePostHeader);
 
+/* Admins edit a post body */
+adminRouter.put('/update-body', validation.updatePostBody, authentication, adminPermission, AdminPostController.updatePostBody);
+
 module.exports = adminRouter;
