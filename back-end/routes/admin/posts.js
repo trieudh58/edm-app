@@ -1,0 +1,11 @@
+var express = require('express');
+var adminRouter = express.Router();
+var AdminPostController = require('../../controllers/admin/posts');
+var authentication = require('../../middleware/authentication');
+var adminPermission = require('../../middleware/adminPermission');
+var validation = require('../../validation/admin/posts');
+
+/* Admins create a post */
+adminRouter.post('/create', validation.create, authentication, adminPermission, AdminPostController.create);
+
+module.exports = adminRouter;
