@@ -142,6 +142,42 @@ module.exports = {
                 });
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/posts/delete
+     * operations:
+     *   -  httpMethod: DELETE
+     *      summary: Admin delete a post
+     *      notes: Return result
+     *      nickname: Delete post
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: postId
+     *          description: Post id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Delete a post */
+    delete: function (req, res) {
+        models.Post.findByIdAndRemove(req.body.postId, function (err, deletedPost) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!deletedPost)
+                return handleUserErrorWithCustomMessage(res, 'Post does not exists');
+            return res.json({
+                success: true,
+                message: 'Post deleted'
+            });
+        });
     }
 };
 
