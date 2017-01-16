@@ -19,4 +19,22 @@ validation.create = function (req, res, next) {
     });
 };
 
+validation.updatePostHeader = function (req, res, next) {
+    Joi.validate({
+        postId: req.body.postId,
+        newHeader: req.body.newHeader
+    }, {
+        postId: Joi.string().required(),
+        newHeader: Joi.string().required()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 module.exports = validation;

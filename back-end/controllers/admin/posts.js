@@ -48,6 +48,53 @@ module.exports = {
                 message: 'Post created'
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/posts/update-header
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin update a post header
+     *      notes: Return result
+     *      nickname: Update post header
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: postId
+     *          description: Post id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *        - name: newHeader
+     *          description: New post header
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Update a post header */
+    updatePostHeader: function (req, res) {
+        models.Post.findById(req.body.postId, function (err, post) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!post)
+                return handleUserErrorWithCustomMessage(res, 'Invalid post id');
+            return post.update({
+                header: req.body.newHeader
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Post header updated'
+                });
+            });
+        });
     }
 };
 
