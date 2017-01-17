@@ -5,6 +5,6 @@ var authentication = require('../../middleware/authentication');
 var adminPermission = require('../../middleware/adminPermission');
 
 /* Admins could get student detail */
-adminRouter.get('/get-student-detail', authentication, adminPermission, AdminStatisticsController.getStudentDetail);
+adminRouter.get('/student-accounts', authentication, adminPermission, AdminStatisticsController.getStudentAccounts);
 
 module.exports = adminRouter;

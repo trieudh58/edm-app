@@ -9,12 +9,12 @@ module.exports = {
 
     /**
      * @swagger
-     * path: /api/v1/admin/statistics/get-student-detail
+     * path: /api/v1/admin/statistics/student-accounts
      * operations:
      *   -  httpMethod: GET
-     *      summary: Admin could get student detail
-     *      notes: Return student detail
-     *      nickname: Get student detail
+     *      summary: Admin could get student accounts
+     *      notes: Return student accounts
+     *      nickname: Get student accounts
      *      consumes:
      *        - text/html
      *      parameters:
@@ -24,8 +24,8 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Get student detail */
-    getStudentDetail: function (req, res) {
+    /* Get statistics of student accounts */
+    getStudentAccounts: function (req, res) {
         models.User.find({
             studentCode: {
                 $ne: null
@@ -43,7 +43,7 @@ module.exports = {
             }
             return res.json({
                 success: true,
-                studentDetail: {
+                studentAccountStatistics: {
                     total: students.length + 1,
                     status: {
                         active: numberOfActives,
