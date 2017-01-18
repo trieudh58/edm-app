@@ -10,4 +10,7 @@ adminRouter.get('/student-accounts', authentication, adminPermission, AdminStati
 /* Admins could get student quantity grouped by management class */
 adminRouter.get('/student-quantity-grouped-by-management-class', authentication, adminPermission, AdminStatisticsController.getStudentQuantityGroupedByManagementClass);
 
+/* Admins could get student quantity grouped by academic year */
+adminRouter.get('/student-quantity-grouped-by-academic-year', authentication, adminPermission, AdminStatisticsController.getStudentQuantityGroupedByAcademicYear);
+
 module.exports = adminRouter;
