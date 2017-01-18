@@ -196,8 +196,50 @@ module.exports = {
                     isSent: sentNotifications,
                     isUnsent: notifications - sentNotifications
                 }
-            })
-        })
+            });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/statistics/course-request-quantity
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Admin could get course request quantity
+     *      notes: Return course request quantity
+     *      nickname: Get course request quantity
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get statistics of course request quantity */
+    getCourseRequestQuantity: function (req, res) {
+        models.CourseRequest.find({}, 'status', function (err, courseRequests) {
+            if (err)
+                return handleInternalDBError(err, res);
+            var pendingRequests = 0,
+                publicRequests = 0;
+            courseRequests.forEach(function (el) {
+                if (el.status === 'Pending')
+                    pendingRequests++;
+                if (el.status === 'Public')
+                    publicRequests++;
+            });
+            return res.json({
+                success: true,
+                courseRequestStatistics: {
+                    total: courseRequests.length,
+                    pending: pendingRequests,
+                    public: publicRequests,
+                    denied: courseRequests.length - (pendingRequests + publicRequests)
+                }
+            });
+        });
     }
 };
 

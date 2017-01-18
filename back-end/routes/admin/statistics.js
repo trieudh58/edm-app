@@ -16,4 +16,6 @@ adminRouter.get('/student-quantity-grouped-by-academic-year', authentication, ad
 /* Admins could get notification quantity */
 adminRouter.get('/notification-quantity', authentication, adminPermission, AdminStatisticsController.getNotificationQuantity);
 
+/* Admins could get course request quantity */
+adminRouter.get('/course-request-quantity', authentication, adminPermission, AdminStatisticsController.getCourseRequestQuantity);
 module.exports = adminRouter;
