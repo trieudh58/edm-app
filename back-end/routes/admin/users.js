@@ -20,4 +20,13 @@ adminRouter.delete('/delete', validation.delete, authentication, adminPermission
 /* Update name of a user */
 adminRouter.put('/update-name', validation.updateName, authentication, adminPermission, AdminUserController.updateName);
 
+/* Find a user by student code */
+adminRouter.get('/find-by-student-code', validation.findByStudentCode, authentication, adminPermission, AdminUserController.findByStudentCode);
+
+/* Find a user by name */
+adminRouter.get('/find-by-name', validation.findByName, authentication, adminPermission, AdminUserController.findByName);
+
+/* Find a user by email */
+adminRouter.get('/find-by-email', validation.findByEmail, authentication, adminPermission, AdminUserController.findByEmail);
+
 module.exports = adminRouter;

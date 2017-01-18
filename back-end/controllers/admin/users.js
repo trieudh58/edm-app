@@ -315,6 +315,115 @@ module.exports = {
                 });
             });
         })
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/users/find-by-student-code
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Find a user by student code
+     *      notes: Return user information
+     *      nickname: Find by student code
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: studentCode
+     *          description: Student code
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Find a user by student code */
+    findByStudentCode: function (req, res) {
+        models.User.find({
+            studentCode: req.query.studentCode
+        }, '-password -notificationStack', function (err, users) {
+            if (err)
+                return handleInternalDBError(err, res);
+            return res.json({
+                success: true,
+                data: users
+            });
+        })
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/users/find-by-name
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Find a user by name
+     *      notes: Return user information
+     *      nickname: Find by name
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: name
+     *          description: User name
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     */
+    /* Find a user by name */
+    findByName: function (req, res) {
+        models.User.find({
+            'personalInfo.fullName': req.query.name
+        }, '-password -notificationStack', function (err, users) {
+            if (err)
+                return handleInternalDBError(err, res);
+            return res.json({
+                success: true,
+                data: users
+            });
+        })
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/users/find-by-email
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Find a user by email
+     *      notes: Return user information
+     *      nickname: Find by email
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: email
+     *          description: User email
+     *          paramType: query
+     *          required: true
+     *          dataType: string
+     *          format: email
+     */
+    /* Find a user by email */
+    findByEmail: function (req, res) {
+        models.User.find({
+            email: req.query.email
+        }, '-password -notificationStack', function (err, users) {
+            if (err)
+                return handleInternalDBError(err, res);
+            return res.json({
+                success: true,
+                data: users
+            });
+        })
     }
 };
 

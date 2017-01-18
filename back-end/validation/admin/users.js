@@ -86,4 +86,52 @@ validation.updateName = function (req, res, next) {
     });
 };
 
+validation.findByStudentCode = function (req, res, next) {
+    Joi.validate({
+        studentCode: req.query.studentCode
+    }, {
+        studentCode: Joi.string().required()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
+validation.findByName = function (req, res, next) {
+    Joi.validate({
+        name: req.query.name
+    }, {
+        name: Joi.string().required()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
+validation.findByEmail = function (req, res, next) {
+    Joi.validate({
+        email: req.query.email
+    }, {
+        email: Joi.string().required().email()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 module.exports = validation;
