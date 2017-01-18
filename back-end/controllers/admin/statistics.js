@@ -44,14 +44,14 @@ module.exports = {
             return res.json({
                 success: true,
                 studentAccountStatistics: {
-                    total: students.length + 1,
+                    total: students.length,
                     status: {
                         active: numberOfActives,
-                        inactive: students.length + 1 - numberOfActives,
+                        inactive: students.length - numberOfActives,
                     },
                     gender: {
                         male: numberOfMales,
-                        female: students.length + 1 - numberOfMales
+                        female: students.length- numberOfMales
                     }
                 }
             });
@@ -160,6 +160,44 @@ module.exports = {
                 data: academicYears
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/statistics/notification-quantity
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Admin could get notification quantity
+     *      notes: Return notification quantity
+     *      nickname: Get notification quantity
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get statistics of notification quantity */
+    getNotificationQuantity: function (req, res) {
+        models.Notification.find({}, 'isSent', function (err, notifications) {
+            if (err)
+                return handleInternalDBError(err, res);
+            var sentNotifications = 0;
+            notifications.forEach(function (el) {
+                if (el.isSent)
+                    sentNotifications++;
+            });
+            return res.json({
+                success: true,
+                notificationStatistics: {
+                    total: notifications.length,
+                    isSent: sentNotifications,
+                    isUnsent: notifications - sentNotifications
+                }
+            })
+        })
     }
 };
 

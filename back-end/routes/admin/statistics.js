@@ -13,4 +13,7 @@ adminRouter.get('/student-quantity-grouped-by-management-class', authentication,
 /* Admins could get student quantity grouped by academic year */
 adminRouter.get('/student-quantity-grouped-by-academic-year', authentication, adminPermission, AdminStatisticsController.getStudentQuantityGroupedByAcademicYear);
 
+/* Admins could get notification quantity */
+adminRouter.get('/notification-quantity', authentication, adminPermission, AdminStatisticsController.getNotificationQuantity);
+
 module.exports = adminRouter;
