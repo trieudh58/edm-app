@@ -17,4 +17,7 @@ adminRouter.put('/deactivate-user', validation.deactivateUser, authentication, a
 /* Delete a user. Admin permission required */
 adminRouter.delete('/delete', validation.delete, authentication, adminPermission, AdminUserController.delete);
 
+/* Update name of a user */
+adminRouter.put('/update-name', validation.updateName, authentication, adminPermission, AdminUserController.updateName);
+
 module.exports = adminRouter;

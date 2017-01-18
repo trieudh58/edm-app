@@ -266,5 +266,68 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/users/update-name
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Update name of a user
+     *      notes: Return result
+     *      nickname: Update name
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: userId
+     *          description: User id (that need to be updated)
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *        - name: newName
+     *          description: New name
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Update name of a user */
+    updateName: function (req, res) {
+        models.User.findById(req.body.userId, function (err, user) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!user)
+                return handleUserErrorWithCustomMessage(res, 'Invalid user id');
+            if (user.personalInfo.fullName === req.body.newName)
+                return handleUserErrorWithCustomMessage(res, 'New name are the same as old name');
+            return user.update({
+                'personalInfo.fullName': req.body.newName
+            }, function (err, result) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'New name updated'
+                });
+            });
+        })
     }
 };
+
+function handleInternalDBError(err, res) {
+    return res.status(500).json({
+        success: false,
+        message: err
+    });
+}
+
+function handleUserErrorWithCustomMessage(res, customMessage) {
+    return res.status(400).json({
+        success: false,
+        message: customMessage
+    });
+}

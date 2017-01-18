@@ -68,4 +68,22 @@ validation.delete = function (req, res, next) {
     });
 };
 
+validation.updateName = function (req, res, next) {
+    Joi.validate({
+        userId: req.body.userId,
+        newName: req.body.newName
+    }, {
+        userId: Joi.string().required(),
+        newName: Joi.string().required()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 module.exports = validation;
