@@ -190,6 +190,50 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/posts/unpublish-one
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin unpublish a post
+     *      notes: Return result
+     *      nickname: Unpublish a post
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: postId
+     *          description: Post id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Unpublish a post */
+    unpublishOne: function (req, res) {
+        models.Post.findById(req.body.postId, function (err, post) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!post)
+                return handleUserErrorWithCustomMessage(res, 'Invalid post id');
+            if (!post.isPublished)
+                return handleUserErrorWithCustomMessage(res, 'Post is already unpublished');
+            return post.update({
+                isPublished: false
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Post is now unpublished'
+                });
+            });
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/posts/delete
      * operations:
      *   -  httpMethod: DELETE

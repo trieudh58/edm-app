@@ -17,6 +17,9 @@ adminRouter.put('/update-body', validation.updatePostBody, authentication, admin
 /* Admins publish a post */
 adminRouter.put('/publish-one', validation.publishOne, authentication, adminPermission, AdminPostController.publishOne);
 
+/* Admins unpublish a post */
+adminRouter.put('/unpublish-one', validation.unpublishOne, authentication, adminPermission, AdminPostController.unpublishOne);
+
 /* Admins delete a post */
 adminRouter.delete('/delete', validation.delete, authentication, adminPermission, AdminPostController.delete);
 
