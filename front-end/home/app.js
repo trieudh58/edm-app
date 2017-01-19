@@ -91,7 +91,7 @@ App.config(function($routeProvider,$httpProvider,ChartJsProvider,jwtOptionsProvi
   $httpProvider.interceptors.push('jwtInterceptor');
 });
 
-App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window,$location){
+App.run(function($rootScope,userServices,getNotifications,$http,$window,$location){
   $rootScope.logout=function(){
       localStorage.clear();
       $window.open('/', "_self");
@@ -131,13 +131,13 @@ App.run(function($rootScope,getStudentInfor,getNotifications,$http,$window,$loca
       $rootScope.unReadNotification--;
     }
   }
-  getStudentInfor.get().then(function(response){
+  userServices.get().then(function(response){
     $rootScope.userInfor=response.data;
   })
 });
 
-App.controller('ProfileController', function($scope,getStudentInfor,revoke){
-    getStudentInfor.get().then(response=>{
+App.controller('ProfileController', function($scope,userServices,revoke){
+    userServices.get().then(response=>{
       $scope.userInformation=response.data;
       var birthDay=new Date(response.data.personalInfo.DOB);
       birthDay=birthDay.getDate() + '-' + (birthDay.getMonth() + 1) + '-' +  birthDay.getFullYear();
@@ -152,13 +152,22 @@ App.controller('ProfileController', function($scope,getStudentInfor,revoke){
       console.log('get student information fail!');
     });
     $scope.updateInfo=function(){
-      ///////////
+      ////
     }
     $scope.updateAdvancedInfo=function(){
       ////
     }
-    $scope.changePassword=function(){
-      ////
+    $scope.changePassword=function(newPassword,oldPassword){
+      userServices.changePassword(newPassword,oldPassword).then(response=>{
+        if(response.success){
+          $scope.successMessage=response.message;
+        }
+        else{
+          $scope.failMessage=response.message;
+        }
+      },err=>{
+        $scope.failMessage=response.message;
+      })
     }
     $scope.revoke=function(){
       revoke.revoke().then(response=>{

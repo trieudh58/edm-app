@@ -22,9 +22,13 @@ module.exports = {
     },
     mailer: {
         service: 'Gmail',
-        user: 'mdn.edm.team@gmail.com',
-        pass: 'teamedm123!@#',
-        sender: 'MDN-EDM Team <mdn.edm.team@gmail.com>'
+        host: 'smtp.gmail.com',
+        port: 465,
+        auth: {
+            user: 'mdn.edm.team@gmail.com',
+            pass: 'teamedm123!@#',
+            sender: 'MDN-EDM Team <mdn.edm.team@gmail.com>'
+        }
     }
 
 };

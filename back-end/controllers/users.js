@@ -253,18 +253,19 @@ module.exports = {
                     else if (result.ok) {
                         var transporter = nodemailer.createTransport({
                             service: config.mailer.service,
+                            host: config.mailer.host,
+                            port: config.mailer.port,
                             auth: {
-                                user: config.mailer.user,
-                                pass: config.mailer.pass
+                                user: config.mailer.auth.user,
+                                pass: config.mailer.auth.pass
                             }
                         });
 
                         var receiver = req.body.email;
                         var frontEndFullURL = config.frontEnd.url;
                         var activationLink = frontEndFullURL + '/access?action=verify&email=' + receiver + '&token=' + rememberToken;
-                        console.log(activationLink);
                         var mailOptions = {
-                            from: config.mailer.sender,
+                            from: config.mailer.auth.sender,
                             to: receiver,
                             subject: 'Activate your account',
                             html: 'Dear ' + receiver + ',</br>Please activate your account here:' + activationLink
@@ -547,5 +548,57 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/upload-avatar
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Upload avatar of a user
+     *      notes: Return message
+     *      nickname: Upload avatar
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: avatar
+     *          description: Your profile picture
+     *          paramType: formData
+     *          required: true
+     *          dataType: file
+     */
+    /* Upload avatar of a user. Return a message when successful */
+    uploadAvatar: function (req, res) {
+        if (req.file) {
+            models.User.update({
+                _id: req.user._id
+            }, {
+                'personalInfo.profilePicture': config.app.url + ':' + config.app.port + '/images/' + req.file.filename
+            }, function (err, result) {
+                if (err) {
+                    return res.status(500).json({
+                        success: true,
+                        message: err
+                    });
+                }
+                else {
+                    return res.json({
+                        success: true,
+                        message: 'Avatar uploaded.'
+                    });
+                }
+            });
+        }
+        else {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid file type or file size'
+            });
+        }
     }
 };

@@ -66,6 +66,9 @@ app.use(swagger.init(app, {
         './controllers/timeTables.js',
         './controllers/studentSurvey.js',
         './controllers/assessmentQuestion.js',
+        './controllers/comments.js',
+        './controllers/feedbacks.js',
+        './controllers/posts.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
@@ -74,6 +77,10 @@ app.use(swagger.init(app, {
         './controllers/admin/courseRequests.js',
         './controllers/admin/studentSurvey.js',
         './controllers/admin/assessmentQuestion.js',
+        './controllers/admin/feedbacks.js',
+        './controllers/admin/posts.js',
+        './controllers/admin/statistics.js',
+        './controllers/admin/systemConfigurations.js'
     ]
 }));
 

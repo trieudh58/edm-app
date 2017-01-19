@@ -175,7 +175,7 @@
                   <div class="form-group">
                     <label for="revoke-button" class="col-sm-2 control-label">Revoke: </label>
                     <button type="submit" class="btn btn-danger"  id='revoke-button' ng-click="revoke()">Revoke</button>
-                    <!-- <span ng-if="revoked"> revoked! </span> -->
+                    <span ng-if="revoked"> revoked! </span>
                   </div>
                   <div class="form-group">
                     <b class="col-sm-2 control-label">Đổi mật khẩu: </b>
@@ -183,24 +183,24 @@
                   <div class="form-group">
                     <label for="oldpassword" class="col-sm-2 control-label">Mật khẩu cũ</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" id="oldpassword" placeholder="old password">
+                        <input type="password" class="form-control" id="oldpassword" placeholder="old password" ng-model='oldpassword'>
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="newpassword" class="col-sm-2 control-label">Mật khẩu mới</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" id="newpassword" placeholder="new password">
+                        <input type="password" class="form-control" id="newpassword" placeholder="new password" ng-model='newpassword'>
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="newpassword2" class="col-sm-2 control-label">Mật khẩu mới</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control" id="newpassword2" placeholder="retype new password">
+                        <input type="password" class="form-control" id="newpassword2" placeholder="retype new password">
                     </div>    
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button type="submit" class="btn btn-danger" ng-click="changePassword()">Cập nhật</button>
+                      <button type="submit" class="btn btn-danger" ng-click="changePassword(newpassword,oldpassword)">Cập nhật</button>
                     </div>
                   </div>
                 </form>
