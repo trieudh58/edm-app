@@ -189,6 +189,47 @@ module.exports = {
                 });
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/enable-account-register
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin enable account register configuration
+     *      notes: Return result
+     *      nickname: Enable account register configuration
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Enable account register configuration */
+    enableAccountRegister: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            if (sysConfiguration.allowAccountRegister)
+                return handleUserErrorWithCustomMessage(res, 'Account register is already enabled');
+            return sysConfiguration.update({
+                allowAccountRegister: true
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Account register enabled'
+                });
+            });
+        });
     }
     
 };
