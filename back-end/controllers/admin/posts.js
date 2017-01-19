@@ -146,6 +146,50 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/posts/publish-one
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin publish a post
+     *      notes: Return result
+     *      nickname: Publish a post
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: postId
+     *          description: Post id
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Publish a post */
+    publishOne: function (req, res) {
+        models.Post.findById(req.body.postId, function (err, post) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!post)
+                return handleUserErrorWithCustomMessage(res, 'Invalid post id');
+            if (post.isPublished)
+                return handleUserErrorWithCustomMessage(res, 'Post is already published');
+            return post.update({
+                isPublished: true
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Post is now published'
+                });
+            });
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/posts/delete
      * operations:
      *   -  httpMethod: DELETE

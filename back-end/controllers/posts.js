@@ -12,8 +12,8 @@ module.exports = {
      * path: /api/v1/posts/get-all
      * operations:
      *   -  httpMethod: GET
-     *      summary: Get all posts
-     *      notes: Return all posts
+     *      summary: Get all posts (that is published)
+     *      notes: Return all posts (that is published)
      *      nickname: Get all posts
      *      consumes:
      *        - text/html
@@ -24,9 +24,11 @@ module.exports = {
      *          required: true
      *          dataType: string
      */
-    /* Get all posts */
+    /* Get all posts (that is published) */
     getAll: function (req, res) {
-      models.Post.find({}, function (err, posts) {
+      models.Post.find({
+        isPublished: true
+      }, function (err, posts) {
         if (err)
           return handleInternalDBError(err, res);
         return res.json({
@@ -55,7 +57,9 @@ module.exports = {
      */
     /* Get all post headers */
     getAllPostHeaders: function (req, res) {
-      models.Post.find({}, '_id header', function (err, posts) {
+      models.Post.find({
+        isPublished: true
+      }, '_id header', function (err, posts) {
         if (err)
           return handleInternalDBError(err, res);
         return res.json({
@@ -89,7 +93,10 @@ module.exports = {
      */
     /* Get one post by id */
     getOneById: function (req, res) {
-      models.Post.findById(req.query.postId, function (err, post) {
+      models.Post.findOne({
+      _id: req.query.postId,
+      isPublished: true
+    }, function (err, post) {
         if (err)
           return handleInternalDBError(err, res);
         if (!post)

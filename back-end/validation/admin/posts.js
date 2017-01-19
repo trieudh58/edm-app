@@ -55,6 +55,22 @@ validation.updatePostBody = function (req, res, next) {
     });
 };
 
+validation.publishOne = function (req, res, next) {
+    Joi.validate({
+        postId: req.body.postId
+    }, {
+        postId: Joi.string().required()
+    }, function (err) {
+        if (err) {
+            return res.json({
+                success: false,
+                message: err.details[0].message
+            });
+        }
+        next();
+    });
+};
+
 validation.delete = function (req, res, next) {
     Joi.validate({
         postId: req.body.postId

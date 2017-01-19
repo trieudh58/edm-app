@@ -29,7 +29,11 @@ var PostSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
       }
-    }]
+    }],
+    isPublished: {
+      type: Boolean,
+      default: false
+    }
 }, {
     timestamps: true,
     versionKey: false
