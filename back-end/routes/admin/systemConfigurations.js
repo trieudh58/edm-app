@@ -17,4 +17,7 @@ adminRouter.put('/update-smtp', validation.updateSMTP, authentication, adminPerm
 /* Admins enable account register functionality */
 adminRouter.put('/enable-account-register', authentication, adminPermission, AdminSystemConfigurationController.enableAccountRegister);
 
+/* Admins disable account register functionality */
+adminRouter.put('/disable-account-register', authentication, adminPermission, AdminSystemConfigurationController.disableAccountRegister);
+
 module.exports = adminRouter;
