@@ -18,6 +18,9 @@ adminRouter.get('/get-all-unpublished', authentication, adminPermission, AdminPo
 /* Admins create a post */
 adminRouter.post('/create', validation.create, authentication, adminPermission, AdminPostController.create);
 
+/* Admins create and published a post */
+adminRouter.post('/create-and-publish', validation.createAndPublish, authentication, adminPermission, AdminPostController.createAndPublish);
+
 /* Admins edit a post header */
 adminRouter.put('/update-header', validation.updatePostHeader, authentication, adminPermission, AdminPostController.updatePostHeader);
 

@@ -143,6 +143,50 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/posts/create-and-publish
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Admin create and publish a post
+     *      notes: Return result
+     *      nickname: Create and publish post
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: header
+     *          description: Post header
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *        - name: body
+     *          description: Post body (at least 20 chars)
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     */
+    /* Create and publish a post */
+    createAndPublish: function (req, res) {
+        models.Post.create({
+            creator: req.user._id,
+            header: req.body.header,
+            body: req.body.body,
+            isPublished: true
+        }, function (err) {
+            if (err)
+                return handleInternalDBError(err, res);
+            return res.json({
+                success: true,
+                message: 'Post created and published'
+            });
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/posts/update-header
      * operations:
      *   -  httpMethod: PUT
