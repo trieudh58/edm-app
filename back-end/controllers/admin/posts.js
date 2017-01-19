@@ -369,6 +369,44 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/posts/publish-all
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin publish all posts
+     *      notes: Return result
+     *      nickname: Publish all posts
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Publish all posts */
+    publishAll: function (req, res) {
+        models.Post.update({
+            $or: [
+                { isPublished: false },
+                { isPublished: null }
+            ]
+        }, {
+            isPublished: true
+        }, function (err, result) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!result.nModified)
+                return handleUserErrorWithCustomMessage(res, 'All posts are already published');
+            return res.json({
+                success: true,
+                message: 'All posts are now published'
+            });
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/posts/delete
      * operations:
      *   -  httpMethod: DELETE
