@@ -26,4 +26,10 @@ adminRouter.put('/enable-course-request', authentication, adminPermission, Admin
 /* Admins disable course request functionality */
 adminRouter.put('/disable-course-request', authentication, adminPermission, AdminSystemConfigurationController.disableCourseRequest);
 
+/* Admins enable course comment functionality */
+adminRouter.put('/enable-course-comment', authentication, adminPermission, AdminSystemConfigurationController.enableCourseComment);
+
+/* Admins disable course comment functionality */
+adminRouter.put('/disable-course-comment', authentication, adminPermission, AdminSystemConfigurationController.disableCourseComment);
+
 module.exports = adminRouter;

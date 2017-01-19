@@ -353,6 +353,88 @@ module.exports = {
                 });
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/enable-course-comment
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin enable course comment configuration
+     *      notes: Return result
+     *      nickname: Enable course comment configuration
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Enable course comment configuration */
+    enableCourseComment: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            if (sysConfiguration.allowCourseComment)
+                return handleUserErrorWithCustomMessage(res, 'Course comment is already enabled');
+            return sysConfiguration.update({
+                allowCourseComment: true
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Course comment enabled'
+                });
+            });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/disable-course-comment
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin disable course comment configuration
+     *      notes: Return result
+     *      nickname: Disable course comment configuration
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Disable course comment configuration */
+    disableCourseComment: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            if (!sysConfiguration.allowCourseComment)
+                return handleUserErrorWithCustomMessage(res, 'Course comment is already disabled');
+            return sysConfiguration.update({
+                allowCourseComment: false
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Course comment disabled'
+                });
+            });
+        });
     }
     
 };
