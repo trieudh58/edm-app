@@ -393,6 +393,8 @@ module.exports = {
             ]
         }, {
             isPublished: true
+        }, {
+            multi: true
         }, function (err, result) {
             if (err)
                 return handleInternalDBError(err, res);
@@ -401,6 +403,43 @@ module.exports = {
             return res.json({
                 success: true,
                 message: 'All posts are now published'
+            });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/posts/unpublish-all
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin unpublish all posts
+     *      notes: Return result
+     *      nickname: Unpublish all posts
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Unpublish all posts */
+    unpublishAll: function (req, res) {
+        models.Post.update({
+            isPublished: true
+        }, {
+            isPublished: false
+        }, {
+            multi: true
+        }, function (err, result) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!result.nModified)
+                return handleUserErrorWithCustomMessage(res, 'All posts are already unpublished');
+            return res.json({
+                success: true,
+                message: 'All posts are now unpublished'
             });
         });
     },

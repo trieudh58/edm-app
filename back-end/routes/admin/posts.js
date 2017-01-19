@@ -36,6 +36,9 @@ adminRouter.put('/unpublish-one', validation.unpublishOne, authentication, admin
 /* Admins publish all post */
 adminRouter.put('/publish-all', authentication, adminPermission, AdminPostController.publishAll);
 
+/* Admins unpublish all post */
+adminRouter.put('/unpublish-all', authentication, adminPermission, AdminPostController.unpublishAll);
+
 /* Admins delete a post */
 adminRouter.delete('/delete', validation.delete, authentication, adminPermission, AdminPostController.delete);
 
