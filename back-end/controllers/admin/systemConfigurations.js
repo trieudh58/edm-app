@@ -271,6 +271,88 @@ module.exports = {
                 });
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/enable-course-request
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin enable course request configuration
+     *      notes: Return result
+     *      nickname: Enable course request configuration
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Enable course request configuration */
+    enableCourseRequest: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            if (sysConfiguration.allowCourseRequest)
+                return handleUserErrorWithCustomMessage(res, 'Course request is already enabled');
+            return sysConfiguration.update({
+                allowCourseRequest: true
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Course request enabled'
+                });
+            });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/disable-course-request
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin disable course request configuration
+     *      notes: Return result
+     *      nickname: Disable course request configuration
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Disable course request configuration */
+    disableCourseRequest: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            if (!sysConfiguration.allowCourseRequest)
+                return handleUserErrorWithCustomMessage(res, 'Course request is already disabled');
+            return sysConfiguration.update({
+                allowCourseRequest: false
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'Course request disabled'
+                });
+            });
+        });
     }
     
 };

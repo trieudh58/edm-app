@@ -20,4 +20,10 @@ adminRouter.put('/enable-account-register', authentication, adminPermission, Adm
 /* Admins disable account register functionality */
 adminRouter.put('/disable-account-register', authentication, adminPermission, AdminSystemConfigurationController.disableAccountRegister);
 
+/* Admins enable course request functionality */
+adminRouter.put('/enable-course-request', authentication, adminPermission, AdminSystemConfigurationController.enableCourseRequest);
+
+/* Admins disable course request functionality */
+adminRouter.put('/disable-course-request', authentication, adminPermission, AdminSystemConfigurationController.disableCourseRequest);
+
 module.exports = adminRouter;
