@@ -253,18 +253,19 @@ module.exports = {
                     else if (result.ok) {
                         var transporter = nodemailer.createTransport({
                             service: config.mailer.service,
+                            host: config.mailer.host,
+                            port: config.mailer.port,
                             auth: {
-                                user: config.mailer.user,
-                                pass: config.mailer.pass
+                                user: config.mailer.auth.user,
+                                pass: config.mailer.auth.pass
                             }
                         });
 
                         var receiver = req.body.email;
                         var frontEndFullURL = config.frontEnd.url;
                         var activationLink = frontEndFullURL + '/access?action=verify&email=' + receiver + '&token=' + rememberToken;
-                        console.log(activationLink);
                         var mailOptions = {
-                            from: config.mailer.sender,
+                            from: config.mailer.auth.sender,
                             to: receiver,
                             subject: 'Activate your account',
                             html: 'Dear ' + receiver + ',</br>Please activate your account here:' + activationLink

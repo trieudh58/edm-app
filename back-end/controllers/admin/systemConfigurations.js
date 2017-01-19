@@ -69,9 +69,13 @@ module.exports = {
                 return sysConfiguration.update({
                     mailer: {
                         service: config.mailer.service,
-                        user: config.mailer.user,
-                        pass: config.mailer.pass,
-                        sender: config.mailer.sender
+                        host: config.mailer.host,
+                        port: config.mailer.port,
+                        auth: {
+                            user: config.mailer.auth.user,
+                            pass: config.mailer.auth.pass,
+                            sender: config.mailer.auth.sender
+                        }
                     },
                     allowAccountRegister: true,
                     allowCourseRequest: true,
@@ -91,9 +95,13 @@ module.exports = {
                     creator: req.user._id,
                     mailer: {
                         service: config.mailer.service,
-                        user: config.mailer.user,
-                        pass: config.mailer.pass,
-                        sender: config.mailer.sender
+                        host: config.mailer.host,
+                        port: config.mailer.port,
+                        auth: {
+                            user: config.mailer.auth.user,
+                            pass: config.mailer.auth.pass,
+                            sender: config.mailer.auth.sender
+                        }
                     },
                     allowAccountRegister: true,
                     allowCourseRequest: true,
@@ -109,7 +117,46 @@ module.exports = {
                 });
             }
         });
-    }
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/update-smtp
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin update SMTP configurations in database
+     *      notes: Return result
+     *      nickname: Update SMTP configurations
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: service
+     *          description: SMTP service
+     *          paramType: form
+     *          required: true
+     *          dataType: string
+     *        - name: user
+     *          description: SMTP sender
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Reset all system configurations */
     
 };
 

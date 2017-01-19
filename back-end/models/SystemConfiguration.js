@@ -11,17 +11,27 @@ var SystemConfigurationSchema = new mongoose.Schema({
         type: String,
         require: true
       },
-      user: {
+      host: {
         type: String,
         require: true
       },
-      pass: {
-        type: String,
+      port: {
+        type: Number,
         require: true
       },
-      sender: {
-        type: String,
-        require: true
+      auth: {
+        user: {
+          type: String,
+          require: true
+        },
+        pass: {
+          type: String,
+          require: true
+        },
+        sender: {
+          type: String,
+          require: true
+        }
       }
     },
     allowAccountRegister: {
