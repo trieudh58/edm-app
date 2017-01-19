@@ -75,7 +75,8 @@ app.use(swagger.init(app, {
         './controllers/admin/courseRequests.js',
         './controllers/admin/feedbacks.js',
         './controllers/admin/posts.js',
-        './controllers/admin/statistics.js'
+        './controllers/admin/statistics.js',
+        './controllers/admin/systemConfigurations.js'
     ]
 }));
 
