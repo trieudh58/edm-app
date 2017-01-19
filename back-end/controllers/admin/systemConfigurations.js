@@ -435,6 +435,88 @@ module.exports = {
                 });
             });
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/enable-system-assessment
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin enable system assessment configuration
+     *      notes: Return result
+     *      nickname: Enable system assessment configuration
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Enable system assessment configuration */
+    enableSystemAssessment: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            if (sysConfiguration.allowSystemAssessment)
+                return handleUserErrorWithCustomMessage(res, 'System assessment is already enabled');
+            return sysConfiguration.update({
+                allowSystemAssessment: true
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'System assessment enabled'
+                });
+            });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/system-configurations/disable-system-assessment
+     * operations:
+     *   -  httpMethod: PUT
+     *      summary: Admin disable system assessment configuration
+     *      notes: Return result
+     *      nickname: Disable system assessment configuration
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Disable system assessment configuration */
+    disableSystemAssessment: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            if (!sysConfiguration.allowSystemAssessment)
+                return handleUserErrorWithCustomMessage(res, 'System assessment is already disabled');
+            return sysConfiguration.update({
+                allowSystemAssessment: false
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'System assessment disabled'
+                });
+            });
+        });
     }
     
 };

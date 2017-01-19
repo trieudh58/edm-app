@@ -32,4 +32,10 @@ adminRouter.put('/enable-course-comment', authentication, adminPermission, Admin
 /* Admins disable course comment functionality */
 adminRouter.put('/disable-course-comment', authentication, adminPermission, AdminSystemConfigurationController.disableCourseComment);
 
+/* Admins enable system assessment functionality */
+adminRouter.put('/enable-system-assessment', authentication, adminPermission, AdminSystemConfigurationController.enableSystemAssessment);
+
+/* Admins disable system assessment functionality */
+adminRouter.put('/disable-system-assessment', authentication, adminPermission, AdminSystemConfigurationController.disableSystemAssessment);
+
 module.exports = adminRouter;
