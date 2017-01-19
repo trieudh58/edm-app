@@ -138,25 +138,58 @@ module.exports = {
      *        - name: service
      *          description: SMTP service
      *          paramType: form
-     *          required: true
      *          dataType: string
+     *        - name: host
+     *          description: SMTP host
+     *          paramType: form
+     *          dataType: string
+     *        - name: port
+     *          description: SMTP port
+     *          paramType: form
+     *          dataType: integer
      *        - name: user
+     *          description: SMTP user
+     *          paramType: form
+     *          dataType: string
+     *        - name: password
+     *          description: SMTP password
+     *          paramType: form
+     *          dataType: string
+     *        - name: sender
      *          description: SMTP sender
-     *          paramType: header
-     *          required: true
-     *          dataType: string
-     *        - name: Authorization
-     *          description: Bearer [accessToken]
-     *          paramType: header
-     *          required: true
-     *          dataType: string
-     *        - name: Authorization
-     *          description: Bearer [accessToken]
-     *          paramType: header
-     *          required: true
+     *          paramType: form
      *          dataType: string
      */
-    /* Reset all system configurations */
+    /* Update smtp (mailer) configurations */
+    updateSMTP: function (req, res) {
+        models.SystemConfiguration.findOne({
+            creator: req.user._id
+        }, function (err, sysConfiguration) {
+            if (err)
+                return handleInternalDBError(err, res);
+            if (!sysConfiguration)
+                return handleUserErrorWithCustomMessage(res, 'Configuration does not exist');
+            return sysConfiguration.update({
+                mailer: {
+                    service: req.body.service || config.mailer.service,
+                    host: req.body.host || config.mailer.host,
+                    port: req.body.port || config.mailer.port,
+                    auth: {
+                        user: req.body.user || config.mailer.auth.user,
+                        pass: req.body.password || config.mailer.auth.pass,
+                        sender: req.body.sender || config.mailer.auth.sender
+                    }
+                }
+            }, function (err) {
+                if (err)
+                    return handleInternalDBError(err, res);
+                return res.json({
+                    success: true,
+                    message: 'SMTP configurations updated'
+                });
+            });
+        });
+    }
     
 };
 
