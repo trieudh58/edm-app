@@ -9,6 +9,97 @@ module.exports = {
 
     /**
      * @swagger
+     * path: /api/v1/admin/posts/get-all
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Admin get all posts
+     *      notes: Return all posts
+     *      nickname: Get all posts
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get all posts */
+    getAll: function (req, res) {
+        models.Post.find({}, function (err, posts) {
+            if (err)
+                return handleInternalDBError(err, res);
+            return res.json({
+                success: true,
+                data: posts
+            });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/posts/get-all-published
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Admin get all published posts
+     *      notes: Return all published posts
+     *      nickname: Get all published posts
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get all published posts */
+    getAllPublished: function (req, res) {
+        models.Post.find({
+            isPublished: true
+        }, function (err, posts) {
+            if (err)
+                return handleInternalDBError(err, res);
+            return res.json({
+                success: true,
+                data: posts
+            });
+        });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/admin/posts/get-all-unpublished
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Admin get all unpublished posts
+     *      notes: Return all unpublished posts
+     *      nickname: Get all unpublished posts
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get all unpublished posts */
+    getAllUnpublished: function (req, res) {
+        models.Post.find({
+            isPublished: false
+        }, function (err, posts) {
+            if (err)
+                return handleInternalDBError(err, res);
+            return res.json({
+                success: true,
+                data: posts
+            });
+        });
+    },
+
+    /**
+     * @swagger
      * path: /api/v1/admin/posts/create
      * operations:
      *   -  httpMethod: POST

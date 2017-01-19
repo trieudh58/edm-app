@@ -5,6 +5,16 @@ var authentication = require('../../middleware/authentication');
 var adminPermission = require('../../middleware/adminPermission');
 var validation = require('../../validation/admin/posts');
 
+
+/* Admins get all posts */
+adminRouter.get('/get-all', authentication, adminPermission, AdminPostController.getAll);
+
+/* Admins get all published posts */
+adminRouter.get('/get-all-published', authentication, adminPermission, AdminPostController.getAllPublished);
+
+/* Admins get all unpublished posts */
+adminRouter.get('/get-all-unpublished', authentication, adminPermission, AdminPostController.getAllUnpublished);
+
 /* Admins create a post */
 adminRouter.post('/create', validation.create, authentication, adminPermission, AdminPostController.create);
 
