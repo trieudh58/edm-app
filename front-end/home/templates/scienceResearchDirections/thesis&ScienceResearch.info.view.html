@@ -27,9 +27,9 @@
               <th scope="row">{{index +1}}</th>
               <td>{{lecturer.degree + lecturer.lecturer}}</td>
               <td>{{lecturer.workplace}}</td>
-              <td> <ul><li ng-repeat="thesis in lecturer.thesisGuide" style="text-align: left;">{{thesis}}</li></ul></td>
-              <td> <ul><li ng-repeat="study in lecturer.study" style="text-align: left;">{{study}}</li></ul></td>
-              <td> <ul><li ng-repeat="teach in lecturer.teach" style="text-align: left;">{{teach}}</li></ul></td>
+              <td> <ul><li ng-repeat="thesis in lecturer.thesisGuide track by $index" style="text-align: left;">{{thesis}}</li></ul></td>
+              <td> <ul><li ng-repeat="study in lecturer.study track by $index" style="text-align: left;">{{study}}</li></ul></td>
+              <td> <ul><li ng-repeat="teach in lecturer.teach track by $index" style="text-align: left;">{{teach}}</li></ul></td>
             </tr>
           </tbody>
         </table>

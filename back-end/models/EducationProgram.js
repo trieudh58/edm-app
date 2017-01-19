@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 var EducationProgramSchema = new mongoose.Schema({
     code: {
         type: Number,

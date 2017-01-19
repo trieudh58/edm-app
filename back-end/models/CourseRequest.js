@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 var CourseRequestSchema = new mongoose.Schema({
     creator: {
         type: mongoose.Schema.Types.ObjectId,

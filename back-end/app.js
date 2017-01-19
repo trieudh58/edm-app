@@ -64,12 +64,16 @@ app.use(swagger.init(app, {
         './controllers/scienceResearchDirections.js',
         './controllers/scorePredictions.js',
         './controllers/timeTables.js',
+        './controllers/studentSurvey.js',
+        './controllers/assessmentQuestion.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
         './controllers/admin/notifications.js',
         './controllers/admin/studentGroups.js',
         './controllers/admin/courseRequests.js',
+        './controllers/admin/studentSurvey.js',
+        './controllers/admin/assessmentQuestion.js',
     ]
 }));
 

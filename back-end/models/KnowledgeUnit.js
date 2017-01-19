@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 var KnowledgeUnitSchema = new mongoose.Schema({
     kuCode: {
         type: Number,
