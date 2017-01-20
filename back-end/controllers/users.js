@@ -547,5 +547,57 @@ module.exports = {
                 });
             }
         });
+    },
+
+    /**
+     * @swagger
+     * path: /api/v1/users/upload-avatar
+     * operations:
+     *   -  httpMethod: POST
+     *      summary: Upload avatar of a user
+     *      notes: Return message
+     *      nickname: Upload avatar
+     *      consumes:
+     *        - application/x-www-form-urlencoded
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     *        - name: avatar
+     *          description: Your profile picture
+     *          paramType: formData
+     *          required: true
+     *          dataType: file
+     */
+    /* Upload avatar of a user. Return a message when successful */
+    uploadAvatar: function (req, res) {
+        if (req.file) {
+            models.User.update({
+                _id: req.user._id
+            }, {
+                'personalInfo.profilePicture': config.app.url + ':' + config.app.port + '/images/' + req.file.filename
+            }, function (err, result) {
+                if (err) {
+                    return res.status(500).json({
+                        success: true,
+                        message: err
+                    });
+                }
+                else {
+                    return res.json({
+                        success: true,
+                        message: 'Avatar uploaded.'
+                    });
+                }
+            });
+        }
+        else {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid file type or file size'
+            });
+        }
     }
 };
