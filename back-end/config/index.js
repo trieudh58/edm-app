@@ -1,10 +1,10 @@
 module.exports = {
     app: {
-        url: 'http://localhost',
+        url: 'http://velocityteam.xyz',
         port: 2052
     },
     frontEnd: {
-        url: 'http://localhost',
+        url: 'http://edm.tiaset.net',
         port: '80'
     },
     mongodb: {
