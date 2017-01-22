@@ -51,6 +51,8 @@ module.exports = {
                 }
                 var semesters = [];
                 for (var j = 0; j < allSubjects.length; j++) {
+                    if (allSubjects[j] === 'PES')
+                        continue;
                     semesters.push({
                         subject: allSubjects[j],
                         name: 'Tín hiệu và hệ thống',
