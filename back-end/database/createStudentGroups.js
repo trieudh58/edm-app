@@ -8,9 +8,9 @@ models.StudentGroup.create({
     }
 });
 
-for (var i = 0; i < 25; i++) {
+for (var i = 0; i < 50; i++) {
     models.StudentGroup.create({
-        name: 'K' + (40 + i).toString()
+        name: 'QH-' + (1995 + i).toString() + '-I'
     }, function (err) {
         if (err) {
             throw err;

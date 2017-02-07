@@ -29,24 +29,29 @@ var csvScoreStream = csv.parse({delimiter: ';'}).on('data', function (data) {
                     var date = new Date(parseInt(DOB[2]), parseInt(DOB[1]) - 1, parseInt(DOB[0]), 0, 0, 1);
 
                     var studentGroups = [];
-                    var startYear = (studentRecords[i][0].length == 7) ? parseInt(studentRecords[i][0].slice(0,1)) : parseInt(studentRecords[i][0].slice(0,2));
-                    var groupBySchoolYear = '';
-                    if (!isNaN(startYear)) {
-                        groupBySchoolYear = 'K' + (45 + startYear).toString();
-                        for (var j = 0; j < groups.length; j++) {
-                            if (groups[j].name == groupBySchoolYear || groups[j].name == 'All') {
-                                studentGroups.push({group: groups[j]._id});
-                            }
+                    // var startYear = (studentRecords[i][0].length == 7) ? parseInt(studentRecords[i][0].slice(0,1)) : parseInt(studentRecords[i][0].slice(0,2));
+                    var groupBySchoolYear = studentRecords[i][2].split('/')[0];
+                    for (var j = 0; j < groups.length; j++) {
+                        if (groups[j].name == groupBySchoolYear || groups[j].name == 'All') {
+                            studentGroups.push({group: groups[j]._id});
                         }
                     }
-                    else if (studentRecords[i][0].indexOf('_') != -1) {
-                        groupBySchoolYear = 'K' + studentRecords[i][0].split('_')[1];
-                        for (var j = 0; j < groups.length; j++) {
-                            if (groups[j].name == groupBySchoolYear || groups[j].name == 'All') {
-                                studentGroups.push({group: groups[j]._id});
-                            }
-                        }
-                    }
+                    // if (!isNaN(startYear)) {
+                    //     groupBySchoolYear = 'K' + (45 + startYear).toString();
+                    //     for (var j = 0; j < groups.length; j++) {
+                    //         if (groups[j].name == groupBySchoolYear || groups[j].name == 'All') {
+                    //             studentGroups.push({group: groups[j]._id});
+                    //         }
+                    //     }
+                    // }
+                    // else if (studentRecords[i][0].indexOf('_') != -1) {
+                    //     groupBySchoolYear = 'K' + studentRecords[i][0].split('_')[1];
+                    //     for (var j = 0; j < groups.length; j++) {
+                    //         if (groups[j].name == groupBySchoolYear || groups[j].name == 'All') {
+                    //             studentGroups.push({group: groups[j]._id});
+                    //         }
+                    //     }
+                    // }
 
                     models.User.create({
                         email: studentRecords[i][0] + '@gmail.com',
