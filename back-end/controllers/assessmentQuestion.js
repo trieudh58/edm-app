@@ -34,7 +34,10 @@ module.exports = {
      */
     /* Return question  list */
     getQuestionSetOnPurpose: function (req, res) {
-        AssessmentQuestionSet.find({purpose:req.query.purpose,active:true}, function (err, questions) {
+        AssessmentQuestionSet
+            .find({purpose:req.query.purpose,active:true})
+            .populate('questionList')
+            .exec(function (err, questions) {
             if (err) {
                 return res.status(500).json({
                     success: false,

@@ -24,7 +24,7 @@ validation.create = function (req, res, next) {
 
 validation.deleteOne = function (req, res, next) {
     Joi.validate({
-        courseRequestId: req.body.courseRequestId
+        courseRequestId: req.query.courseRequestId
     }, {
         courseRequestId: Joi.string().required()
     }, function (err) {
