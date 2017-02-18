@@ -525,14 +525,14 @@ module.exports = {
      *          dataType: string
      *        - name: courseRequestId
      *          description: Course request id
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Return delete result */
     deleteOne: function (req, res) {
         models.CourseRequest.findOne({
-            _id: req.body.courseRequestId,
+            _id: req.query.courseRequestId,
             creator: req.user._id
         }, function(err, cr) {
             if (err) {

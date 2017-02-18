@@ -28,13 +28,13 @@ module.exports = {
      *          dataType: string
      *        - name: purpose
      *          description: question purpose
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Return question  list */
     getQuestionSetOnPurpose: function (req, res) {
-        AssessmentQuestionSet.find({purpose:req.body.purpose,active:true}, function (err, questions) {
+        AssessmentQuestionSet.find({purpose:req.query.purpose,active:true}, function (err, questions) {
             if (err) {
                 return res.status(500).json({
                     success: false,
