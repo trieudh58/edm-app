@@ -40,16 +40,18 @@ module.exports = {
             } else {
                 var timeTable = [];
                 result.forEach(function (subject, idx) {
+                    var weekday= Math.floor(Math.random() * 5.9)
+                    var sessionStart= Math.floor(Math.random()* 6.9)+1
                     timeTable.push({
                         subject: subject,
                         classCode: subject.code + ' 2',
-                        theory: {
+                         theory: {
                             lecturer: 'PGS.TS. Phan Xuân Hiếu',
                             classTime: {
-                                weekday: 0,
+                                weekday: weekday,
                                 session: {
-                                    start: 3,
-                                    end: 5
+                                    start: sessionStart,
+                                    end: sessionStart+3
                                 }
                             },
                             auditorium: '308 GD2'
@@ -59,10 +61,10 @@ module.exports = {
                                 groupId: 0,
                                 lecturer: 'CN. Vương Thị Hải Yến',
                                 classTime: {
-                                    weekday: 2,
+                                    weekday: (weekday+2)%5,
                                     session: {
-                                        start: 4,
-                                        end: 6
+                                        start: sessionStart,
+                                        end: sessionStart+2
                                     }
                                 },
                                 auditorium: '208 G2'
@@ -71,10 +73,10 @@ module.exports = {
                                 groupId: 1,
                                 lecturer: 'CN. Dương Quang Vũ',
                                 classTime: {
-                                    weekday: 2,
+                                    weekday: (weekday+3)%5,
                                     session: {
-                                        start: 8,
-                                        end: 10
+                                        start: sessionStart,
+                                        end: sessionStart+2
                                     }
                                 },
                                 auditorium: '203 G2'
@@ -83,7 +85,7 @@ module.exports = {
                     });
                 });
                 res.json({
-                    success: false,
+                    success: true,
                     data: timeTable
                 });
             }
@@ -152,16 +154,29 @@ module.exports = {
             success: true,
             data: [
                 {
-                    classCode: 'INT2203 4',
-                    groupId: 2
+                    classCode: 'INT2203 2',
+                    groupId: 1
                 },
                 {
-                    classCode: 'INT3052 2'
+                    classCode: 'INT3052 2',
+                    groupId:0
                 },
                 {
-                    classCode: 'INT2203 4',
+                    classCode: 'POL1001 2',
                     groupId: 0
                 },
+                {
+                    classCode:'INT2207 2',
+                    groupId: 1
+                },
+                {
+                    classCode: 'INT3401 2',
+                    groupId: 0
+                },
+                {
+                    classCode:'INT2044 2',
+                    groupId: 1
+                }
             ]
         });
     }

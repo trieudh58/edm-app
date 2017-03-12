@@ -38,7 +38,7 @@ var fileUpload = multer({
   })
 });
 /* upload image get link*/
-router.post('/upload-avatar', authentication, imageUpload.single('image'), upload.uploadImage);
+router.post('/upload-image', authentication, imageUpload.single('image'), upload.uploadImage);
 
 /* upload file get link */
 router.post('/upload-file', authentication, fileUpload.single('file'), upload.uploadFile);
