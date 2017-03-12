@@ -1,12 +1,20 @@
 var mongoose = require('mongoose');
-
+var config=require('../config');
 var PostSchema = new mongoose.Schema({
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       require: true
     },
+    coverImage: {
+        type: String,
+        default: config.app.url + ':' + config.app.port + '/images/default.jpg' 
+    },
     header: {
+      type: String,
+      require: true
+    },
+    sumary: {
       type: String,
       require: true
     },

@@ -59,7 +59,7 @@ module.exports = {
     getAllPostHeaders: function (req, res) {
       models.Post.find({
         isPublished: true
-      }, '_id header', function (err, posts) {
+      }, '_id header coverImage sumary', function (err, posts) {
         if (err)
           return handleInternalDBError(err, res);
         return res.json({
@@ -96,7 +96,7 @@ module.exports = {
       models.Post.findOne({
       _id: req.query.postId,
       isPublished: true
-    }, function (err, post) {
+    },'_id header coverImage body comments', function (err, post) {
         if (err)
           return handleInternalDBError(err, res);
         if (!post)

@@ -1,11 +1,32 @@
 var express = require('express');
 var adminRouter = express.Router();
+var multer = require('multer');
 var AdminPostController = require('../../controllers/admin/posts');
 var authentication = require('../../middleware/authentication');
 var adminPermission = require('../../middleware/adminPermission');
 var validation = require('../../validation/admin/posts');
 
-
+var upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, callback) {
+      callback(null, __dirname + '/../../public/images/');
+    },
+    filename: function (req, file, callback) {
+      var fileType = file.mimetype.split('/')[1];
+      callback(null, file.fieldname + '-' + Date.now() + '.' + fileType);
+    }
+  }),
+  // File filter. We need to filter out non-image file type
+  fileFilter: function (req, file, callback) {
+    // Accept .png and .jpg
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg') {
+      callback(null, true);
+    }
+    else {
+      callback(null, false);
+    }
+  }
+});
 /* Admins get all posts */
 adminRouter.get('/get-all', authentication, adminPermission, AdminPostController.getAll);
 
@@ -16,10 +37,10 @@ adminRouter.get('/get-all-published', authentication, adminPermission, AdminPost
 adminRouter.get('/get-all-unpublished', authentication, adminPermission, AdminPostController.getAllUnpublished);
 
 /* Admins create a post */
-adminRouter.post('/create', validation.create, authentication, adminPermission, AdminPostController.create);
+adminRouter.post('/create', authentication, adminPermission, upload.single('coverImage'), AdminPostController.create);
 
 /* Admins create and published a post */
-adminRouter.post('/create-and-publish', validation.createAndPublish, authentication, adminPermission, AdminPostController.createAndPublish);
+adminRouter.post('/create-and-publish', authentication, adminPermission,  upload.single('coverImage'),AdminPostController.createAndPublish);
 
 /* Admins edit a post header */
 adminRouter.put('/update-header', validation.updatePostHeader, authentication, adminPermission, AdminPostController.updatePostHeader);

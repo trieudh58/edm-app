@@ -1,5 +1,5 @@
 var models = require('../../models');
-
+var config = require('../../config');
 module.exports = {
     /**
      * @swagger
@@ -124,13 +124,20 @@ module.exports = {
      *          paramType: form
      *          required: true
      *          dataType: string
+     *        - name: coverImage
+     *          description: cover picture
+     *          paramType: formData
+     *          required: true
+     *          dataType: file
      */
     /* Create a post */
     create: function (req, res) {
         models.Post.create({
             creator: req.user._id,
             header: req.body.header,
-            body: req.body.body
+            body: req.body.body,
+            sumary: req.body.body.substring(0, 200) + '...',
+            coverImage:config.app.url + ':' + config.app.port + '/images/' + req.file.filename
         }, function (err) {
             if (err)
                 return handleInternalDBError(err, res);
@@ -167,6 +174,11 @@ module.exports = {
      *          paramType: form
      *          required: true
      *          dataType: string
+     *        - name: coverImage
+     *          description: cover picture
+     *          paramType: formData
+     *          required: true
+     *          dataType: file
      */
     /* Create and publish a post */
     createAndPublish: function (req, res) {
@@ -174,6 +186,8 @@ module.exports = {
             creator: req.user._id,
             header: req.body.header,
             body: req.body.body,
+            sumary: req.body.body.substring(0, 200) + '...',
+            coverImage:config.app.url + ':' + config.app.port + '/images/' + req.file.filename,
             isPublished: true
         }, function (err) {
             if (err)

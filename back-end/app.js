@@ -72,6 +72,7 @@ app.use(swagger.init(app, {
         './controllers/suggestionAndWarning.js',
         './controllers/upload.js',
         './controllers/lecturer.js',
+        './controllers/importantNotification.js',
         './controllers/admin/users.js',
         './controllers/admin/studentRecords.js',
         './controllers/admin/subjects.js',
@@ -83,7 +84,8 @@ app.use(swagger.init(app, {
         './controllers/admin/feedbacks.js',
         './controllers/admin/posts.js',
         './controllers/admin/statistics.js',
-        './controllers/admin/systemConfigurations.js'
+        './controllers/admin/systemConfigurations.js',
+        './controllers/admin/importantNotification.js',
     ]
 }));
 
