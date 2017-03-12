@@ -67,7 +67,7 @@ module.exports = {
     /* Create student survey answers */
  	submitStudentSurvey: function(req,res){
  		try {
-            var answerList = JSON.parse(req.body.answers);
+            var answerList = JSON.parse(req.body.answerList);
             var StudentAnswer={userId:req.user.id,answerList:answerList};
             StudentServeyAnswer.find({userId:req.user.id},function(err,object){
                 if(err){
@@ -77,20 +77,36 @@ module.exports = {
                     })
                 }
                 else{
-                        StudentServeyAnswer.update(StudentAnswer,{upset:true},function(err){
-                            if(err){
-                                return res.status(500).json({
-                                    success:false,
-                                    message:err
-                                })
-                            }
-                            else{
-                                return res.status(200).json({
-                                    success:true,
-                                    message:'update answers success!'
-                                })
-                            }
-                        })
+                        if(object){
+                            console.log(object);
+                            StudentServeyAnswer.update(StudentAnswer,{upset:true},function(err){
+                                if(err){
+                                    return res.status(500).json({
+                                        success:false,
+                                        message:err
+                                    })
+                                }
+                                else{
+                                    return res.status(200).json({
+                                        success:true,
+                                        message:'update answers success!'
+                                    })
+                                }
+                            })
+                        }
+                        else{
+                            StudentServeyAnswer.create({userId:req.user.id,answerList:answerList},function(err,object){
+                                if (err)
+                                    return res.status(500).json({
+                                        success:false,
+                                        message:err
+                                    })
+                                return res.json({
+                                    success: true,
+                                    message: 'submited!'
+                                });
+                            })
+                        }
                 }
             })
             //create student answer
@@ -100,9 +116,6 @@ module.exports = {
                 message: err
             });
         }
-        return res.json({
-            success: true,
-            message: 'Personal time table created.'
-        });
+
     }
 };
