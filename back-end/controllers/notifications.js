@@ -582,7 +582,7 @@ module.exports = {
      *          dataType: string
      *        - name: notificationIds
      *          description: Notification ids (separated by comma)
-     *          paramType: body
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
