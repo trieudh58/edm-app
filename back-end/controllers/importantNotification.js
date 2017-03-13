@@ -26,7 +26,7 @@ module.exports = {
      */
     /* Get all important-notification (that is published) */
     getAll: function (req, res) {
-      models.Notification.find({
+      models.ImportantNotification.find({
         isPublished: true
       }, function (err, importantNotification) {
         if (err)
@@ -57,7 +57,7 @@ module.exports = {
      */
     /* Get all Notification headers */
     getAllNotificationHeaders: function (req, res) {
-      models.Notification.find({
+      models.ImportantNotification.find({
         isPublished: true
       }, '_id header sumary', function (err, importantNotification) {
         if (err)
@@ -93,7 +93,7 @@ module.exports = {
      */
     /* Get one Notification by id */
     getOneById: function (req, res) {
-      models.Notification.findOne({
+      models.ImportantNotification.findOne({
       _id: req.query.notificationId,
       isPublished: true
     },'_id header body', function (err, Notification) {

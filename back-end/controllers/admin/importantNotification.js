@@ -26,7 +26,7 @@ module.exports = {
      */
     /* Get all important-notification */
     getAll: function (req, res) {
-        models.Post.find({}, function (err, importantNotification) {
+        models.ImportantNotification.find({}, function (err, importantNotification) {
             if (err)
                 return handleInternalDBError(err, res);
             return res.json({
@@ -55,7 +55,7 @@ module.exports = {
      */
     /* Get all published important-notification */
     getAllPublished: function (req, res) {
-        models.Post.find({
+        models.ImportantNotification.find({
             isPublished: true
         }, function (err, importantNotification) {
             if (err)
@@ -86,7 +86,7 @@ module.exports = {
      */
     /* Get all unpublished important-notification */
     getAllUnpublished: function (req, res) {
-        models.Post.find({
+        models.ImportantNotification.find({
             isPublished: false
         }, function (err, importantNotification) {
             if (err)
@@ -127,7 +127,7 @@ module.exports = {
      */
     /* Create a post */
     create: function (req, res) {
-        models.Post.create({
+        models.ImportantNotification.create({
             creator: req.user._id,
             header: req.body.header,
             sumary: req.body.body.substring(0, 200) + '...',
@@ -171,7 +171,7 @@ module.exports = {
      */
     /* Create and publish a post */
     createAndPublish: function (req, res) {
-        models.Post.create({
+        models.ImportantNotification.create({
             creator: req.user._id,
             header: req.body.header,
             sumary: req.body.body.substring(0, 200) + '...',
@@ -216,7 +216,7 @@ module.exports = {
      */
     /* Update a post header */
     updatePostHeader: function (req, res) {
-        models.Post.findById(req.body.postId, function (err, post) {
+        models.ImportantNotification.findById(req.body.postId, function (err, post) {
             if (err)
                 return handleInternalDBError(err, res);
             if (!post)
@@ -263,7 +263,7 @@ module.exports = {
      */
     /* Update a post body */
     updatePostBody: function (req, res) {
-        models.Post.findById(req.body.postId, function (err, post) {
+        models.ImportantNotification.findById(req.body.postId, function (err, post) {
             if (err)
                 return handleInternalDBError(err, res);
             if (!post)
@@ -306,7 +306,7 @@ module.exports = {
      */
     /* Publish a post */
     publishOne: function (req, res) {
-        models.Post.findById(req.body.postId, function (err, post) {
+        models.ImportantNotification.findById(req.body.postId, function (err, post) {
             if (err)
                 return handleInternalDBError(err, res);
             if (!post)
@@ -350,7 +350,7 @@ module.exports = {
      */
     /* Unpublish a post */
     unpublishOne: function (req, res) {
-        models.Post.findById(req.body.postId, function (err, post) {
+        models.ImportantNotification.findById(req.body.postId, function (err, post) {
             if (err)
                 return handleInternalDBError(err, res);
             if (!post)
@@ -389,7 +389,7 @@ module.exports = {
      */
     /* Publish all important-notification */
     publishAll: function (req, res) {
-        models.Post.update({
+        models.ImportantNotification.update({
             $or: [
                 { isPublished: false },
                 { isPublished: null }
@@ -429,7 +429,7 @@ module.exports = {
      */
     /* Unpublish all important-notification */
     unpublishAll: function (req, res) {
-        models.Post.update({
+        models.ImportantNotification.update({
             isPublished: true
         }, {
             isPublished: false
@@ -471,7 +471,7 @@ module.exports = {
      */
     /* Delete a post */
     delete: function (req, res) {
-        models.Post.findByIdAndRemove(req.body.postId, function (err, deletedPost) {
+        models.ImportantNotification.findByIdAndRemove(req.body.postId, function (err, deletedPost) {
             if (err)
                 return handleInternalDBError(err, res);
             if (!deletedPost)
