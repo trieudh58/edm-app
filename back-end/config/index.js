@@ -1,6 +1,6 @@
 module.exports = {
     app: {
-        url: 'http://trieudh.me',
+        url: 'http://localhost',
         port: 2052
     },
     frontEnd: {
@@ -8,7 +8,7 @@ module.exports = {
         port: '80'
     },
     mongodb: {
-        host: 'mongodb://thuongdv95:mothaiba@ds137801.mlab.com:37801/gggg'
+        host: 'mongodb://localhost:27017/edm-api'
     },
     jwt: {
         secret: '!@#@HRHQ12d21sa#$%@#%#@dsa2422234242dsf232@#',

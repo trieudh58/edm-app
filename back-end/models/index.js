@@ -4,7 +4,7 @@ var fs = require('fs');
 
 /* Connect to mongodb */
 var mongooseConnect = function () {
-    mongoose.createConnection(config.mongodb.host, function () {
+    mongoose.connect(config.mongodb.host, function () {
         console.log('Connected to mongodb.');
     });
 };
