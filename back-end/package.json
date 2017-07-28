@@ -11,7 +11,7 @@
   "license": "ISC",
   "homepage": "https://github.com/trieudh58/edm-app#readme",
   "dependencies": {
-    "bcrypt": "^0.8.7",
+    "bcrypt": "^1.0.2",
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
     "express": "^4.14.0",
