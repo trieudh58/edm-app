@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  back-end:
+    container_name: edm-backend
+    image: back-end
+    build: .
+    ports:
+      - 2052:2052
