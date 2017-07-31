@@ -8,5 +8,5 @@ router.post('/create-student-survey-question',authentication,adminPermission,stu
 router.put('/update-student-survey-question',authentication,adminPermission,studentSurveyController.updateStudentSurveyQuestion);
 router.get('/get-question-type',authentication,adminPermission,studentSurveyController.getStudentSurveyQuestionType);
 router.delete('/delete-question',authentication,adminPermission,studentSurveyController.deleteStudentSurveyQuestion);
-
+router.get('/get-questions',authentication,adminPermission,studentSurveyController.getStudentSurveyQuestions);
 module.exports = router;

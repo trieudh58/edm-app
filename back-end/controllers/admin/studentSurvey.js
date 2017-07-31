@@ -164,6 +164,40 @@ module.exports = {
     },
         /**
      * @swagger
+     * path: /api/v1/admin/student-survey/get-questions
+     * operations:
+     *   -  httpMethod: GET
+     *      summary: Get questions
+     *      notes:
+     *      nickname: Get supported question
+     *      consumes:
+     *        - text/html
+     *      parameters:
+     *        - name: Authorization
+     *          description: Bearer [accessToken]
+     *          paramType: header
+     *          required: true
+     *          dataType: string
+     */
+    /* Get question types */
+    getStudentSurveyQuestions: function(req,res){
+        question.find({}, function (err, questions) {
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err
+                });
+            }
+            else {
+                return res.json({
+                    success: true,
+                    question: questions
+                });
+            }
+        });
+    },
+        /**
+     * @swagger
      * path: /api/v1/admin/student-survey/delete-question
      * operations:
      *   -  httpMethod: DELETE
