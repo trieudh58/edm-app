@@ -599,7 +599,7 @@ module.exports = {
                     message:'fail to activate question set.'
                 })
             else{
-                AssessmentQuestionSet.update({active:true,purpose:questionSet.purpose},{active:false},function(err){
+                AssessmentQuestionSet.update({active:true, purpose: questionSet.purpose},{$set:{active:false}}, {"multi": true},function(err){
                     if(err)
                         return res.status(500).json({
                             success: false,

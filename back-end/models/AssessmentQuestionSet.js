@@ -10,7 +10,11 @@ var AssessmentQuestionSetSchema= mongoose.Schema({
 			enum:['systemAssessment','courseClassAssessment'],
 			require:true
 		},
-		active:Boolean
+		active:
+		{
+			type:Boolean,
+			default: false
+		}
 	},
 	{
 		timeStamp:true,
