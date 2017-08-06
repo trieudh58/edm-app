@@ -592,20 +592,20 @@ module.exports = {
      */
     /* system assessment question statistic */
     activeQuestionSet: function(req,res){
-        AssessmentQuestionSet.find({_id:req.body.questionSetId},function(err,questionSet){
+        AssessmentQuestionSet.findOne({_id:req.body.questionSetId},function(err,questionSet){
             if(err)
                 return res.status(500).json({
                     success:false,
                     message:'fail to activate question set.'
                 })
             else{
-                AssessmentQuestionSet.update({active:true, purpose: questionSet.purpose},{$set:{active:false}}, {"multi": true},function(err){
+                AssessmentQuestionSet.update({active:true, purpose: questionSet.purpose},{$set:{active:false}}, {"multi": true},function(err,result){
                     if(err)
                         return res.status(500).json({
                             success: false,
                             message: err
                         })
-                    else
+                    else{
                         AssessmentQuestionSet.update({_id:req.body.questionSetId},{active:true},function(err){
                             if(err)
                                 return res.status(500).json({
@@ -618,6 +618,7 @@ module.exports = {
                                     message:'success to activate.'
                                 })
                     })
+                    }
                 });
             }    
         })
