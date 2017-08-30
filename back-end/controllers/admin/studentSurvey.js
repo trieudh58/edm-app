@@ -214,13 +214,13 @@ module.exports = {
      *          dataType: string
      *        - name: questionId
      *          description: question id
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Delete questions */
     deleteStudentSurveyQuestion: function(req,res){
-    	question.findOne({_id:req.body.questionId},function (err,object) {
+    	question.findOne({_id:req.query.questionId},function (err,object) {
     		if(err){
     			return res.status(500).json({
     				success:false,

@@ -188,14 +188,14 @@ module.exports = {
      *          dataType: string
      *        - name: subjectCode
      *          description: Subject code
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Return deletion result */
     deleteSubject: function (req, res) {
         Subject.findOneAndRemove({
-            code: req.body.subjectCode
+            code: req.query.subjectCode
         }, function (err, deleted) {
             if (err) {
                 return res.status(500).json({

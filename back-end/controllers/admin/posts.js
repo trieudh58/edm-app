@@ -476,13 +476,13 @@ module.exports = {
      *          dataType: string
      *        - name: postId
      *          description: Post id
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Delete a post */
     delete: function (req, res) {
-        models.Post.findByIdAndRemove(req.body.postId, function (err, deletedPost) {
+        models.Post.findByIdAndRemove(req.query.postId, function (err, deletedPost) {
             if (err)
                 return handleInternalDBError(err, res);
             if (!deletedPost)

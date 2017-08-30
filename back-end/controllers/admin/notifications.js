@@ -492,7 +492,7 @@ module.exports = {
      *          dataType: string
      *        - name: notificationId
      *          description: Notification id
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
@@ -587,7 +587,7 @@ module.exports = {
      *          dataType: string
      *        - name: notificationIds
      *          description: Notification ids (separated by comma)
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */

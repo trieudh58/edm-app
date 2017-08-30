@@ -54,14 +54,14 @@ module.exports = {
      *          dataType: string
      *        - name: feedbackId
      *          description: Feedback id to be deleted
-     *          paramType: form
+     *          paramType: query
      *          required: true
      *          dataType: string
      */
     /* Delete one feedback by id */
     deleteOneById: function (req, res) {
         models.Feedback.remove({
-            _id: req.body.feedbackId
+            _id: req.query.feedbackId
         }, function (err, deletedRecord) {
             if (err)
                 return handleInternalDBError(err, res);
