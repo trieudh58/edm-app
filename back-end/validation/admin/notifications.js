@@ -75,7 +75,7 @@ validation.getOneById = function (req, res, next) {
 
 validation.deleteOneById = function (req, res, next) {
     Joi.validate({
-        notificationId: req.body.notificationId
+        notificationId: req.query.notificationId
     }, {
         notificationId: Joi.string().required()
     }, function (err) {
@@ -91,7 +91,7 @@ validation.deleteOneById = function (req, res, next) {
 
 validation.deleteByIds = function (req, res, next) {
     Joi.validate({
-        notificationIds: req.body.notificationIds
+        notificationIds: req.query.notificationIds
     }, {
         notificationIds: Joi.string().required()
     }, function (err) {

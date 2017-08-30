@@ -107,7 +107,7 @@ validation.unpublishOne = function (req, res, next) {
 
 validation.delete = function (req, res, next) {
     Joi.validate({
-        postId: req.body.postId
+        postId: req.query.postId
     }, {
         postId: Joi.string().required()
     }, function (err) {

@@ -54,7 +54,7 @@ validation.deactivateUser = function (req, res, next) {
 
 validation.delete = function (req, res, next) {
     Joi.validate({
-        email: req.body.email
+        email: req.query.email
     }, {
         email: Joi.string().email().required()
     }, function (err) {

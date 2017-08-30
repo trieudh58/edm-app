@@ -19,7 +19,7 @@ validation.create = function (req, res, next) {
 
 validation.deleteById = function (req, res, next) {
     Joi.validate({
-        groupId: req.body.groupId
+        groupId: req.query.groupId
     }, {
         groupId: Joi.string().required()
     }, function (err) {
@@ -35,7 +35,7 @@ validation.deleteById = function (req, res, next) {
 
 validation.deleteByName = function (req, res, next) {
     Joi.validate({
-        groupName: req.body.groupName
+        groupName: req.query.groupName
     }, {
         groupName: Joi.string().required()
     }, function (err) {
