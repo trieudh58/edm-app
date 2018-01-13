@@ -1,0 +1,220 @@
+<div class="row">
+    <div class="col-sm-9">
+        <div class="admin-dashboard-page">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Tổng quan</h5>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <canvas id="line" class="chart chart-line" chart-data="dataLine" chart-labels="labelsLine"></canvas>
+                            <h5 class="text-center">Thống kê số sinh viên đã tham gia vào hệ thống (theo kỳ)</h5>
+                            <hr>
+                        </div>
+                        <div class="col-sm-4">
+                            <canvas id="pie" class="chart chart-pie" chart-data="dataPie1" chart-labels="labelsPie1"></canvas>
+                            <h5 class="text-center">Phản hồi từ sinh viên</h5>
+                        </div>
+                        <div class="col-sm-4">
+                            <canvas id="doughnut" class="chart chart-doughnut" chart-data="dataDoughnut" chart-labels="labelsDoughnut"></canvas>
+                            <h5 class="text-center">Sinh viên đã đăng ký</h5>
+                        </div>
+                        <div class="col-sm-4">
+                            <canvas id="pie" class="chart chart-pie" chart-data="dataPie2" chart-labels="labelsPie2"></canvas>
+                            <h5 class="text-center">Yêu cầu xin mở lớp</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /panel -->
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h6 class="panel-title">Thông tin</h6>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="tabbable" ng-init="dashboardIndex = 0">
+                        <uib-tabset justified="true" active="dashboardIndex">
+                            <uib-tab index="0" class="nav-justified" heading="Các yêu cầu xin mở lớp đang chờ xét duyệt">
+                                <ul class="media-list">
+                                    <li class="media">
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                Lorem Ipsum is simply dummy text
+                                            </a>
+
+                                            <span class="display-block text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s....</span>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                Lorem Ipsum is simply dummy text
+                                            </a>
+
+                                            <span class="display-block text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s....</span>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                Lorem Ipsum is simply dummy text
+                                            </a>
+
+                                            <span class="display-block text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s....</span>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                Lorem Ipsum is simply dummy text
+                                            </a>
+
+                                            <span class="display-block text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s....</span>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                Lorem Ipsum is simply dummy text
+                                            </a>
+
+                                            <span class="display-block text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s....</span>
+                                        </div>
+                                    </li>
+                                    <li class="media">
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                Lorem Ipsum is simply dummy text
+                                            </a>
+
+                                            <span class="display-block text-muted">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s....</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </uib-tab>
+                            <uib-tab index="1" class="nav-justified" heading="Các yêu cầu xin mở lớp đã bị từ chối"></uib-tab>
+                        </uib-tabset>
+                    </div>
+                </div>
+            </div>
+            <!-- /panel -->
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="sidebar-fixed affix sidebar-default hidden-xs">
+            <div class="sidebar-content">
+
+                <div class="sidebar-category">
+                    <div class="category-title">
+                        <span>Thông báo gần đây</span>
+                        <ul class="icons-list">
+                            <li><a href="#" data-action="reload"></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="category-content">
+                        <ul class="media-list">
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Hoang Duong</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">4 phút trước</div>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Si Nguyen</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">10 phút trước</div>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Hoang Duong</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">4 phút trước</div>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Si Nguyen</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">10 phút trước</div>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Hoang Duong</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">4 phút trước</div>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Si Nguyen</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">10 phút trước</div>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Hoang Duong</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">4 phút trước</div>
+                                </div>
+                            </li>
+                            <li class="media">
+                                <div class="media-left"><a href="#" class="btn border-warning text-warning btn-flat btn-icon btn-sm btn-rounded"><i class="icon-git-pull-request"></i></a></div>
+                                <div class="media-body">
+                                    <a href="#">Si Nguyen</a> đã gửi một yêu cầu xin mở lớp
+                                    <div class="media-annotation">10 phút trước</div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <!-- /sidebar-category -->
+
+            </div>
+        </div>
+        <!-- /main sidebar -->
+    </div>
+</div>

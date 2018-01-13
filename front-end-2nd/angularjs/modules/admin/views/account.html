@@ -1,0 +1,86 @@
+<div class="admin-account-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Quản lý tài khoản</h5>
+
+            <div style="display: inline-block;">
+                <input type="text" class="form-control input-sm" placeholder="Search" ng-model="query"/>
+                <button ng-click="searchAccount(query)">GO</button>
+            </div>   
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#modalCreateNew"><i class="text-success-600 icon-add"></i> Tạo tài khoản mới</a></li>
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <table class="table datatable-scroll-y" width="100%">
+                    <thead>
+                    <tr>
+                        <th>Mã sinh viên</th>
+                        <th>Họ tên</th>
+                        <th>Lớp</th>
+                        <th>Ngày sinh</th>
+                        <th>Email</th>
+                        <th>Trạng thái</th>
+                        <th>Loại</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="account in accountInfo">
+                        <td>{{account.studentCode}}</td>
+                        <td><a href="">{{account.personalInfo.fullName}}</a></td>
+                        <td>{{account.personalInfo.className}}</td>
+                        <td>{{account.personalInfo.DOB| date : "dd/MM/y"}}</td>
+                        <td>{{account.email}}</td>
+                        <td class="text-center"> <span class="label display-block" ng-class= "{'label-success': account.isActive == true,'label-warning': account.isActive == false}" >{{ account.isActive ? 'Đang hoạt động' : 'Đang khoá' }}</span></td>
+                        <td class="text-center"> <span class="label display-block" ng-class= "{'label-success': account.isAdmin == true,'label-warning': account.isAdmin == false}" >{{ account.isAdmin ? 'Admin' : 'Student' }}</span></td>
+                        <td class="text-center">
+                            <ul class="icons-list">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="icon-menu9"></i>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <!-- <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li> -->
+                                        <li ng-show="account.isActive"><a href="#" ng-click='deactivateAccount($index,account.email)'><i class="icon-close2"></i> Tạm ngưng tài khoản</a></li>
+                                        <li ng-show="!account.isActive"><a href="#" ng-click='activateAccount($index,account.email)'><i class="icon-checkmark-circle2"></i> Kích hoạt tài khoản</a></li>
+                                        <li ><a href="#"  ng-click='deleteAccount($index,account.email)'><i class="icon-trash" ></i> Xóa tài khoản</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+            </div>
+    </div>
+    <!-- /panel -->
+    <div id="modalCreateNew" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="formData" validation-rules="validationRules">
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Tạo mới tài khoản</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <text-field type="text" attribute="email" icon-before="icon-mention text-muted" placeholder="E-mail"></text-field>
+                        <text-field type="text" attribute="password" icon-before="icon-user-lock text-muted" placeholder="Nhập mật khẩu"></text-field>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success" ng-click="createAccount(formData)" ><i class="icon-add"></i> Tạo mới</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /modal -->
+</div>

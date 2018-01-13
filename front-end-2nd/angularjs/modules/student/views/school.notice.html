@@ -1,0 +1,47 @@
+<div class="student-school-page student-school-news-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thông báo quan trọng</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 col-md-3" ng-repeat="(key,item) in responseData">
+                    <div class="panel item">
+                        <div class="panel-body text-center">
+                            <div class="icon-object border-blue text-blue">{{key+1}} </div>
+                            <h5 class="text-semibold">{{item.header}}</h5>
+                            <p class="mb-15">{{item.sumary}}</p>
+                            <a data-toggle="modal" data-target="#modalViewComent" ng-click="getPost(item._id)" class="btn bg-blue-400">Xem chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modalViewComent" class="modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-bookmark4"></i> {{responsePostData.header}} </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="media clearfix">
+                            <img ng-src="{{responsePostData.coverImage}}" class="media-object pull-left img-responsive" style="max-width: 300px" >
+                            <span ng-bind-html="responsePostData.body"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /modal -->
+    </div>
+    <!-- /panel -->
+</div>

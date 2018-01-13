@@ -1,0 +1,127 @@
+<div class="navbar navbar-inverse">
+
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/student/dashboard" ng-if="isAdmin != true"><img src="assets/images/logo.png" alt=""></a>
+        <a class="navbar-brand" href="/admin/dashboard" ng-if="isAdmin == true"><img src="assets/images/logo.png" alt=""></a>
+
+        <ul class="nav navbar-nav pull-right visible-xs-block">
+            <li><a data-toggle="collapse" data-target="#navbar-mobile"><i class="icon-tree5"></i></a></li>
+        </ul>
+    </div>
+
+    <div class="navbar-collapse collapse" id="navbar-mobile">
+        <p class="navbar-text" ng-if="isAdmin == true"><i class="icon-user-check position-left"></i> <span class="label bg-success-400">Tài khoản quản trị</span></p>
+        <ul class="nav navbar-nav navbar-right">
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="icon-git-compare"></i>
+                    <span class="visible-xs-inline-block position-right">Thông báo</span>
+                    <span class="badge bg-warning-400" ng-if="unreadNotifications">{{unreadNotifications}}</span>
+                </a>
+
+                <div class="dropdown-menu dropdown-content">
+                    <div class="dropdown-content-heading">
+                        Thông báo
+                        <ul class="icons-list">
+                            <li><a href="#" ng-click="reloadNotification()"><i class="icon-sync"></i></a></li>
+                        </ul>
+                    </div>
+
+                    <ul class="media-list dropdown-content-body width-350">
+                        <li class="media" ng-repeat="item in latestNotifications">
+                            <div class="media-left">
+                                <span class="btn border-info text-info btn-flat btn-rounded btn-icon btn-sm"><i class="icon-git-pull-request"></i></span>
+                            </div>
+
+                            <div class="media-body">
+                                <div class="pull-left">
+                                    <a ng-if="isAdmin != true" href="/student/notification/{{item.notification._id}}" ng-class="{'text-bold' : item.isRead == false}">{{item.notification.title}}</a>
+                                    <a ng-if="isAdmin == true" href="/admin/notification/{{item.notification._id}}" ng-class="{'text-bold' : item.isRead == false}">{{item.notification.title}}</a>
+
+                                    <div class="media-annotation">{{item.notification.updatedAt | date : "dd/MM/y h:mm:ss a"}}</div>
+
+                                </div>
+                                <div class="pull-right hide">
+                                    <a href="#" ng-click="markAsImportant(item.notification._id)" ng-if="item.isImportant == false" title="Đánh dấu là quan trọng"><i class="icon-star-empty3"></i></a>
+                                    <a href="#" ng-click="markAsUnimportant(item.notification._id)" ng-if="item.isImportant == true" title="Bỏ đánh dấu là quan trọng"><i class="icon-star-full2"></i></a>
+                                    <a href="#" ng-click="markAsRead(item.notification._id)" ng-if="item.isRead == false" title="Đánh dấu là đã đọc"><i class="icon-eye-blocked"></i></a>
+                                    <a href="#" ng-click="markAsUnread(item.notification._id)" ng-if="item.isRead == true" title="Đánh dấu là chưa đọc"><i class="icon-eye2"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="dropdown-content-footer">
+                        <a ng-if="isAdmin != true" href="/student/notification" data-popup="tooltip" title="Xem tất cả thông báo"><i class="icon-menu display-block"></i></a>
+                        <a ng-if="isAdmin == true" href="/admin/notification" data-popup="tooltip" title="Xem tất cả thông báo"><i class="icon-menu display-block"></i></a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="dropdown dropdown-user">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <img ng-src="{{personalInfo.profilePicture}}" alt="">
+                    <span>{{personalInfo.fullName}}</span>
+                    <i class="caret"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-right" ng-if="isAdmin != true">
+                    <li><a href="/student/infomation/profile"><i class="icon-user"></i> Hồ sơ cá nhân</a></li>
+                    <li><a href="/student/infomation/profile#password"><i class="icon-lock"></i> Đổi mật khẩu</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/logout"><i class="icon-switch2"></i> Đăng xuất</a></li>
+                </ul>
+                <ul class="dropdown-menu dropdown-menu-right" ng-if="isAdmin == true">
+                    <li><a href="/admin/profile"><i class="icon-user"></i> Hồ sơ cá nhân</a></li>
+                    <li><a href="/admin/profile#password"><i class="icon-lock"></i> Đổi mật khẩu</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/logout"><i class="icon-switch2"></i> Đăng xuất</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- /main navbar -->
+
+<div class="navbar navbar-default" id="navbar-second">
+    <ul class="nav navbar-nav no-border visible-xs-block">
+        <li><a class="text-center collapsed" data-toggle="collapse" data-target="#navbar-second-toggle"><i class="icon-menu7"></i></a></li>
+    </ul>
+
+    <div class="navbar-collapse collapse" id="navbar-second-toggle">
+        <ul class="nav navbar-nav" ng-if="isAdmin != true">
+            <li class="active"><a href="/student/dashboard"><i class="icon-display4 position-left text-primary"></i> Tổng quan</a></li>
+            <li><a href="/student/infomation"><i class="icon-magazine position-left text-success"></i> Thông tin sinh viên</a></li>
+            <li><a href="/student/recommendation"><i class="icon-magic-wand position-left text-orange"></i> Tư vấn học tập</a></li>
+            <li><a href="/student/suggestion"> <i class="icon-point-right position-left text-purple"></i> Gợi ý NCKH và KLTN</a></li>
+            <li><a href="/student/utility"><i class="icon-graduation2 position-left text-danger"></i> Dành cho sinh viên</a></li>
+            <li><a href="/student/school"><i class="icon-info22 position-left text-teal"></i> Thông tin từ nhà trường</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav" ng-if="isAdmin == true">
+            <!-- <li class="active"><a href="/admin/dashboard"><i class="icon-display4 position-left"></i> Tổng quan</a></li> -->
+            <li><a href="/admin/account"><i class="icon-users2 position-left"></i> Tài khoản</a></li>
+            <li><a href="/admin/notification"><i class="icon-git-compare position-left"></i> Thông báo</a></li>
+            <li><a href="/admin/post"><i class="icon-bookmark4 position-left"></i> Bài viết</a></li>
+            <li><a href="/admin/important-notification"><i class="icon-bookmark4 position-left2"></i> Thông báo chung</a></li>
+            <li><a href="/admin/assessment-question"><i class="icon-stats-bars2 icon-question3"></i> Câu hỏi đánh giá</a></li>
+            <li><a href="/admin/question-servey"><i class="icon-stats-bars2 icon-question2"></i> Câu hỏi survey</a></li>
+            <li><a href="/admin/course-request"><i class="icon-stats-bars2 icon-question4"></i> Yêu cầu mở lớp</a></li>
+            <li><a href="/admin/feedback"><i class="icon-stats-bars2 icon-bookmark3"></i> Feedback </a></li>
+            <!-- <li><a href="/admin/setting"><i class="icon-cogs position-left"></i> Thiết lập</a></li> -->
+            <!-- <li><a href="/admin/statistic"><i class="icon-chart position-left"></i> Thống kê</a></li> -->
+
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a>
+                    Phiên bản
+                    <span class="label label-inline position-right bg-success-400">1.0</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- /second navbar -->

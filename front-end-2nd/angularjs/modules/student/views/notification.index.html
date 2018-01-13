@@ -1,0 +1,45 @@
+<div class="student-notification-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Danh sách thông báo từ hệ thống</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li>
+                        <a href="#" ng-click="deleteItems(notification.ids)" ><i class="icon-trash text-danger-600"></i> Xóa các mục đã chọn</a>
+                    </li>
+
+                    <li>
+                        <a href="#" ng-click="markAllAsRead()" ><i class="icon-eye-blocked text-orange"></i> Đánh dấu tất cả là đã đọc</a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="getImportantTitles()" ><i class="icon-star-full2 text-green"></i> Những thông báo quan trọng</a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="getUnreadTitles()" ><i class="icon-eye8 text-blue"></i> Những thông báo chưa đọc</a>
+                    </li>
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bolt">
+            <table show-filter="false" ng-table="tableParamsNotification" class="table table-framed" width="100%">
+                <tr ng-repeat="item in $data" ng-class="{'read': item.isRead == true,'unread': item.isRead == false}">
+                    <td class="text-center" data-title="''"><input type="checkbox" checklist-model="notification.ids" checklist-value="item._id"></td>
+                    <td class="text-left" data-title="'Tiêu đề thông báo'" filter="{ title: 'text'}" sortable="'title'"><a href="/student/notification/{{item._id}}" ng-class="{'text-bold': item.isRead == false}">{{item.title}}</a></td>
+                    <td class="text-center" data-title="'Người gửi'" filter="{ creator: 'text'}" sortable="'creator'"> <a href="mailto:{{item.creator}}">{{item.creator}}</a></td>
+                    <td class="text-center" data-title="'Thời gian'" filter="{ updatedAt: 'text'}" sortable="'updatedAt'"> {{item.updatedAt | date : "dd/MM/y h:mm:ss a"}}</td>
+                    <td class="text-center" data-title="'Thao tác'">
+                        <div class="tools">
+                            <a href="#" ng-click="markAsImportant(item._id)" ng-if="item.isImportant == false" title="Đánh dấu là quan trọng"><i class="icon-star-empty3"></i></a>
+                            <a href="#" ng-click="markAsUnimportant(item._id)" ng-if="item.isImportant == true" title="Bỏ đánh dấu là quan trọng"><i class="icon-star-full2"></i></a>
+                            <a href="#" ng-click="markAsRead(item._id)" ng-if="item.isRead == false" title="Đánh dấu là đã đọc"><i class="icon-eye-blocked"></i></a>
+                            <a href="#" ng-click="markAsUnread(item._id)" ng-if="item.isRead == true" title="Đánh dấu là chưa đọc"><i class="icon-eye2"></i></a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

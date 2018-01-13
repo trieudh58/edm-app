@@ -1,0 +1,52 @@
+/*
+ <!--************************************************************-->
+ <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
+ <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
+ <!--************************************************************-->
+ */
+
+// Rest service (giaphv@tiaset.net)
+angularBolt.service('rest', function ($http, $location, $routeParams) {
+
+    return {
+
+        baseUrl: 'http://13.59.253.132:2052/api/v1/',
+        path: undefined,
+
+        models: function () {
+            return $http.get(this.baseUrl + this.path + location.search);
+        },
+
+        model: function () {
+            return $http.get(this.baseUrl + this.path + "/" + $routeParams.id);
+        },
+
+        get: function () {
+            return $http.get(this.baseUrl + this.path);
+        },
+
+        getWithParams: function (model) {
+            return $http.get(this.baseUrl + this.path, {params: model});
+        },
+
+        postFile: function (model) {
+            return $http.post(this.baseUrl + this.path, model, {headers: {'Content-Type': undefined}});
+        },
+
+        postModel: function (model) {
+            return $http.post(this.baseUrl + this.path, model);
+        },
+
+        putModel: function (model) {
+            return $http.put(this.baseUrl + this.path, model);
+        },
+
+        deleteModel: function (model) {
+            return $http.delete(this.baseUrl + this.path, {params: model});
+        },
+        deleteForm: function (model) {
+            return $http.delete(this.baseUrl + this.path, model);
+        }
+    };
+
+});

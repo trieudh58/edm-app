@@ -1,0 +1,73 @@
+<div class="student-utility-page height-auto single-panel-page">
+        <div class="col-sm-8">
+            <div class="panel panel-flat mh">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Đánh giá hệ thống</h5>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <h5 class="text-green">{{questions.name}}</h5>
+                    <hr>
+                    <div class="form-group" ng-repeat="(index,question) in questions.questionList">
+                        <label>{{index +1}}. {{question.content}}</label>
+                        <div star-rating ng-model="rating[index]" max="5" on-rating-select="rateFunction()"></div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn bg-primary" ng-click="submitAssessmentAnswer()"><i class="icon-paperplane"></i> Gửi đi</button>
+                        <a href="/student/utility" class="btn bg-warning"><i class="icon-arrow-left8"></i> Trở lại </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /panel -->
+
+        </div>
+        <div class="col-sm-4">
+            <div class="sidebar-fixed affix sidebar-default hidden-xs ">
+                <div class="sidebar-content mh">
+
+                    <div class="sidebar-category">
+                        <div class="category-title">
+                            <span>Góp ý hệ thống</span>
+                            <ul class="icons-list">
+                                <li><a data-action="collapse"></a></li>
+                            </ul>
+                        </div>
+
+                        <div class="category-content">
+
+                            <form controller="formController" form-for="formData" validation-rules="validationRules" submit-with="postData(formData)" validate-on="validateOn">
+
+                                <text-field type="text"
+                                            attribute="header"
+                                            icon-before="icon-file-text text-muted"
+                                            placeholder="Nhập tiêu đề"
+                                            label="Tiêu đề">
+                                </text-field>
+
+                                <text-field multiline type="text"
+                                            attribute="body"
+                                            icon-before="icon-bubble-lines4 text-muted"
+                                            placeholder="Nội dung góp ý"
+                                            label="Nội dung">
+                                </text-field>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn bg-primary"><i class="icon-paperplane"></i> Gửi đi</button>
+                                    <a href="/student/utility" class="btn bg-warning"><i class="icon-arrow-left8"></i> Trở lại </a>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /panel -->
+
+                    </div>
+                </div>
+                <!-- /sidebar-category -->
+
+            </div>
+        </div>
+</div>

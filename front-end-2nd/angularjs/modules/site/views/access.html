@@ -1,0 +1,79 @@
+<div class="site-access-page">
+    <div class="tabbable panel login-form width-400">
+        <uib-tabset justified="true" active="accessIndex">
+            <uib-tab index="0" class="nav-justified" heading="Đăng nhập">
+                <form form-for="formData" validation-rules="validationRules">
+                    <div class="panel-body">
+                        <div class="text-center">
+                            <div class="icon-object border-slate-300 text-slate-300"><i class="icon-reading"></i></div>
+                            <h5 class="content-group">Đăng nhập vào hệ thống
+                                <small class="display-block">Nếu chưa có tài khoản, vui lòng đăng ký</small>
+                            </h5>
+                            <div class="alert bg-danger alert-styled-left text-left" ng-show="loginError">
+                                Thông tin đăng nhập không chính xác, hoặc tài khoản chưa được kích hoạt.
+                            </div>
+                            <div class="alert bg-danger alert-styled-left text-left" ng-show="verifyError">
+                                Xác minh tài khoản thất bại!
+                            </div>
+                            <div class="alert bg-success alert-styled-left text-left" ng-show="verifySuccess">
+                                Xác minh thành công!
+                            </div>
+                        </div>
+                        <text-field type="text" attribute="email" icon-before="icon-mention text-muted" placeholder="E-mail"></text-field>
+                        <text-field type="password" attribute="password" icon-before="icon-user-lock text-muted" placeholder="Nhập mật khẩu"></text-field>
+                        <div class="form-group login-options">
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <a href="/index.html" target="_blank">Trợ giúp</a>
+                                </div>
+
+                                <div class="col-xs-6 text-right">
+                                    <a href="forgot-password">Quên mật khẩu?</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button ng-click="postLogin(formData)" type="submit" class="btn bg-blue btn-block">Đăng nhập <i class="icon-arrow-right14 position-right"></i></button>
+                        </div>
+                    </div>
+
+                </form>
+            </uib-tab>
+            <uib-tab index="1" class="nav-justified" heading="Đăng ký">
+                <form form-for="formData" validation-rules="validationRules">
+                    <div class="panel-body">
+
+                        <div class="text-center">
+                            <div class="icon-object border-success text-success"><i class="icon-plus3"></i></div>
+                            <h5 class="content-group">Tạo một tài khoản mới
+                                <small class="display-block">Tất cả các trường là bắt buộc</small>
+                            </h5>
+                            <div class="alert bg-success alert-styled-left text-left" ng-show="registerSuccess">
+                                Bạn đã đăng ký tài khoản thành công, vui lòng kiểm tra e-mail và làm theo hướng dẫn để kích hoạt tài khoản.
+                            </div>
+                            <div class="alert bg-danger alert-styled-left text-left" ng-show="registerError">
+                                Đăng ký tài khoản không thành công, vui lòng sử dụng tài khoản @VNU.EDU.VN để đăng ký.
+                            </div>
+                        </div>
+                        <text-field type="text" attribute="email" icon-before="icon-mention text-muted" placeholder="E-mail"></text-field>
+                        <text-field type="password" attribute="password" icon-before="icon-user-lock text-muted" placeholder="Nhập mật khẩu"></text-field>
+                        <text-field type="password" attribute="repassword" icon-before="icon-user-lock text-muted" placeholder="Xác nhận mật khẩu"></text-field>
+                        <div class="form-group login-options">
+                            <div class="row">
+                                <div class="col-xs-6 text-left">
+                                    <a href="/index.html" target="_blank">Trợ giúp</a>
+
+                                </div>
+
+                                <div class="col-xs-6 text-right">
+                                    <a ng-click="activeLoginTab()">Đăng nhập</a>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" ng-click="postRegister(formData)" class="btn bg-indigo-400 btn-block">Đăng ký <i class="icon-circle-right2 position-right"></i></button>
+                    </div>
+                </form>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+</div>

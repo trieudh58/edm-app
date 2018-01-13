@@ -1,0 +1,333 @@
+<div class="admin-statistic-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thống kê</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <canvas id="bar" class="chart chart-bar" chart-data="dataBar" chart-labels="labelsBar"></canvas>
+                    <h5 class="text-center">Điểm đánh giá hệ thống từ sinh viên (thang điểm từ 1 - 5)</h5>
+                </div>
+                <div class="col-sm-6">
+                    <canvas id="line" class="chart chart-line" chart-data="dataLine" chart-labels="labelsLine"></canvas>
+                    <h5 class="text-center">Số sinh viên đã tham gia vào hệ thống (theo kỳ học)</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /panel -->
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thống kê tài khoản</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-xlg text-nowrap">
+                    <tbody>
+                    <tr>
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-info-400 text-info-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-users2"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    3122 <small class="display-block no-margin">tất cả</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-success-400 text-success-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-checkmark4"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    2242 <small class="display-block no-margin">đã kích hoạt</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-cross2"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    343 <small class="display-block no-margin">chưa kích hoạt</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="text-right col-sm-3">
+                            <a href="#" class="btn btn-default"><i class="icon-users2 position-left"></i> Đi đến trang quản lý</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /panel -->
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thống kê thông báo</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-xlg text-nowrap">
+                    <tbody>
+                    <tr>
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-info-400 text-info-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-git-compare"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    4122 <small class="display-block no-margin">tất cả</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-success-400 text-success-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-checkmark4"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    3242 <small class="display-block no-margin">đã gửi đi</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-cross2"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    1343 <small class="display-block no-margin">chưa gửi đi</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="text-right col-sm-3">
+                            <a href="#" class="btn btn-default"><i class="icon-git-compare position-left"></i> Đi đến trang quản lý</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /panel -->
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thống kê phản hồi</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-xlg text-nowrap">
+                    <tbody>
+                    <tr>
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-info-400 text-info-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-paperplane"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    2133 <small class="display-block no-margin">tất cả</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-success-400 text-success-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-checkmark4"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    1233 <small class="display-block no-margin">đã xử lý</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-cross2"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    812 <small class="display-block no-margin">chưa xử lý</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="text-right col-sm-3">
+                            <a href="#" class="btn btn-default"><i class="icon-paperplane position-left"></i> Đi đến trang quản lý</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /panel -->
+
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thống kê yêu cầu xin mở lớp</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-xlg text-nowrap">
+                    <tbody>
+                    <tr>
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-info-400 text-info-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-rotate-cw"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    2133 <small class="display-block no-margin">tất cả</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-success-400 text-success-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-checkmark4"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    1233 <small class="display-block no-margin">đã phê duyệt</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-cross2"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    812 <small class="display-block no-margin">chưa phê duyệt</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="text-right col-sm-3">
+                            <a href="#" class="btn btn-default"><i class="icon-rotate-cw position-left"></i> Đi đến trang quản lý</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /panel -->
+
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thống kê góp ý hệ thống</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-xlg text-nowrap">
+                    <tbody>
+                    <tr>
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-info-400 text-info-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-envelope"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    2133 <small class="display-block no-margin">tất cả</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-success-400 text-success-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-checkmark4"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    1233 <small class="display-block no-margin">đã xử lý</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="col-sm-3">
+                            <div class="media-left media-middle">
+                                <a href="#" class="btn border-warning-400 text-warning-400 btn-flat btn-rounded btn-xs btn-icon"><i class="icon-cross2"></i></a>
+                            </div>
+
+                            <div class="media-left">
+                                <h5 class="text-semibold no-margin">
+                                    812 <small class="display-block no-margin">chưa xử lý</small>
+                                </h5>
+                            </div>
+                        </td>
+
+                        <td class="text-right col-sm-3">
+                            <a href="#" class="btn btn-default"><i class="icon-envelope position-left"></i> Đi đến trang quản lý</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

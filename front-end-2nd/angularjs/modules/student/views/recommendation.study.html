@@ -1,0 +1,859 @@
+<div class="student-recommendation-page student-recommendation-study-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Tư vấn lộ trình học</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="hidden-xs hidden-sm">
+                <div class="container">
+
+                    <div class="alert alert-warning alert-styled-left alert-arrow-left alert-component">
+                        <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+                        <h6 class="alert-heading text-semibold">Gợi ý lộ trình</h6>
+                        Lộ trình của sinh viên sẽ được gợi ý là một danh sách các môn học theo từng kỳ (có khoảng từ <code>8-10</code> kỳ và mỗi kỳ có khoảng <code>4-10</code> môn học).
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="timeline">
+                                <li ng-class="{'passed': semesters[1]}" title="{{semesters[1] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 1">
+                                        <img class="img-circle img-responsive" src="/assets/images/one-1.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-info-700">Kỳ 1</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-info-700">
+                                                <thead class="bg-info-600">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(1)" title="{{switch == 1 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[1]">Điểm</strong>
+                                                        <strong ng-show="!semesters[1]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(1,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 1 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-class="{'passed': semesters[2]}" class="timeline-inverted" title="{{semesters[2] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 2">
+                                        <img class="img-circle img-responsive" src="/assets/images/one-2.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-brown-700">Kỳ 2</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-brown-700">
+                                                <thead class="bg-brown-600">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(2)" title="{{switch == 2 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[2]">Điểm</strong>
+                                                        <strong ng-show="!semesters[2]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(2,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 2 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-class="{'passed': semesters[3]}" title="{{semesters[3] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 3">
+                                        <img class="img-circle img-responsive" src="/assets/images/two-1.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-slate-700">Kỳ 3</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-slate-700">
+                                                <thead class="bg-slate-600">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(3)" title="{{switch == 3 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[3]">Điểm</strong>
+                                                        <strong ng-show="!semesters[3]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(3,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 3 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-class="{'passed': semesters[4]}" class="timeline-inverted" title="{{semesters[4] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 4">
+                                        <img class="img-circle img-responsive" src="/assets/images/two-2.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-teal-700">Kỳ 4</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-teal-700">
+                                                <thead class="bg-teal-600">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(4)" title="{{switch == 4 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[4]">Điểm</strong>
+                                                        <strong ng-show="!semesters[4]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(4,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 4 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-class="{'passed': semesters[5]}" title="{{semesters[5] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 5">
+                                        <img class="img-circle img-responsive" src="/assets/images/three-1.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-pink-700">Kỳ 5</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-pink-700">
+                                                <thead class="bg-pink-600">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(5)" title="{{switch == 5 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[5]">Điểm</strong>
+                                                        <strong ng-show="!semesters[5]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(5,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 5 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-class="{'passed': semesters[6]}" class="timeline-inverted" title="{{semesters[6] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 6">
+                                        <img class="img-circle img-responsive" src="/assets/images/three-2.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-orange-700">Kỳ 6</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-orange-700">
+                                                <thead class="bg-orange-600">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(6)" title="{{switch == 6 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[6]">Điểm</strong>
+                                                        <strong ng-show="!semesters[6]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(6,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 6 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-show="isset[7]"  ng-class="{'passed': semesters[7]}" title="{{semesters[7] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 7">
+                                        <img class="img-circle img-responsive" src="/assets/images/four-1.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-blue-700">Kỳ 7</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-blue-700">
+                                                <thead class="bg-blue-700">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(7)" title="{{switch == 7 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[7]">Điểm</strong>
+                                                        <strong ng-show="!semesters[7]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(7,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 7 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-show="isset[8]" ng-class="{'passed': semesters[8]}" class="timeline-inverted" title="{{semesters[8] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 8">
+                                        <img class="img-circle img-responsive" src="/assets/images/four-2.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-green-700">Kỳ 8</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-green-700">
+                                                <thead class="bg-green-700">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(8)" title="{{switch == 8 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[8]">Điểm</strong>
+                                                        <strong ng-show="!semesters[8]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(8,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 8 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-show="isset[9]" ng-class="{'passed': semesters[9]}" title="{{semesters[9] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 9">
+                                        <img class="img-circle img-responsive" src="/assets/images/four-1.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-blue-700">Kỳ 9</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-blue-700">
+                                                <thead class="bg-blue-700">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(9)" title="{{switch == 9 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[9]">Điểm</strong>
+                                                        <strong ng-show="!semesters[9]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(9,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 9 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+                                <li ng-show="isset[10]" ng-class="{'passed': semesters[10]}" class="timeline-inverted" title="{{semesters[10] ? 'Đã học': 'Chưa học'}}">
+                                    <div class="timeline-image" title="Kỳ 10">
+                                        <img class="img-circle img-responsive" src="/assets/images/four-2.png" alt="">
+                                    </div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            <h4 class="subheading text-bold text-green-700">Kỳ 10</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <table class="table table-hover text-left header-fixed text-green-700">
+                                                <thead class="bg-green-700">
+                                                <tr>
+                                                    <th><strong>#</strong></th>
+                                                    <th><strong>Mã môn</strong></th>
+                                                    <th><strong>Tên môn học</strong></th>
+                                                    <th><strong>Tín chỉ</strong></th>
+                                                    <th ng-click="switchFunction(10)" title="{{switch == 10 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                                        <strong ng-show="semesters[10]">Điểm</strong>
+                                                        <strong ng-show="!semesters[10]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                                        <i class="icon-sort icon-xs"></i>
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="item in filterSemester(10,items)">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{item.subject}}</td>
+                                                    <td>{{item.name}}</td>
+                                                    <td class="text-center text-bold">{{item.credit}}</td>
+                                                    <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 10 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                </li>
+
+                                <li ng-show="isset[10] || isset[8] && !isset[9] " class="success" title="Hoàn thành chương trình tốt nghiệp">
+                                    <div class="timeline-image">
+                                        <img class="img-circle img-responsive" src="/assets/images/five.png" alt="">
+                                    </div>
+                                </li>
+
+                                <li ng-show="isset[9] && !isset[10]" class="success" title="Hoàn thành chương trình tốt nghiệp">
+                                    <div class="timeline-image">
+                                        <img class="img-circle img-responsive" src="/assets/images/five.png" alt="">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visible-xs visible-sm timeline timeline-left content-group">
+                <div class="timeline-container">
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-info-700">
+                                <i class="text-center text-bold">1</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-info-700 text-bold">Kỳ 1</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-info-700">
+                                    <thead class="bg-info-700">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(1)" title="{{switch == 1 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[1]">Điểm</strong>
+                                            <strong ng-show="!semesters[1]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(1,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 1 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-brown-700">
+                                <i class="text-center text-bold">2</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-brown-700 text-bold">Kỳ 2</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-brown-700">
+                                    <thead class="bg-brown-700">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(2)" title="{{switch == 2 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[2]">Điểm</strong>
+                                            <strong ng-show="!semesters[2]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(2,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 2 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-slate-600">
+                                <i class="text-center text-bold">3</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-slate-600 text-bold">Kỳ 3</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-slate-600">
+                                    <thead class="bg-slate-600">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(3)" title="{{switch == 3 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[3]">Điểm</strong>
+                                            <strong ng-show="!semesters[3]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(3,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 3 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-teal-600">
+                                <i class="text-center text-bold">4</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-teal-600 text-bold">Kỳ 4</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-teal-600">
+                                    <thead class="bg-teal-600">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(4)" title="{{switch == 4 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[4]">Điểm</strong>
+                                            <strong ng-show="!semesters[4]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(4,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 4 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-pink-600">
+                                <i class="text-center text-bold">5</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-pink-600 text-bold">Kỳ 5</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-pink-600">
+                                    <thead class="bg-pink-600">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(5)" title="{{switch == 5 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[5]">Điểm</strong>
+                                            <strong ng-show="!semesters[5]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(5,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 5 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-orange-600">
+                                <i class="text-center text-bold">6</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-orange-600 text-bold">Kỳ 6</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-orange-600">
+                                    <thead class="bg-orange-600">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(6)" title="{{switch == 6 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[6]">Điểm</strong>
+                                            <strong ng-show="!semesters[6]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(6,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 6 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-blue-700">
+                                <i class="text-center text-bold">7</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-blue-700 text-bold">Kỳ 7</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-blue-700">
+                                    <thead class="bg-blue-700">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(7)" title="{{switch == 7 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[7]">Điểm</strong>
+                                            <strong ng-show="!semesters[7]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(7,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 7 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row">
+                        <div class="timeline-icon">
+                            <div class="bg-green-700">
+                                <i class="text-center text-bold">8</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-green-700 text-bold">Kỳ 8</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-green-700">
+                                    <thead class="bg-green-700">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(8)" title="{{switch == 8 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[8]">Điểm</strong>
+                                            <strong ng-show="!semesters[8]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(8,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 8 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row" ng-show="isset[9]">
+                        <div class="timeline-icon">
+                            <div class="bg-blue-700">
+                                <i class="text-center text-bold">9</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-blue-700 text-bold">Kỳ 9</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-blue-700">
+                                    <thead class="bg-blue-700">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(9)" title="{{switch == 9 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[9]">Điểm</strong>
+                                            <strong ng-show="!semesters[9]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(9,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 9 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                    <div class="timeline-row" ng-show="isset[10]">
+                        <div class="timeline-icon">
+                            <div class="bg-green-700">
+                                <i class="text-center text-bold">10</i>
+                            </div>
+                        </div>
+                        <div class="panel panel-flat">
+                            <div class="panel-heading">
+                                <h5 class="panel-title text-green-700 text-bold">Kỳ 10</h5>
+                                <div class="heading-elements">
+                                    <ul class="icons-list">
+                                        <li><a data-action="collapse"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table table-hover text-left header-fixed text-green-700">
+                                    <thead class="bg-green-700">
+                                    <tr>
+                                        <th><strong>#</strong></th>
+                                        <th><strong>Mã môn</strong></th>
+                                        <th><strong>Tên môn học</strong></th>
+                                        <th><strong>Tín chỉ</strong></th>
+                                        <th ng-click="switchFunction(10)" title="{{switch == 10 ? 'Xem điểm số' :'Xem điểm chữ' }}" >
+                                            <strong ng-show="semesters[10]">Điểm</strong>
+                                            <strong ng-show="!semesters[10]" title="Dự đoán điểm có thể đạt được">Dự đoán</strong>
+                                            <i class="icon-sort icon-xs"></i>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in filterSemester(10,items)">
+                                        <td>{{$index+1}}</td>
+                                        <td>{{item.subject}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td class="text-center text-bold">{{item.credit}}</td>
+                                        <td class="text-center text-bold {{records[item.subject]['class']}}">{{switch == 10 ? records[item.subject]['char'] : records[item.subject]['score']}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /timeline-row -->
+                </div>
+            </div>
+            <!-- /timeline -->
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

@@ -1,0 +1,164 @@
+<div class="student-utility-page single-panel-page">
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+			<h5 class="panel-title">Quản lý câu hỏi</h5>
+			<div class="heading-elements">
+				<ul class="icons-list">
+					<li>
+						<a data-toggle="modal" data-target="#modal-question-survey"><i class="text-success-600 icon-add"></i> Tạo câu hỏi mới</a>
+					</li>
+					<li><a data-action="collapse"></a></li>
+					<!--Create question-->
+					<div id="modal-question-survey" class="modal">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<form form-for="formData" validation-rules="validationRules">
+									<div class="modal-header bg-blue-700">
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+										<h5 class="modal-title"><i class="icon-add"></i> Tạo mới</h5>
+									</div>
+
+									<div class="modal-body">
+										<text-field type="text"
+										            attribute="question"
+										            icon-before="icon-file-text text-muted"
+										            placeholder="Nhập câu hỏi"
+										            label="Question">
+										</text-field>
+										<select-field type="select"
+										              attribute="questionType"
+										              placeholder="Chọn một loại câu hỏi"
+										              label="Loại câu hỏi"
+										              options="questionTypes"
+										              allow-blank>
+										</select-field>
+										<text-field multiline type="text"
+										            attribute="choices"
+										            icon-before="icon-bubble-lines4 text-muted"
+										            placeholder="Nếu có nhiều lựa chọn thì tách nhau bởi dấu | vidu: A|B|C"
+										            label="Lựa chọn">
+										</text-field>
+									</div>
+									<div class="modal-footer">
+										<button type="submit" class="btn btn-link" data-dismiss="modal">Đóng</button>
+										<button type="submit" class="btn btn-success" ng-click="postNewQuestion(formData)">
+											<i class="icon-add"></i> Tạo mới
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<!--end create-->
+				</ul>
+			</div>
+		</div>
+
+		<div class="panel-body">
+
+			<form class="panel-form">
+				<table class="table" width="100%">
+					<thead>
+					<tr>
+						<th>Câu hỏi</th>
+						<th>Loại câu hỏi</th>
+						<th>Các lựa chọn</th>
+						<th class="text-center">Thao tác</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="item in dataQuestions">
+						<td>
+							<p>
+								{{item.question}}
+							</p>
+						</td>
+						<td>
+							<p>
+								{{item.questionType}}
+
+							</p>
+						</td>
+						<td>
+							<p class="form-group" >
+								<label ng-repeat="(key,value) in item.choices" class="radio-list display-block">
+									{{value}}
+								</label>
+							</p>
+						</td>
+						<td class="text-center">
+							<ul class="icons-list">
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+										<i class="icon-menu9"></i>
+									</a>
+
+									<ul class="dropdown-menu dropdown-menu-right">
+										<li>
+											<a data-toggle="modal" data-target="#modal-question-survey-edit" ng-click="setCurrentData(item._id,item.question,item.questionType,item.choices)"><i class="icon-pencil7"></i>Chỉnh sửa</a>
+										</li>
+										<li><a ng-click="deleteQuestion(item._id)"><i class="icon-trash"></i>Xóa</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</form>
+
+		</div>
+	</div>
+
+	<!--edit question-->
+	<div id="modal-question-survey-edit" class="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form form-for="editformData" validation-rules="validationRules">
+					<div class="modal-header bg-blue-700">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h5 class="modal-title"><i class="icon-add"></i> Edit question</h5>
+					</div>
+
+					<div class="modal-body">
+						<text-field type="text"
+						            attribute="_id"
+						            icon-before="icon-file-text text-muted"
+						>
+						</text-field>
+						<text-field type="text"
+						            attribute="question"
+						            icon-before="icon-file-text text-muted"
+						            placeholder="Nhập câu hỏi"
+						            label="Câu hỏi"
+						>
+						</text-field>
+						<select-field type="select"
+						              attribute="questionType"
+						              placeholder="Chọn một loại câu hỏi"
+						              label="Loại câu hỏi"
+						              options="questionTypes"
+						              allow-blank
+
+						>
+						</select-field>
+						<text-field multiline type="text"
+						            attribute="choices"
+						            icon-before="icon-bubble-lines4 text-muted"
+						            placeholder="Nhập lựa chọn"
+						            label="Lựa chọn">
+						</text-field>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-link" data-dismiss="modal">Đóng</button>
+						<button type="submit" class="btn btn-success" ng-click="putNewQuestion(editformData)">
+							<i class="icon-add"></i> Update
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!--end edit-->
+</div>

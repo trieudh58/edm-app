@@ -1,0 +1,349 @@
+<div class="admin-account-page single-panel-page">
+    <div class="panel panel-flat">
+
+
+        <div class="panel-body" >
+            <div class="tabbable"   style=" position: relative" ng-init="accountIndex = 0">
+                <uib-tabset justified="false" active="accountIndex">
+                    <!--TAB 1-->
+                    <uib-tab index="0" heading="Câu hỏi đánh giá môn học">
+                        <button type="button" class="btn btn-primary"
+                                style=" position: absolute; top: 0; right : 5px"
+                                data-toggle="modal" data-target="#sectionCreateNew"
+                        >
+                            <span class="glyphicon glyphicon-plus-sign"></span>Add new section
+                        </button>
+                        <!-- EACH SECTION -->
+                                <div ng-repeat="section in courseSetList" class=" panel panel-flat " >
+                                    <div class="panel-heading">
+                                        <div class="section-assessment-header">
+                                        <h5 class="panel-title">{{section.name}}</h5>
+                                        <span ng-if=(section.active) class=" label display-block label-success span-to-state "
+                                               >Đang hoạt động</span>
+                                            <span ng-if=(!section.active) class=" label display-block label-default span-to-state "
+                                            >Không hoạt động</span>
+
+                                        </div>
+
+                                        <div class="heading-elements">
+                                            <ul class="icons-list" >
+
+                                                <li class="dropdown" >
+                                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="icon-menu9"></i>
+                                                    </a>
+
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li><a ng-click = "deleteSection(section._id)" href="#">
+                                                            <i class="icon-trash"></i> Xóa phần</a>
+                                                        </li>
+                                                        <li ng-hide="section.active">
+                                                            <a ng-click="activeSection(section._id)" href="#" >
+                                                            <i class="icon-checkmark-circle2"></i> Kích hoạt</a>
+                                                        </li>
+                                                        <li><a ng-click = "setSection(section._id,section.name)"
+                                                                data-toggle="modal" data-target="#questionCreateNew">
+                                                            <i class="icon-add"></i>Tạo câu hỏi mới</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+
+                                                <li><a data-action="collapse" data-toggle="collapse"
+                                                       data-target={{"#"+section._id}}></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div id={{section._id}} class="panel-collapse collapse in">
+                                        <table class="table datatable-scroll-y" width="100%">
+                                            <tbody>
+                                        <!--EACH QUESTION -->
+                                            <tr ng-repeat="question in section.questionList">
+                                                <td >{{question.content}}</td>
+                                                <td  class="wrap-flex-end" >
+                                                    <a
+                                                            class="content-crud-question"
+                                                            data-toggle="modal"
+                                                            data-target="#addToOtherSection"
+                                                            ng-click="setSection(section._id,section.name);setCurrentQuestion(question._id,question.content)"
+                                                    ><i  class="icon-add-to-list"></i></a>
+                                                    <a
+                                                            class="content-crud-question"
+                                                            data-toggle="modal"
+                                                            data-target="#editQuestion"
+                                                            ng-click="setCurrentQuestion(question._id,question.content)"
+                                                    ><i  class="icon-pencil7"></i></a>
+                                                    <a
+                                                            ng-click="deleteQuestion(question._id);"
+                                                            class="content-crud-question" href="#">
+                                                        <i class="icon-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        <!--END EACH QUETSTION-->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                    </uib-tab>
+                    <!--TAB 2-->
+                    <uib-tab index="1" heading="Câu hỏi đánh giá hệ thống">
+                        <button type="button" class="btn btn-primary"
+                                style=" position: absolute; top: 0; right : 5px"
+                                data-toggle="modal" data-target="#system_sectionCreateNew"
+                        >
+                            <span class="glyphicon glyphicon-plus-sign"></span>Add new section
+                        </button>
+                        <!-- EACH SECTION -->
+                        <div ng-repeat="section in systemSetList" class=" panel panel-flat " >
+                            <div class="panel-heading">
+                                <div class="section-assessment-header">
+                                    <h5 class="panel-title">{{section.name}}</h5>
+                                    <span ng-if=(section.active) class=" label display-block label-success span-to-state "
+                                    >Đang hoạt động</span>
+                                    <span ng-if=(!section.active) class=" label display-block label-default span-to-state "
+                                    >Không hoạt động</span>
+
+                                </div>
+
+                                <div class="heading-elements">
+                                    <ul class="icons-list" >
+
+                                        <li class="dropdown" >
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                                <i class="icon-menu9"></i>
+                                            </a>
+
+                                            <ul class="dropdown-menu dropdown-menu-right">
+                                                <li><a ng-click = "deleteSection(section._id)" href="#">
+                                                    <i class="icon-trash"></i> Xóa phần</a>
+                                                </li>
+                                                <li ng-hide="section.active">
+                                                    <a ng-click="activeSection(section._id)" href="#" >
+                                                        <i class="icon-checkmark-circle2"></i> Kích hoạt</a>
+                                                </li>
+                                                <li><a ng-click = "setSection(section._id,section.name)"
+                                                       data-toggle="modal" data-target="#questionCreateNew">
+                                                    <i class="icon-add"></i>Tạo câu hỏi mới</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li><a data-action="collapse" data-toggle="collapse"
+                                               data-target={{"#system"+section._id}}></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id={{"system"+section._id}} class="panel-collapse collapse in">
+                                <table class="table datatable-scroll-y" width="100%">
+                                    <tbody>
+                                    <!--EACH QUESTION -->
+                                    <tr ng-repeat="question in section.questionList">
+                                        <td >{{question.content}}</td>
+                                        <td  class="wrap-flex-end" >
+                                            <a
+                                                    class="content-crud-question"
+                                                    data-toggle="modal"
+                                                    data-target="#system_addToOtherSection"
+                                                    ng-click="setSection(section._id,section.name);setCurrentQuestion(question._id,question.content)"
+                                            ><i  class="icon-add-to-list"></i></a>
+                                            <a
+                                                    class="content-crud-question"
+                                                    data-toggle="modal"
+                                                    data-target="#editQuestion"
+                                                    ng-click="setCurrentQuestion(question._id,question.content)"
+                                            ><i  class="icon-pencil7"></i></a>
+                                            <a
+                                                    ng-click="deleteQuestion(question._id);"
+                                                    class="content-crud-question" href="#">
+                                                <i class="icon-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    <!--END EACH QUETSTION-->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+            </div>
+        </div>
+    </div>
+
+    <!-- create question -->
+    <div id="questionCreateNew" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="formData" validation-rules="validationRules"
+                >
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Tạo mới câu hỏi đánh giá</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <textarea ng-model="body" class="form-control content-group" rows="3" cols="1"
+                                  placeholder="Nhập nội dung câu hỏi..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success"
+                                data-dismiss="modal"
+                                ng-click="createQuestion(sectionId,body)"
+                        ><i class="icon-paperplane"></i> Gửi đi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- /modal new section -->
+    <div id="sectionCreateNew" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="formData" validation-rules="validationRules"
+                >
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Tạo mới section đánh giá khóa học </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <textarea ng-model="newSectionName" class="form-control content-group" rows="3" cols="1"
+                                  placeholder="Nhập tên của section tại đây ..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success"
+                                data-dismiss="modal"
+                                ng-click="createSection(newSectionName)"
+                        ><i class="icon-paperplane"></i> Gửi đi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- /modal edit question -->
+    <div id="editQuestion" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="testModel" validation-rules="validationRules"
+                >
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Chỉnh sửa câu hỏi đánh giá khóa học </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <textarea ng-model="newQuestion" class="form-control content-group" rows="3" cols="1"
+                                  placeholder="Nhập tên của section tại đây ..."></textarea></div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success"
+                                data-dismiss="modal"
+                                ng-click="editQuestion(questionId,newQuestion)"
+                        ><i class="icon-paperplane"></i> Gửi đi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--modal add to other section-->
+    <div id="addToOtherSection" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="addToOtherSectionModel" validation-rules="validationRules"
+                >
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i>Thêm câu hỏi này vào một phần khác</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <select-field attribute="nextSection"
+                                      placeholder="Chọn một phần"
+                                      options="sectionsNameId"
+                                      allow-blank>
+                        </select-field>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success"
+                                data-dismiss="modal"
+                                ng-click="addToOtherSection()"
+                        ><i class="icon-paperplane"></i> Gửi đi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--MODEL SYSTEM-->
+    <!-- /modal new section -->
+    <div id="system_sectionCreateNew" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="system_formData" validation-rules="validationRules"
+                >
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Tạo mới section đánh giá hệ thống </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <textarea ng-model="newSectionName" class="form-control content-group" rows="3" cols="1"
+                                  placeholder="Nhập tên của section tại đây ..."></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success"
+                                data-dismiss="modal"
+                                ng-click="system_createSection(newSectionName)"
+                        ><i class="icon-paperplane"></i> Gửi đi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--modal add to other section-->
+    <div id="system_addToOtherSection" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="addToOtherSectionModel" validation-rules="validationRules"
+                >
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i>Thêm câu hỏi này vào một phần khác</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <select-field attribute="nextSection"
+                                      placeholder="Chọn một phần"
+                                      options="system_sectionsNameId"
+                                      allow-blank>
+                        </select-field>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-success"
+                                data-dismiss="modal"
+                                ng-click="addToOtherSection()"
+                        ><i class="icon-paperplane"></i> Gửi đi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>

@@ -1,0 +1,56 @@
+<div class="student-school-page student-school-news-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thông tin từ nhà trường</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 col-md-3" ng-repeat="item in responseData">
+                    <div class="post">
+                        <div class="post-img-content">
+                            <img src="{{item.coverImage}}" width="460" height="250" />
+                            <span class="post-title"><b>{{item.header}}</b></span>
+                        </div>
+                        <div class="content pb-10">
+                            <div class="author">
+                                Bởi <b>Admin</b>
+                                <!--<time>{{item.createdAt | date : 'medium'  }}</time>-->
+                            </div>
+                            <p>{{item.sumary}}</p>
+                            <div>
+                                <a data-toggle="modal" data-target="#modalViewComent" ng-click="getPost(item._id)" class="btn bg-blue-700 btn-sm">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="modalViewComent" class="modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-bookmark4"></i> {{responsePostData.header}} </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="media clearfix">
+                                <img ng-src="{{responsePostData.coverImage}}" class="media-object pull-left img-responsive" style="max-width: 300px" >
+                                <span ng-bind-html="responsePostData.body"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /modal -->
+    </div>
+    <!-- /panel -->
+</div>

@@ -1,0 +1,110 @@
+<div class="student-utility-page student-utility-request-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Xin mở lớp</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a href="#form"><i class="text-success-600 icon-add"></i> Tạo yêu cầu mới</a></li>
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="clearfix">
+                <p class="pull-left">Dưới đây là danh sách các yêu cầu xin mở lớp</p>
+                <div class="pull-right">
+                    <select select2-ui data-placeholder="Tùy chọn danh sách hiển thị" ng-model="selectedItem" id="selectedItem">
+                        <option value=""></option>
+                        <option ng-repeat="item in selectItems" ng-selected="selectedItem == item.id" value="{{item.id}}">{{item.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <table class="table table-hover" width="100%">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Tên môn học</th>
+                    <th>Thời gian mong muốn</th>
+                    <th>Nội dung yêu cầu</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr ng-repeat="(key,value) in dataRequests">
+                    <td>{{key+1}}</td>
+                    <td>{{value.courseInfo.subject.name.vi}} <br> ({{value.courseInfo.subject.name.en}})</td>
+                    <td>
+                        <div ng-if="value.courseInfo.expectedTime == 'Morning'">Buổi sáng</div>
+                        <div ng-if="value.courseInfo.expectedTime == 'Afternoon'">Buổi chiều</div>
+                        <div ng-if="value.courseInfo.expectedTime == 'Evening'">Buổi tối</div>
+                    </td>
+                    <td>{{value.reason}}</td>
+                    <td>
+                        <div ng-if="value.status == 'Pending'" class="label label-warning display-block">Đang chờ</div>
+                        <div ng-if="value.status == 'Denied'" class="label label-danger display-block">Bị từ chối</div>
+                        <div ng-if="value.status == 'Public'" class="label label-success display-block">Được chấp nhận</div>
+                    </td>
+                    <td>
+                        <button ng-if="own == 0 && value.creator.email != email" ng-click="joinCourse(value._id)" type="button" class="btn bg-green btn-xs hide">
+                            <i class="icon-googleplus5"></i> Gia nhập lớp
+                        </button>
+                        <button ng-if="own == 0 && value.creator.email != email" ng-click="unJoinCourse(value._id)" type="button" class="btn bg-warning btn-xs">
+                            <i class="icon-ungroup"></i> Bỏ gia nhập lớp
+                        </button>
+                        <button ng-if="value.status != 'Public'" ng-click="cancelRequest(value._id)" type="button" class="btn bg-danger btn-xs">
+                            <i class="icon-rotate-ccw"></i> Hủy yêu cầu
+                        </button>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- /panel -->
+    <div class="panel panel-flat" id="form">
+        <div class="panel-heading">
+            <h5 class="panel-title">Tạo yêu cầu xin mở lớp</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form controller="formController" form-for="formData" validation-rules="validationRules" submit-with="postData(formData)">
+                <div class="panel-body">
+
+                    <select-field attribute="subjectId"
+                                  placeholder="Chọn một môn học"
+                                  label="Môn học đánh giá"
+                                  options="dataSubjects"
+                                  allow-blank>
+                    </select-field>
+
+                    <select-field attribute="expectedTime"
+                                  placeholder="Chọn thời gian yêu cầu mở lớp"
+                                  label="Thời gian yêu cầu"
+                                  options="dataExpectedTime"
+                                  allow-blank>
+                    </select-field>
+
+                    <text-field multiline type="text"
+                                attribute="reason"
+                                icon-before="icon-bubble-lines4 text-muted"
+                                placeholder="Nhập nội dung yêu cầu" label="Nội dung yêu cầu">
+                    </text-field>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn bg-primary"><i class="icon-paperplane"></i> Gửi đi</button>
+                        <a href="/student/utility" class="btn bg-warning"><i class="icon-arrow-left8"></i> Trở lại </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- /panel -->
+
+</div>

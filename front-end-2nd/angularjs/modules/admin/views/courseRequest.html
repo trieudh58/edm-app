@@ -1,0 +1,71 @@
+<div class="admin-notification-page single-panel-page">
+    <div class="panel panel-flat">
+              <div class="panel-heading">
+                <h5 class="panel-title">Yêu cầu mở lớp</h5>
+                <div class="heading-elements">
+                    <ul class="icons-list">
+                        <li>
+                            <a href="#" ng-click="getPendingRequests()" ><i class="alert alert-warning"> Yêu cầu mới</i></a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="getPublicRequests()" ><i class="alert alert-success">Đã duyệt</i> </a>
+                        </li>
+                        <li>
+                            <a href="#" ng-click="getDeniedRequests()" ><i class="alert alert-danger"> Đã từ chối</i></a>
+                        </li>
+                        <li><a data-action="collapse"></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="bolt">
+              <table show-filter="false" ng-table="requestListTable" class="table table-framed" width="100%">
+                  <tr ng-repeat="item in $data">
+                      <td class="text-left" data-title="'Người gửi'" filter="{ creator: 'text'}" sortable="'creator'">{{item.creator.email}}</td>
+
+                      <td class="text-left" data-title="'Môn học'" filter="{ subject: 'text'}" sortable="'subject'">{{item.courseInfo.subject.name.vi}}</a></td>
+                      <td class="text-center" data-title="'Thời gian'" filter="{ time: 'text'}" sortable="'time'">{{item.courseInfo.expectedTime}}</a></td>
+                      <td class="text-center" data-title="'Tham gia'" filter="{ number: 'text'}" sortable="'number'">{{item.joiners.length}}</a></td>
+                      <td class="text-center" data-title="'Cập nhật'" filter="{ updatedAt: 'text'}" sortable="'updatedAt'"> {{item.updatedAt | date : "dd/MM/y h:mm:ss a"}}</td>
+                      <td class="text-center" data-title="'Thao tác'">
+                          <ul class="icons-list">
+                              <li class="dropdown">
+                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                      <i class="icon-menu9"></i>
+                                  </a>
+
+                                  <ul class="dropdown-menu dropdown-menu-right">
+                                      <li><a href="#" data-toggle="modal" data-target="#viewDetail" ng-click="passRequestData($index)"><i class="icon-pencil7"></i> Xem chi tiết</a></li>
+
+                                     <li ng-show="item.status== 'Pending'"><a href="#"  ng-click ="putPublicRequest(item._id,$index)"><i class="icon-checkmark-circle2"></i>Gửi đi</a></li>
+                                      <li ng-show="item.status== 'Pending'"><a href="#"  ng-click ="putDenyRequest(item._id,$index)"><i class="icon-checkmark-circle2"></i>Từ chối</a></li>
+                                      <li><a href="#"  ng-click="deleteRequest(item._id,$index)"><i class="icon-trash"></i> Xóa</a></li>
+                                  </ul>
+                              </li>
+                          </ul>
+                      </td>
+                  </tr>
+              </table>
+          </div>
+    </div>
+
+    <div id="viewDetail" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="formData" validation-rules="validationRules">
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Details</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="panel panel-body border-top-info">
+                            <h3 class="no-margin text-semibold">Reason</h3>
+                            <hr>
+                            <p>{{requestDetail.reason}}</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

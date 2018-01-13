@@ -1,0 +1,123 @@
+<div class="student-dashboard-page">
+    <div class="col-sm-9">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Tổng quan</h5>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <canvas id="line" chart-colors="colorsLine" class="chart chart-line" chart-data="dataLine" chart-labels="labelsLine"></canvas>
+                            <h5 class="text-center">Điểm theo học kỳ</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /panel -->
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h6 class="panel-title">Các gợi ý dành cho bạn</h6>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="tabbable" ng-init="dashboardIndex = 0">
+                        <uib-tabset justified="true" active="dashboardIndex">
+                            <uib-tab index="0" class="nav-justified" heading="Về chất lượng học tập">
+                                <ul class="media-list">
+                                    <li class="media" ng-repeat='suggestion in suggestionList'>
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                <span class="display-block">{{suggestion}}</span>
+                                            </a>
+                                            
+                                        </div>
+                                    </li>
+                                </ul>
+                            </uib-tab>
+                            <uib-tab index="1" class="nav-justified" heading="Về điều kiện tiêu chí tốt nghiệp">
+                                <ul class="media-list">
+                                    <li class="media" ng-repeat='condition in conditionList'>
+                                        <div class="media-left">
+                                            <img src="assets/images/placeholder.jpg" class="img-circle img-xs" alt="">
+                                        </div>
+
+                                        <div class="media-body">
+                                            <a href="#">
+                                                <span class="display-block">{{condition}}</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </uib-tab>
+                        </uib-tabset>
+                    </div>
+                </div>
+            </div>
+            <!-- /panel -->
+    </div>
+    <div class="col-sm-3">
+        <div class="sidebar-fixed affix sidebar-default hidden-xs">
+            <div class="sidebar-content">
+
+                <div class="sidebar-category">
+                    <div class="category-title">
+                        <span>Mức độ hoàn thiện khóa học</span>
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="category-content">
+                        <ul class="media-list">
+                            <li class="media" ng-repeat="(key,value) in statusBarData" title="Mức độ hoàn thiện: {{value.studiedCredits}} / {{value.totalCredits}}">
+                                <div class="media-body">
+                                    <p class="text-semibold">{{value.name}}</p>
+                                    <div class="progress">
+                                        <!-- <div class="progress-bar" style="width:{{(KU.studiedCredits+0)/(KU.totalCredits+0)}}%"> -->
+                                        <!-- <div class="progress-bar" style="width:15%"> -->
+                                        <div class="progress-bar"
+                                             ng-class="{
+                                             'progress-bar-danger': key == 2,
+                                             'progress-bar-success' : key == 3,
+                                             'progress-bar-warning' : key == 4,
+                                             'progress-bar-info' : key == 5,
+                                             'bg-teal' : key == 6,
+                                             'bg-orange' : key == 7,
+                                             'bg-pink' : key == 8,
+                                             'bg-slate' : key == 9,
+                                             }"
+                                             style="width:{{value.studiedCredits/value.totalCredits*100}}%">
+                                            <span>{{value.studiedCredits}} / {{value.totalCredits}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                    </div>
+                </div>
+                <!-- /sidebar-category -->
+
+            </div>
+        </div>
+        <!-- /main sidebar -->
+    </div>
+</div>
+

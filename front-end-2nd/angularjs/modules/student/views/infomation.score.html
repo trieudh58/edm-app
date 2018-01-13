@@ -1,0 +1,46 @@
+<div class="student-profile-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Kết quả học tập</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table datatable-scroll-y" width="100%">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mã MH</th>
+                    <th>Môn học</th>
+                    <th class="text-center">Tín chỉ</th>
+                    <th class="text-center">Điểm hệ 10</th>
+                    <th class="text-center">Điểm chữ</th>
+                    <th class="text-center">Điểm hệ 4</th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="(semester,record) in records">
+                <tr>
+                    <th colspan="7" class="border-bold text-bold">
+                        KỲ HỌC SỐ {{semester}}
+                    </th>
+                </tr>
+                <tr ng-repeat="(index,item) in record">
+                    <th scope="row">{{index+1}}</th>
+                    <td>{{item.subjectCode}}</td>
+                    <td>{{subjectsNameDictViet[item.subjectCode]}}</td>
+                    <td class="text-center">{{subjectCredits[item.subjectCode]}}</td>
+                    <td class="text-center">{{item.score}}</td>
+                    <td class="text-center">{{item.scoreChar}}</td>
+                    <td class="text-center">{{item.score4}}</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <!-- /panel -->
+
+</div>

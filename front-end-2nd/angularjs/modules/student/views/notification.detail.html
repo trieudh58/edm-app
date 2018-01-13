@@ -1,0 +1,43 @@
+<div class="student-notification-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Chi tiết thông báo</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li>
+                        <a href="/student/notification" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="text-success-600 icon-git-compare"></i> Danh sách thông báo
+                        </a>
+                    </li>
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div class="panel panel-body border-top-info">
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <h6 class="no-margin text-semibold">{{object.title}}</h6>
+                        <p class="content-group-sm text-muted">{{object.updatedAt | date : "dd/MM/y h:mm:ss a"}}</p>
+                    </div>
+
+                    <div class="pull-right tools">
+                        <a href="#" ng-click="markAsImportant(object._id)" title="Đánh dấu là quan trọng"><i class="icon-star-empty3"></i> </a>
+                        <a href="#" ng-click="markAsUnimportant(object._id)" title="Bỏ đánh dấu là quan trọng"><i class="icon-star-full2"></i> </a>
+                        <a href="#" ng-click="markAsRead(object._id)" title="Đánh dấu là đã đọc"><i class="icon-eye-blocked"></i> </a>
+                        <a href="#" ng-click="markAsUnread(object._id)" title="Đánh dấu là chưa đọc"><i class="icon-eye2"></i> </a>
+                    </div>
+                </div>
+                <hr>
+
+                <blockquote class="no-margin">
+                    {{object.body}}
+                    <footer>Bởi <cite title="Source Title">{{object.creator.email}}</cite></footer>
+                </blockquote>
+            </div>
+            <a href="/student/notification"><i class="icon-arrow-left16"></i> Trở lại danh sách thông báo</a>
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

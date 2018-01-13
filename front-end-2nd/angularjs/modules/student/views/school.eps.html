@@ -1,0 +1,87 @@
+<div class="student-school-page student-school-eps-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Chương trình đào tạo</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <ul class="event-list">
+                <li ng-repeat="(key, item) in responseData" data-toggle="modal" data-target="#modalViewComent" ng-click="getEpDetail(item.code);setObject(item.name,key)">
+                    <time ng-class="{
+                    'bg-info-300': key == 0,
+                    'bg-teal-300': key == 1,
+                    'bg-brown-300': key == 2,
+                    'bg-pink-300': key == 3,
+                    'bg-orange-300': key == 4,
+                    'bg-blue-300': key == 5,
+                    'bg-green-300': key == 6,
+                    }">
+                        <span class="day">{{item.totalCredits}}</span>
+                        <span class="month">Tín chỉ</span>
+                    </time>
+                    <div class="info" ng-class="{
+                    'text-info-300': key == 0,
+                    'text-teal-300': key == 1,
+                    'text-brown-300': key == 2,
+                    'text-pink-300': key == 3,
+                    'text-orange-300': key == 4,
+                    'text-blue-300': key == 5,
+                    'text-green-300': key == 6,
+                    }">
+                        <h2 class="title">{{item.name}}</h2>
+                        <p class="desc">Xem chi tiết</p>
+                    </div>
+
+                </li>
+
+            </ul>
+        </div>
+        <div id="modalViewComent" class="modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header {{bg}}">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-bookmark4"></i> {{name}} </h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <table class="table datatable-scroll-y" width="100%">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Mã MH</th>
+                                <th>Môn học</th>
+                                <th class="text-center">Tín chỉ</th>
+                                <th class="text-center">Số giờ lý thuyết</th>
+                                <th class="text-center">Số giờ thực hành</th>
+                            </tr>
+                            </thead>
+                            <tbody ng-repeat="item in epDetail">
+                            <tr>
+                                <th colspan="7" class="border-bold text-bold">
+                                    {{kus[item.kuCode]}}
+                                </th>
+                            </tr>
+                            <tr ng-repeat="(value,key) in item.subjects">
+                                <th scope="row">{{index+1}}</th>
+                                <td>{{key}}</td>
+                                <td>{{subjects[key].name.vi}}<br>({{subjects[key].name.en}})</td>
+                                <td class="text-center">{{subjects[key].details.credits}}</td>
+                                <td class="text-center">{{subjects[key].details.onClassHour}}</td>
+                                <td class="text-center">{{subjects[key].details.practiceHour}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /modal -->
+    </div>
+    <!-- /panel -->
+</div>

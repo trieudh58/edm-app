@@ -1,0 +1,38 @@
+<div class="student-recommendation-page student-recommendation-srd-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Gợi ý nghiên cứu khoa học</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body clearfix">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <p>Danh sách các hướng nghiên cứu khoa học</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-sm-3 col-md-4" ng-repeat="item in responseData">
+                    <div class="box">
+                        <div class="box-icon bg-green">
+                            <span class="icon-lab"></span>
+                        </div>
+                        <div class="info">
+                            <h5 class="text-center">{{item.supervisor}}</h5>
+                            <ul class="list-square text-left">
+                                <li ng-repeat="item in item.topics">{{item}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

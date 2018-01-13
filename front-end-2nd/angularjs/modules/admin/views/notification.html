@@ -1,0 +1,103 @@
+<div class="admin-notification-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Quản lý thông báo</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-toggle="modal" data-target="#modalCreateNew"><i class="text-success-600 icon-add"></i> Tạo thông báo mới</a></li>
+                    <li>
+                        <a href="#" ng-click="getAllNotifications()" ><i class="icon-list text-info"> Tất cả</i></a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="getAllSentNotifications()" ><i class="icon-list text-green"></i> Đã gửi</a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="getUnSentNotifications()" ><i class="icon-list text-orange"></i> Chưa gửi</a>
+                    </li>
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bolt">
+            <table show-filter="false" ng-table="tableNotification" class="table table-framed" width="100%">
+                <tr ng-repeat="item in $data">
+                    <td class="text-left" data-title="'Tiêu đề thông báo'" filter="{ title: 'text'}" sortable="'title'">{{item.title}}</td>
+                    <td class="text-center" data-title="'Người gửi'" filter="{ creator: 'text'}" sortable="'creator'"> <a href="mailto:{{item.creator.email}}">{{item.creator.email}}</a></td>
+                    <td class="text-center" data-title="'Thời gian'" filter="{ updatedAt: 'text'}" sortable="'updatedAt'"> {{item.updatedAt | date : "dd/MM/y h:mm:ss a"}}</td>
+                    <td class="text-center" data-title="'Trạng thái'"> <span class="label display-block" ng-class="{'label-success': item.isSent == true,'label-warning': item.isSent == false}">{{ item.isSent ? 'đã gửi' : 'chưa gửi' }}</span></td>
+                    <td class="text-center" data-title="'Thao tác'">
+                        <ul class="icons-list">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-menu9"></i>
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a href="#" data-toggle="modal" data-target="#viewDetail" ng-click="passNotificationData(item._id)"><i class="icon-pencil7"></i> Xem chi tiết</a></li>
+
+                                    <!-- <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>  -->
+                                    <li ng-show="!item.isSent"><a href="#"  ng-click ="sendNotification(item._id,$index)"><i class="icon-checkmark-circle2"></i>Gửi đi</a></li>
+                                    <li><a href="#"  ng-click="deleteNotification(item._id,$index)"><i class="icon-trash"></i> Xóa</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- /panel -->
+    <div id="modalCreateNew" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="formData" validation-rules="validationRules">
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Tạo thông báo mới</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <text-field type="text" attribute="title" placeholder="Tiêu đề"></text-field>
+                        <text-field multiline attribute="body" placeholder="Nội dung"></text-field>
+                        <select-field attribute="targetGroupIds" options="groups" multiple="true"> </select-field>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-warning" ng-click="createNotification(formData)"><i class="icon-add"></i> Tạo</button>
+                        <button type="button" class="btn btn-success" ng-click="createAndSendNotification(formData)"><i class="icon-add"></i> Tạo và gửi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /modal -->
+    <div id="viewDetail" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form form-for="formData" validation-rules="validationRules">
+                    <div class="modal-header bg-blue-700">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h5 class="modal-title"><i class="icon-add"></i> Thông báo</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="panel panel-body border-top-info">
+                            <h3 class="no-margin text-semibold">{{notificationDetail.title}}</h3>
+                            <p class="content-group-sm text-muted">{{notificationDetail.updatedAt | date : "dd/MM/y h:mm:ss a"}}</p>
+                            <hr>
+
+                            <blockquote class="no-margin">
+                                {{notificationDetail.body}}
+                                <footer>Bởi <cite title="Source Title">{{notificationDetail.creator.email}}</cite></footer>
+                                <footer><cite title="Source Title">Gửi tới</cite></footer>
+                                <p ng-repeat="item in notificationDetail.targetGroups"><cite title="Source Title">{{item.group.name}}</cite></p>
+                            </blockquote>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /modal -->
+</div>

@@ -1,0 +1,35 @@
+<div class="student-recommendation-page student-recommendation-lecturerinfo-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Gợi ý nghiên cứu khoa học</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body clearfix">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <p>Danh sách các hướng nghiên cứu khoa học</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="bolt">
+            <table show-filter="true" ng-table="tableParams" class="table table-hover table-striped table-framed" width="100%">
+                <tr ng-repeat="item in $data">
+                    <td data-title="'STT'" filter="{ i: 'text'}" sortable="'i'">{{item.i}}</td>
+                    <td data-title="'Giảng viên'" filter="{ lecturer: 'text'}" sortable="'lecturer'">{{item.lecturer}}</td>
+                    <td data-title="'Địa điểm làm việc'" filter="{ workplace: 'text'}" sortable="'workplace'">{{item.workplace}}</td>
+                    <td data-title="'Hướng dẫn luận án'" filter="{ thesisGuide: 'text'}" sortable="'thesisGuide'"> <ul class="list-square"><li ng-repeat="thesis in item.thesisGuide track by $index" style="text-align: left;">{{thesis}}</li></ul></td>
+                    <td data-title="'Nghiên cứu'" filter="{ study: 'text'}" sortable="'study'"> <ul class="list-square"><li ng-repeat="study in item.study track by $index" style="text-align: left;">{{study}}</li></ul></td>
+                    <td data-title="'Môn dạy'" filter="{ teach: 'text'}" sortable="'teach'"> <ul class="list-square"><li ng-repeat="teach in item.teach track by $index" style="text-align: left;">{{teach}}</li></ul></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

@@ -1,0 +1,54 @@
+<div class="student-utility-page single-panel-page">
+	<div class="panel panel-flat">
+		<div class="panel-heading">
+			<h5 class="panel-title">Feedback</h5>
+			<div class="heading-elements">
+			</div>
+		</div>
+
+		<div class="panel-body">
+
+			<form class="panel-form">
+				<table class="table" width="100%">
+					<thead>
+					<tr>
+						<th>Góp ý</th>
+						<th>Nội dung</th>
+						<th>Thời gian</th>
+						<th class="text-center">Thao tác</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="item in feedbacks">
+						<td>
+							<p>
+								{{item.header}}
+							</p>
+						</td>
+						<td>
+							<p>
+								{{item.body}}
+
+							</p>
+						</td>
+						<td>
+							<p>
+								{{item.createdAt}}
+							</p>
+						</td>
+						<td class="text-center">
+							<ul class="icons-list">
+								<li class="dropdown">
+									<a ng-click="deleteFeedback(item._id)"><i class="icon-trash"></i>Xóa</a>
+
+								</li>
+							</ul>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</form>
+
+		</div>
+	</div>
+</div>

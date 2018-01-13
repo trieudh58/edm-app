@@ -1,0 +1,42 @@
+<div class="student-utility-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title"> Phản hồi về môn đã học </h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <form controller="formController" form-for="formData" validation-rules="validationRules" submit-with="submitAssessmentAnswer(formData)">
+
+                <select-field attribute="subjectCode"
+                              placeholder="Chọn một môn học"
+                              label="Môn học đánh giá"
+                              options="dataSubjects"
+                              allow-blank>
+                </select-field>
+
+                <select-field attribute="lecturerCode"
+                              placeholder="Chọn giảng viên"
+                              label="Giảng viên"
+                              options="dataLecturers"
+                              allow-blank>
+                </select-field>
+                <h5 class="text-green">{{questions.name}}</h5>
+                <hr>
+                <div class="form-group" ng-repeat="(index,question) in questions.questionList">
+                    <label>{{index +1}}. {{question.content}}</label>
+                    <div star-rating ng-model="rating[index]" max="5" on-rating-select="rateFunction()"></div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn bg-primary"><i class="icon-paperplane"></i> Gửi đi</button>
+                    <a href="/student/utility" class="btn bg-warning"><i class="icon-arrow-left8"></i> Trở lại </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

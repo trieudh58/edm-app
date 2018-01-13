@@ -1,0 +1,155 @@
+<div class="student-profile-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Hồ sơ cá nhân</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="tabbable">
+                <uib-tabset justified="true" active="profileIndex">
+                    <uib-tab index="0" class="nav-justified" heading="Thông tin cơ bản">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Họ tên</label>
+                                            <input type="text" value="{{studentInfo.fullName}}" disabled="disabled" class="form-control">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>E-mail</label>
+                                            <input type="text" value="{{email}}" disabled="disabled" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label>Giới tính</label>
+                                            <select class="form-control" disabled="disabled">
+                                                <option ng-if="studentInfo.gender == true">Nam</option>
+                                                <option ng-if="studentInfo.gender != true">Nữ</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Ngày sinh</label>
+                                            <input type="text" value="{{studentInfo.DOB |date: 'd/M/y' }}" disabled="disabled" class="form-control">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Lớp</label>
+                                            <input type="text" value="{{studentInfo.className}}" disabled="disabled" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Sở thích</label>
+                                            <tags-input ng-model="studentInfo.interests"></tags-input>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Kỹ năng</label>
+                                            <tags-input ng-model="studentInfo.skills"></tags-input>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-left">
+                                    <button type="submit" class="btn btn-primary" ng-click="updateProfile(studentInfo)"><i class="icon-floppy-disk"></i> Lưu lại</button>
+                                    <a href="/student/infomation" class="btn bg-warning"><i class="icon-arrow-left8"></i> Trở lại </a>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="thumbnail">
+                                    <div class="thumb thumb-rounded thumb-slide">
+                                        <img ng-src="{{studentInfo.profilePicture}}" alt="">
+                                        <div class="caption">
+                                    <span>
+                                        <label for="file" class="btn bg-success-400 btn-icon btn-xs" data-popup="lightbox"><i class="icon-plus2"></i></label>
+                                        <input type="file" id="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" class="hide form-control">
+                                    </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="caption text-center">
+                                        <h6 class="text-semibold no-margin">{{studentInfo.fullName}}
+                                            <small class="display-block hide">UX/UI designer</small>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <!-- /user thumbnail -->
+                            </div>
+
+                        </div>
+                    </uib-tab>
+                    <uib-tab index="1" class="nav-justified" heading="Đổi mật khẩu">
+                        <div class="row">
+                            <div class="col-sm-8">
+
+                                <div class="form-group">
+                                    <form form-for="formData" validation-rules="validationRules" submit-with="putData(formData)">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+
+                                                    <div class="form-group">
+                                                        <text-field type="password" attribute="oldPassword" icon-before="icon-user-lock text-muted" placeholder="Nhập mật khẩu cũ" label="Mật khẩu cũ" ></text-field>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <text-field type="password" attribute="newPassword" icon-before="icon-user-lock text-muted" placeholder="Nhập mật khẩu mới" label="Mật khẩu mới" ></text-field>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <text-field type="password" attribute="rePassword" icon-before="icon-user-lock text-muted" placeholder="Xác nhận mật khẩu" label="Xác nhận mật khẩu" ></text-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                                <div class="text-left">
+                                    <button type="submit" class="btn btn-primary"><i class="icon-floppy-disk"></i> Lưu lại</button>
+                                    <a href="/student/infomation" class="btn bg-warning"><i class="icon-arrow-left8"></i> Trở lại </a>
+
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="thumbnail">
+                                    <div class="thumb thumb-rounded thumb-slide">
+                                        <img ng-src="{{studentInfo.profilePicture}}" alt="">
+                                        <div class="caption">
+                                    <span>
+                                        <label for="file" class="btn bg-success-400 btn-icon btn-xs" data-popup="lightbox"><i class="icon-plus2"></i></label>
+                                        <input type="file" id="file" name="file" onchange="angular.element(this).scope().uploadFile(this.files)" class="hide form-control">
+                                    </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="caption text-center">
+                                        <h6 class="text-semibold no-margin">{{studentInfo.fullName}}
+                                            <small class="display-block hide">UX/UI designer</small>
+                                        </h6>
+                                    </div>
+                                </div>
+                                <!-- /user thumbnail -->
+                            </div>
+
+                        </div>
+                    </uib-tab>
+                </uib-tabset>
+            </div>
+
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

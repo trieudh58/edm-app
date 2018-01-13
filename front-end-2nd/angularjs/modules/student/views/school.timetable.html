@@ -1,0 +1,31 @@
+<div class="student-school-page student-school-timetable-page single-panel-page">
+    <div class="panel panel-flat">
+        <div class="panel-heading">
+            <h5 class="panel-title">Thông báo quan trọng</h5>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bolt">
+            <table show-filter="true" ng-table="timeTableParams" class="table table-hover" width="100%">
+                <tr ng-repeat="item in $data">
+                    <td data-title="'STT'" filter="{i: 'text'}" sortable="'i'">{{item.i}}</td>
+                    <td data-title="'Mã môn học'" filter="{classCode: 'text'}" sortable="'classCode'">{{item.classCode}}</td>
+                    <td data-title="'Tên môn học'" filter="{name: 'text'}" sortable="'name'">{{item.name}}</td>
+                    <td class="text-center" data-title="'Thứ'" filter="{weekday: 'text'}" sortable="'weekday'">{{item.weekday}}
+                    <td class="text-center" data-title="'Thời gian'"  filter="{time: 'text'}" sortable="'time'">{{item.time.start}}-{{item.time.end}}</td>
+                    <td class="text-center" data-title="'Giảng đường'" filter="{auditorium: 'text'}" sortable="'auditorium'">{{item.auditorium}}</td>
+                    <td class="text-center" data-title="'Tín chỉ'" filter="{credits: 'text'}" sortable="'credits'">{{item.credits}}</td>
+                    <td class="text-center" data-title="'Giới hạn'" filter="{studentLimitation: 'text'}" sortable="'studentLimitation'">{{item.studentLimitation}}</td>
+                    <td class="text-center" data-title="'Nhóm'" filter="{group: 'text'}" sortable="'group'">{{item.groupId}}</td>
+                    <td class="text-center" data-title="'Giảng viên'" filter="{lecturer: 'text'}" sortable="'lecturer'">{{item.lecturer}}</td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <!-- /panel -->
+</div>

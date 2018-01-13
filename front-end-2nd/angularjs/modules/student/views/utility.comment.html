@@ -1,0 +1,84 @@
+<div class="student-utility-page student-utility-comment-page single-panel-page height-auto">
+    <div class="clearfix">
+        <div class="col-sm-8">
+            <div class="panel panel-flat">
+                <div class="panel-heading">
+                    <h5 class="panel-title">Bình luận đánh giá môn học</h5>
+                    <div class="heading-elements">
+                        <ul class="icons-list">
+                            <li><a data-action="collapse"></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bolt">
+                    <table show-filter="true" ng-table="tableParams" class="table table-hover table-striped table-framed" width="100%">
+                        <tr ng-repeat="(key, item) in $data" ng-class="{'active text-bold' : subjectCode == item.code}">
+                            <td data-title="'STT'" filter="{ i: 'text'}" sortable="'i'">{{item.i}}</td>
+                            <td data-title="'Mã môn học'" filter="{ code: 'text'}" sortable="'code'">{{item.code}}</td>
+                            <td data-title="'Tên môn học'" filter="{ name: 'text'}" sortable="'name'">
+                                <a ng-click="getSubject(item.code);setSubject(item.name,item.code)" title="Xem và đăng bình luận">
+                                    <span ng-bind-html="item.name"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="sidebar-fixed affix sidebar-default">
+                <div class="sidebar-content">
+                    <div class="panel-flat panel-default">
+                        <div class="panel-heading">
+                            <h6 class="panel-title">
+                                 <span ng-bind-html="subjectName"></span>
+                            </h6>
+                        </div>
+
+                        <div class="panel-body">
+
+                            <div class="panel-group panel-group-control panel-group-control-right pt-20">
+                                <ul class="media-list chat-list content-group" id="commenBox">
+                                    <li class="media" ng-repeat="(key, value) in detail.comments" >
+                                        <div class="media-left">
+                                            <a href="assets/images/placeholder.jpg">
+                                                <img src="assets/images/placeholder.jpg" class="img-circle" alt="">
+                                            </a>
+
+                                        </div>
+
+                                        <div class="media-body">
+                                            <div class="media-content">
+                                                <p class="text-size-large">{{value.commentBody}}</p>
+                                                <hr style="margin: 5px 0">
+                                                <div class="text-size-mini"><strong>{{value.user.personalInfo.fullName}}</strong> - <i>{{value.user.personalInfo.className}}</i> ({{value.createdAt | date :'medium'}})</div>
+                                            </div>
+                                            <span class="media-annotation display-block mt-10">
+
+                                    </span>
+                                        </div>
+
+                                    </li>
+                                </ul>
+
+                                <textarea ng-model="body" class="form-control content-group" rows="3" cols="1" placeholder="Nhập nội dung bình luận..."></textarea>
+
+                                <div class="row">
+
+                                    <div class="col-xs-6 text-left">
+                                        <button ng-click="postComment(body,subjectCode)" type="button" class="btn bg-primary"><i class="icon-paperplane"></i> Gửi đi</button>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /div -->
