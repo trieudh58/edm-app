@@ -105,14 +105,16 @@ module.exports = {
      */
     /* update the question */
     updateStudentSurveyQuestion: function(req,res){
-    	if(req.body.choices)
+        if(req.body.choices instanceof Array)
+            var choices= req.body.choices;
+    	else if(req.body.choices)
     		var choices=req.body.choices.split('|');
     	else
     		var choices=[]
     	question.update({_id:req.body.id},{
     		questionType:req.body.questionType,
     		question:req.body.question,
-    		choices:req.body.choices	
+    		choices:choices	
     	},function (err) {
     		if(err){
     			return res.status(500).json({
