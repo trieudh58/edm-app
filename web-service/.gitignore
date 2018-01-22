@@ -1,1 +1,6 @@
-# Webservice ignored files go here
+.idea/
+target/
+.settings/
+out/
+.project
+.classpath

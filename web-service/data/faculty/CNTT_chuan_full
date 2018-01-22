@@ -1,0 +1,70 @@
+MAT1101, Xác suất thống kê ,3,1,3,MAT1094,3,1,20
+ELT2029,Toán trong công nghệ,3,1,3,MAT1094,3,1,21
+MAT1099,Phương pháp tính,2,2,2,MAT1093;MAT1095,5,1,35
+MAT1100,Tối ưu hóa,2,2,2,MAT1093;MAT1095,5,1,36
+ELT2028,Chuyên nghiệp trong công nghệ,2,2,2,0,5,1,37
+ELT2031,Mô hình hóa và mô phỏng,2,2,2,INT1006,5,1,38
+ELT3044,Xử lý tín hiệu số,3,3,3,MAT1093;MAT1094,5,1,39
+BSA2022,Nguyên lý Marketing ,3,3,3,0,5,1,40
+INE1150,Kinh tế vi mô 1,3,3,3,0,5,1,41
+INE1151,Kinh tế vĩ mô 1,3,3,3,0,5,1,42
+INT3117,Kiểm thử và đảm bảo chất lượng phần mềm,3,4,15,INT2204,5,1,43
+INT3105,Kiến trúc phần mềm,3,4,15,INT2204,5,1,44
+INT3106,Phương pháp hình thức,3,4,15,INT1050,5,1,45
+INT3108,Lập trình nhúng và thời gian thực ,3,4,15,INT2205;INT2202,5,1,46
+INT3109,Thu thập và phân tích yêu cầu,3,4,15,INT2208,5,1,47
+INT3111,Quản lý dự án phần mềm,3,4,15,INT2208,5,1,48
+INT3206,Cơ sở dữ liệu phân tán,3,4,15,INT2207,5,1,49
+INT3207,Kho dữ liệu,3,4,15,INT2207,5,1,50
+INT3209,Khai phá dữ liệu ,3,4,15,INT2207,5,1,51
+INT3213,Nhập môn an toàn thông tin,3,4,15,0,5,1,52
+INT3216,Phân tích đánh giá hiệu năng hệ thống,3,4,15,INT2207,5,1,53
+INT3217,Lập trình hệ thống,3,4,15,INT2207,5,1,54
+INT3301,Thực hành hệ điều hành mạng,3,4,15,INT1006,5,1,55
+INT3303,Mạng không dây,3,4,15,INT2209,5,1,56
+INT3304,Lập trình mạng,3,4,15,INT2209,5,1,57
+INT3305,Truyền thông đa phương tiện,3,4,15,INT2209,5,1,58
+INT3307,An toàn và an ninh mạng,3,4,15,INT2209,5,1,59
+INT3309,Phân tích và thiết kế mạng máy tính,3,4,15,INT2209,5,1,60
+INT3310,Quản trị mạng,3,4,15,INT2209,5,1,61
+INT3501,Khoa học dịch vụ,3,4,15,INT1003,5,1,62
+INT3505,Kiến trúc hướng dịch vụ ,3,4,15,INT2204,5,1,63
+INT3506,Các hệ thống thương mại điện tử,3,4,15,INT1003,5,1,64
+INT3401,Trí tuệ nhân tạo,3,4,15,INT2203,5,1,65
+INT3403,Đồ họa máy tính,3,4,15,INT2203,5,1,66
+INT3404,Xử lý ảnh ,3,4,15,INT2203,5,1,67
+INT3407,Tin sinh học,3,4,15,INT2202,5,1,68
+INT3512,hjhj,3,5,0,1,1,1,1
+INT3402,huu,3,5,0,1,1,1,1
+###
+PHI1004,Những nguyên lý cơ bản của chủ nghĩa Mác - Lênin 1,2,0,0,0,1,0,1
+PHI1005,Những nguyên lý cơ bản của chủ nghĩa Mác - Lênin 2,3,0,0,PHI1004,1,0,2
+POL1001,Tư tưởng Hồ Chí Minh,2,0,0,PHI1005,1,0,3
+HIS1002,Đường lối cách mạng của Đảng Cộng sản Việt Nam,3,0,0,POL1001,1,0,4
+INT1003,Tin học cơ sở 1,2,0,0,0,1,0,5
+INT1006,Tin học cơ sở 4,3,0,0,0,1,0,6
+FLF1105,Tiếng Anh A1,4,0,0,0,1,0,7
+FLF1106,Tiếng Anh A2,5,0,0,FLF1105,1,0,8
+FLF1107,Tiếng Anh B1,5,0,0,FLF1106,1,0,9
+MAT1093,Đại số,4,0,0,0,2,0,13
+MAT1094,Giải tích 1,5,0,0,0,2,0,14
+MAT1095,Giải tích 2,5,0,0,MAT1094,2,0,15
+PHY1100,Cơ – Nhiệt,3,0,0,0,2,0,16
+PHY1103,Điện và Quang,3,0,0,PHY1100,2,0,17
+ELT2035,Tín hiệu và hệ thống,3,0,0,MAT1095,3,0,18
+INT2203,Cấu trúc dữ liệu và giải thuật,3,0,0,INT1006;INT2202,3,0,19
+INT1050,Toán học rời rạc,4,0,0,0,4,0,22
+INT2204,Lập trình hướng đối tượng,3,0,0,INT1006,4,0,23
+INT2205,Kiến trúc máy tính,3,0,0,INT1003,4,0,24
+INT2206,Nguyên lý hệ điều hành,3,0,0,INT1006,4,0,25
+INT2209,Mạng máy tính,3,0,0,INT1006,4,0,26
+INT2207,Cơ sở dữ liệu,3,0,0,INT1006;INT2204,4,0,27
+INT2208,Công nghệ phần mềm,3,0,0,INT1006,4,0,28
+INT2202,Lập trình nâng cao,3,0,0,INT1006,5,0,29
+INT3202,Hệ quản trị cơ sở dữ liệu,3,0,0,INT2207,5,0,30
+INT3110,Phân tích và thiết kế hướng đối tượng,3,0,0,INT2204,5,0,31
+INT3306,Phát triển ứng dụng Web ,3,0,0,INT2204;INT2207,5,0,32
+INT3115,Thiết kế giao diện người dùng,3,0,0,INT2204,5,0,33
+INT3507,Các vấn đề hiện đại Công nghệ thông tin,3,0,0,INT1003,5,0,34
+INT3508,Thực tập chuyên ngành,3,0,0,INT1003,6,0,69
+INT4050,Khóa luận tốt nghiệp,7,0,0,0,6,0,70
