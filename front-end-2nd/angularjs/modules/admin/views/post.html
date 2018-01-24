@@ -1,36 +1,32 @@
-<div class="admin-data-page single-panel-page">
+<div class="admin-notification-page single-panel-page">
     <div class="panel panel-flat">
         <div class="panel-heading">
-            <h5 class="panel-title">Quản lý dữ liệu</h5>
+            <h5 class="panel-title">Quản lý bài viết</h5>
             <div class="heading-elements">
                 <ul class="icons-list">
-                    <li><a data-toggle="modal" data-target="#modalCreateNew"><i class="text-success-600 icon-add"></i> Thêm mới</a></li>
-                    <li><a data-toggle="modal" data-target="#modalUpdateData"><i class="text-info-600 icon-upload7"></i> Cập nhật dữ liệu</a></li>
+                    <li><a data-toggle="modal" data-target="#modalCreateNew"><i class="text-success-600 icon-add"></i> Tạo bài viết</a></li>
+                    <li>
+                        <a href="#" ng-click="getAllPosts()" ><i class="icon-list text-info"> Tất cả</i></a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="getAllSentPosts()" ><i class="icon-list text-green"></i> Đã gửi</a>
+                    </li>
+                    <li>
+                        <a href="#" ng-click="getUnSentPosts()" ><i class="icon-list text-orange"></i> Chưa gửi</a>
+                    </li>
                     <li><a data-action="collapse"></a></li>
                 </ul>
             </div>
         </div>
 
-        <div class="panel-body">
-            <table class="table datatable-scroll-y" width="100%">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Tiêu đề</th>
-                    <th>Ngày tạo</th>
-                    <th>Ngày cập nhật</th>
-                    <th>Trạng thái</th>
-                    <th class="text-center">Thao tác</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-success">Đã gửi</span></td>
-                    <td class="text-center">
+        <div class="bolt">
+            <table show-filter="false" ng-table="tablePost" class="table table-framed" width="100%">
+                <tr ng-repeat="item in $data">
+                    <td class="text-left" data-title="'Tiêu đề thông báo'" filter="{ title: 'text'}" sortable="'title'">{{item.header}}</td>
+                    <td class="text-center" data-title="'Người gửi'" filter="{ creator: 'text'}" sortable="'creator'"> <a href="mailto:{{item.creator.email}}">{{item.creator}}</a></td>
+                    <td class="text-center" data-title="'Thời gian'" filter="{ updatedAt: 'text'}" sortable="'updatedAt'"> {{item.updatedAt | date : "dd/MM/y h:mm:ss a"}}</td>
+                    <td class="text-center" data-title="'Trạng thái'"> <span class="label display-block" ng-class="{'label-success': item.isPublished == true,'label-warning': item.isPublished == false}">{{ item.isPublished ? 'đã gửi' : 'chưa gửi' }}</span></td>
+                    <td class="text-center" data-title="'Thao tác'">
                         <ul class="icons-list">
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -38,247 +34,16 @@
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#viewDetail" ng-click="passPostData(item._id)"><i class="icon-pencil7"></i> Xem chi tiết</a></li>
+
+                                    <!-- <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>  -->
+                                    <li ng-show="!item.isPublished"><a href="#"  ng-click ="sendPost(item._id,$index)"><i class="icon-checkmark-circle2"></i>Gửi đi</a></li>
+                                    <li><a href="#"  ng-click="deletePost(item._id,$index)"><i class="icon-trash"></i> Xóa</a></li>
                                 </ul>
                             </li>
                         </ul>
                     </td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-warning">Chưa gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-success">Đã gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-success">Đã gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-warning">Chưa gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-success">Đã gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-success">Đã gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-warning">Chưa gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-success">Đã gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-success">Đã gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><a href="">Lorem Ipsum is simply dummy text of the printing and</a></td>
-                    <td>01/01/2016</td>
-                    <td>01/01/2016</td>
-                    <td><span class="label display-block label-warning">Chưa gửi</span></td>
-                    <td class="text-center">
-                        <ul class="icons-list">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-menu9"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-right">
-                                    <li><a href="#"><i class="icon-pencil7"></i> Chỉnh sửa</a></li>
-                                    <li><a href="#"><i class="icon-close2"></i> Tạm ngưng</a></li>
-                                    <li><a href="#"><i class="icon-checkmark-circle2"></i> Gửi đi</a></li>
-                                    <li><a href="#"><i class="icon-trash"></i> Xóa</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                </tr>
-
-                </tbody>
             </table>
         </div>
     </div>
@@ -289,52 +54,47 @@
                 <form form-for="formData" validation-rules="validationRules">
                     <div class="modal-header bg-blue-700">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h5 class="modal-title"><i class="icon-add"></i> Tạo bài viết mới</h5>
+                        <h5 class="modal-title"><i class="icon-add"></i> Tạo Bài viết mới</h5>
                     </div>
 
                     <div class="modal-body">
-                        <text-field type="text" attribute="title" placeholder="Tiêu đề"></text-field>
+                        <text-field type="text" attribute="header" placeholder="Tiêu đề"></text-field>
                         <text-field multiline attribute="body" placeholder="Nội dung"></text-field>
-                        <select-field attribute="group" options="groups" multiple="true"> </select-field>
+                        <label for="type" class="label-control">Chọn ảnh cover</label>
+                        <label for="coverImage" class="form-control"><i class="icon-file-plus">{{postCover.name}}</i></label>
+                        <input id="coverImage" type="file" onchange="angular.element(this).scope().uploadFile(this.files)" class="hide form-control">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
-                        <button type="button" class="btn btn-success" ng-click="postCreateNew(formData)"><i class="icon-add"></i> Tạo mới</button>
+                        <button type="button" class="btn btn-warning" ng-click="createPost(formData)"><i class="icon-add"></i> Tạo</button>
+                        <button type="button" class="btn btn-success" ng-click="createAndSendPost(formData)"><i class="icon-add"></i> Tạo và gửi</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
     <!-- /modal -->
-    <div id="modalUpdateData" class="modal">
+    <div id="viewDetail" class="modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form form-for="formData" validation-rules="validationRules">
                     <div class="modal-header bg-blue-700">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h5 class="modal-title"><i class="icon-upload7"></i> Cập nhật dữ liệu</h5>
+                        <h5 class="modal-title"><i class="icon-add"></i> Bài viết</h5>
                     </div>
 
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="type" class="label-control">Chọn tập tin</label>
-                            <label for="file" class="form-control"><i class="icon-file-plus"></i> Chọn tập tin để tải lên</label>
-                            <input id="file" type="file" class="hide form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="type" class="label-control">Loại dữ liệu</label>
-                            <select id="type" class="form-control">
-                                <option value="1">Cập nhật điểm</option>
-                                <option value="2">Cập nhật thời khóa biểu</option>
-                                <option value="3">Cập nhật khung đào tạo</option>
-                                <option value="4">Cập nhật sinh viên</option>
-                            </select>
-                        </div>
+                        <div class="panel panel-body border-top-info">
+                            <img src="{{PostDetail.coverImage}}"></img>
+                            <h3 class="no-margin text-semibold">{{PostDetail.header}}</h3>
+                            <p class="content-group-sm text-muted">{{PostDetail.updatedAt | date : "dd/MM/y h:mm:ss a"}}</p>
+                            <hr>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-link" data-dismiss="modal">Đóng</button>
-                        <button type="button" class="btn btn-info" ng-click="postCreateNew(formData)"><i class="icon-upload7"></i> Tải lên</button>
+                            <blockquote class="no-margin">
+                                {{PostDetail.body}}
+                                <footer>Bởi <cite title="Source Title">{{PostDetail.creator}}</cite></footer>     
+                            </blockquote>
+                        </div>
                     </div>
                 </form>
             </div>

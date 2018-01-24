@@ -1,7 +1,4 @@
-<!--************************************************************-->
-<!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
-<!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
-<!--************************************************************-->
+
 <!DOCTYPE html>
 <html ng-app="angularBolt">
 <head>
@@ -11,7 +8,7 @@
     <meta name="fragment" content="bolt"/>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lightning Bolt Solutions</title>
+    <title>PRE system</title>
     <!--begin library css-->
     <link rel="stylesheet" type="text/css" href="assets/angular/angular/angular-csp.css">
     <link rel="stylesheet" type="text/css" href="assets/angular/angular-motion/dist/angular-motion.min.css">
@@ -100,7 +97,7 @@
     <!--end page content-->
     <!--begin footer-->
     <div class="footer text-muted">
-        <p ng-if="access == true" ng-class="text-center">&copy; <?php echo date('Y'); ?> PRE. Designed by <a href="http://tiaset.net" target="_blank">TiaSet™</a></p>
+        <p ng-if="access == true" ng-class="text-center">&copy; <?php echo date('Y'); ?> PRE.</p>
         <div ng-if="access != true">
             <div class="clearfix pull-left">
                 <div class="breadcrumb-line-wide">

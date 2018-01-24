@@ -1,9 +1,4 @@
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
+
  
 angularBolt.controller('CourseRequestController', ['NgTableParams','$location','$localStorage','$scope', '$rootScope', 'rest', 'toastr', '$window', 'cfpLoadingBar',function (NgTableParams,$location,$localStorage,$scope, $rootScope, rest, toastr, $window, cfpLoadingBar) {
 

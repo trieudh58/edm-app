@@ -1,11 +1,4 @@
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
 
-// Angular module (giaphv@tiaset.net)
 'use strict';
 var angularBolt = angular.module('angularBolt', [
     'ngRoute',

@@ -1,11 +1,4 @@
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
 
-// Enter directive (giaphv@tiaset.net)
 angularBolt.directive('ngEnter',
     function () {
         return function (scope, element, attrs) {

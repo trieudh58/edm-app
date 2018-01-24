@@ -1,10 +1,4 @@
 
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
 
 angularBolt.controller('ImportantNotificationController', ['NgTableParams','$location','$localStorage','$scope', '$rootScope', 'rest', 'toastr', '$window', 'cfpLoadingBar',function (NgTableParams,$location,$localStorage,$scope, $rootScope, rest, toastr, $window, cfpLoadingBar) {
 
@@ -16,24 +10,9 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
         boltScript();
     });
 
-    // Modal
-    $scope.groups = [{value: 1, label: 'Group 1'}, {value: 2, label: 'Group 2'}, {value: 3, label: 'Group 3'}, {value: 4, label: 'Group 4'}];
-    rest.path ='/admin/student-groups/get-all';
-    rest.get().then(function boltSuccess(response){
-
-        if (response.data.success == true) {
-            $scope.groups=studentGroupConvert(response.data.data);
-        }
-        else {
-            apiError(response);
-        }
-        }, function boltError(response) {
-            apiError(response);
-    });
-
     $scope.notifications= [];
     $scope.getAllNotifications = function(){
-        rest.path = 'admin/notifications/get-all';
+        rest.path = 'admin/important-notification/get-all';
         rest.get().then(function boltSuccess(response) {
             if (response.data.success == true) {
                 $scope.notifications=response.data.data;
@@ -51,8 +30,8 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
     $scope.getAllNotifications();
 
     $scope.deleteNotification = function(id,index){
-        rest.path = 'admin/notifications/delete-by-id';
-        rest.deleteModel({'notificationId': id}).then(function boltSuccess(response) {
+        rest.path = 'admin/important-notification/delete';
+        rest.deleteModel({'postId': id}).then(function boltSuccess(response) {
             if (response.data.success == true) {
                 $scope.notifications.splice(index,1);
                 $scope.tableNotification = new NgTableParams({},{
@@ -69,8 +48,7 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
         }
 
     $scope.createNotification = function(data){
-        data.targetGroupIds = data.targetGroupIds.join(',');
-        rest.path = 'admin/notifications/create';
+        rest.path = 'admin/important-notification/create';
         rest.postModel(data).then(function boltSuccess(response) {
             if (response.data.success == true) {
                 toastr.success('Thông báo đã tạo', 'Thông báo');
@@ -84,8 +62,7 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
     }
 
     $scope.createAndSendNotification = function(data){
-        data.targetGroupIds = data.targetGroupIds.join(',');
-        rest.path = 'admin/notifications/create-and-send';
+        rest.path = 'admin/important-notification/create-and-publish';
         rest.postModel(data).then(function boltSuccess(response) {
             if (response.data.success == true) {
                 toastr.success('Thông báo đã gửi', 'Thông báo');
@@ -99,10 +76,10 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
     }
 
     $scope.sendNotification = function(id,index){
-        rest.path = 'admin/notifications/send-created';
-        rest.putModel({'notificationId': id}).then(function boltSuccess(response) {
+        rest.path = 'admin/important-notification/publish-one';
+        rest.putModel({'postId': id}).then(function boltSuccess(response) {
             if (response.data.success == true) {
-                $scope.notifications[index].isSent= true;
+                $scope.notifications[index].isPublished= true;
                 $scope.tableNotification = new NgTableParams({},{
                     dataset: $scope.notifications
                 })
@@ -117,7 +94,7 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
         }
 
     $scope.getAllSentNotifications = function(){
-        rest.path = 'admin/notifications/get-all-sent';
+        rest.path = 'admin/important-notification/get-all-published';
         rest.get().then(function boltSuccess(response) {
             if (response.data.success == true) {
                 $scope.notifications=response.data.data;
@@ -133,7 +110,7 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
             });
     }
     $scope.getUnSentNotifications = function(){
-        rest.path = 'admin/notifications/get-all-unsent';
+        rest.path = 'admin/important-notification/get-all-unpublished';
         rest.get().then(function boltSuccess(response) {
             if (response.data.success == true) {
                 $scope.notifications=response.data.data;
@@ -150,16 +127,6 @@ angularBolt.controller('ImportantNotificationController', ['NgTableParams','$loc
     }
 
     $scope.passNotificationData = function(id){
-        rest.path = 'admin/notifications/get-one-by-id';
-        rest.getWithParams({'notificationId': id}).then(function boltSuccess(response) {
-            if (response.data.success == true) {
-                $scope.notificationDetail=response.data.data;
-            }
-            else {
-                apiError(response);
-            }
-            }, function boltError(response) {
-                apiError(response);
-            });
+        $scope.notificationDetail=$scope.notifications.filter( obj => obj._id === id)[0];
     }
 }]);

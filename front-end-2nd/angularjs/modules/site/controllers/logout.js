@@ -1,9 +1,4 @@
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
+
 
 angularBolt.controller('SiteLogoutController', ['$location', '$http', '$scope', '$rootScope', 'rest', 'toastr', '$window', 'cfpLoadingBar', '$localStorage', function ($location, $http, $scope, $rootScope, rest, toastr, $window, cfpLoadingBar, $localStorage) {
 

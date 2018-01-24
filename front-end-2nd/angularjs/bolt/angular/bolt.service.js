@@ -1,11 +1,4 @@
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
 
-// Rest service (giaphv@tiaset.net)
 angularBolt.service('rest', function ($http, $location, $routeParams) {
 
     return {

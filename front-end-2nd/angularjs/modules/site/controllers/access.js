@@ -1,9 +1,4 @@
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
+
 
 angularBolt.controller('SiteAccessController', ['$location', '$http', '$scope', '$rootScope', 'rest', 'toastr', '$window', 'cfpLoadingBar', '$localStorage', function ($location, $http, $scope, $rootScope, rest, toastr, $window, cfpLoadingBar, $localStorage) {
 
@@ -19,7 +14,7 @@ angularBolt.controller('SiteAccessController', ['$location', '$http', '$scope', 
                 $window.boltLoading.finish()
             }, 1000);
         }
-        $location.path('/admin/dashboard');
+        $location.path('/admin/account');
 
 
     }
@@ -109,7 +104,7 @@ angularBolt.controller('SiteAccessController', ['$location', '$http', '$scope', 
                         $localStorage.profilePicture = $rootScope.personalInfo.profilePicture;
 
                         if ($rootScope.isAdmin == true) {
-                            $location.path('/admin/dashboard');
+                            $location.path('/admin/account');
 
                         } else {
                             $location.path('/student/dashboard');

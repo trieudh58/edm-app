@@ -1,11 +1,4 @@
 
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
-
 angularBolt.controller('PostController', ['NgTableParams','$location','$localStorage','$scope', '$rootScope', 'rest', 'toastr', '$window', 'cfpLoadingBar',function (NgTableParams,$location,$localStorage,$scope, $rootScope, rest, toastr, $window, cfpLoadingBar) {
 
     // Initial
@@ -16,29 +9,14 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
         boltScript();
     });
 
-    // Modal
-    $scope.groups = [{value: 1, label: 'Group 1'}, {value: 2, label: 'Group 2'}, {value: 3, label: 'Group 3'}, {value: 4, label: 'Group 4'}];
-    rest.path ='/admin/student-groups/get-all';
-    rest.get().then(function boltSuccess(response){
-
-        if (response.data.success == true) {
-            $scope.groups=studentGroupConvert(response.data.data);
-        }
-        else {
-            apiError(response);
-        }
-        }, function boltError(response) {
-            apiError(response);
-    });
-
-    $scope.notifications= [];
-    $scope.getAllNotifications = function(){
-        rest.path = 'admin/notifications/get-all';
+     $scope.notifications= [];
+    $scope.getAllPosts = function(){
+        rest.path = 'admin/posts/get-all';
         rest.get().then(function boltSuccess(response) {
             if (response.data.success == true) {
-                $scope.notifications=response.data.data;
-                $scope.tableNotification = new NgTableParams({}, {
-                    dataset: $scope.notifications
+                $scope.Posts=response.data.data;
+                $scope.tablePost = new NgTableParams({}, {
+                    dataset: $scope.Posts
                 });
             }
             else {
@@ -48,15 +26,15 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
                 apiError(response);
             });
     }
-    $scope.getAllNotifications();
+    $scope.getAllPosts();
 
-    $scope.deleteNotification = function(id,index){
-        rest.path = 'admin/notifications/delete-by-id';
-        rest.deleteModel({'notificationId': id}).then(function boltSuccess(response) {
+    $scope.deletePost = function(id,index){
+        rest.path = 'admin/posts/delete';
+        rest.deleteModel({'postId': id}).then(function boltSuccess(response) {
             if (response.data.success == true) {
-                $scope.notifications.splice(index,1);
-                $scope.tableNotification = new NgTableParams({},{
-                    dataset: $scope.notifications
+                $scope.Posts.splice(index,1);
+                $scope.tablePost = new NgTableParams({},{
+                    dataset: $scope.Posts
                 })
                 toastr.warning('Các mục đã chọn đã được xóa thành công', 'Thông báo');
             }
@@ -68,10 +46,14 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
             });
         }
 
-    $scope.createNotification = function(data){
-        data.targetGroupIds = data.targetGroupIds.join(',');
-        rest.path = 'admin/notifications/create';
-        rest.postModel(data).then(function boltSuccess(response) {
+    $scope.createPost = function(data){
+        var formData = new FormData();
+        formData.append('coverImage',  $scope.postCover)
+        $scope.postCover ={};
+        formData.append('header', data.header);
+        formData.append('body', data.body);
+        rest.path = 'admin/posts/create';
+        rest.postFile(formData).then(function boltSuccess(response) {
             if (response.data.success == true) {
                 toastr.success('Thông báo đã tạo', 'Thông báo');
             }
@@ -83,10 +65,14 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
             });
     }
 
-    $scope.createAndSendNotification = function(data){
-        data.targetGroupIds = data.targetGroupIds.join(',');
-        rest.path = 'admin/notifications/create-and-send';
-        rest.postModel(data).then(function boltSuccess(response) {
+    $scope.createAndSendPost = function(data){
+        var formData = new FormData();
+        formData.append('coverImage',  $scope.postCover)
+        $scope.postCover ={};
+        formData.append('header', data.header);
+        formData.append('body', data.body);
+        rest.path = 'admin/posts/create-and-publish';
+        rest.postFile(formData).then(function boltSuccess(response) {
             if (response.data.success == true) {
                 toastr.success('Thông báo đã gửi', 'Thông báo');
             }
@@ -98,13 +84,13 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
             });
     }
 
-    $scope.sendNotification = function(id,index){
-        rest.path = 'admin/notifications/send-created';
-        rest.putModel({'notificationId': id}).then(function boltSuccess(response) {
+    $scope.sendPost = function(id,index){
+        rest.path = 'admin/posts/publish-one';
+        rest.putModel({'postId': id}).then(function boltSuccess(response) {
             if (response.data.success == true) {
-                $scope.notifications[index].isSent= true;
-                $scope.tableNotification = new NgTableParams({},{
-                    dataset: $scope.notifications
+                $scope.Posts[index].isPublished= true;
+                $scope.tablePost = new NgTableParams({},{
+                    dataset: $scope.Posts
                 })
                 toastr.success('đã gửi', 'Thông báo');
             }
@@ -116,13 +102,13 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
             });
         }
 
-    $scope.getAllSentNotifications = function(){
-        rest.path = 'admin/notifications/get-all-sent';
+    $scope.getAllSentPosts = function(){
+        rest.path = 'admin/posts/get-all-published';
         rest.get().then(function boltSuccess(response) {
             if (response.data.success == true) {
-                $scope.notifications=response.data.data;
-                $scope.tableNotification = new NgTableParams({}, {
-                    dataset: $scope.notifications
+                $scope.Posts=response.data.data;
+                $scope.tablePost = new NgTableParams({}, {
+                    dataset: $scope.Posts
                 });
             }
             else {
@@ -132,13 +118,13 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
                 apiError(response);
             });
     }
-    $scope.getUnSentNotifications = function(){
-        rest.path = 'admin/notifications/get-all-unsent';
+    $scope.getUnSentPosts = function(){
+        rest.path = 'admin/posts/get-all-unpublished';
         rest.get().then(function boltSuccess(response) {
             if (response.data.success == true) {
-                $scope.notifications=response.data.data;
-                $scope.tableNotification = new NgTableParams({}, {
-                    dataset: $scope.notifications
+                $scope.Posts=response.data.data;
+                $scope.tablePost = new NgTableParams({}, {
+                    dataset: $scope.Posts
                 });
             }
             else {
@@ -149,17 +135,13 @@ angularBolt.controller('PostController', ['NgTableParams','$location','$localSto
             });
     }
 
-    $scope.passNotificationData = function(id){
-        rest.path = 'admin/notifications/get-one-by-id';
-        rest.getWithParams({'notificationId': id}).then(function boltSuccess(response) {
-            if (response.data.success == true) {
-                $scope.notificationDetail=response.data.data;
-            }
-            else {
-                apiError(response);
-            }
-            }, function boltError(response) {
-                apiError(response);
-            });
+    $scope.passPostData = function(id){
+        $scope.PostDetail=$scope.Posts.filter( obj => obj._id === id)[0];
+    }
+    $scope.uploadFile = function(files){
+        $scope.postCover = files[0];
+        console.log("dm");
+        console.log(files[0]);
+        console.log($scope.postCover.name);
     }
 }]);

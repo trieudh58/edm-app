@@ -1,24 +1,18 @@
-/*
- <!--************************************************************-->
- <!-- Developed by Lightning Bolt Solutions - http://tiaset.net  -->
- <!-- giaphv@tiaset.net,  rocket@tiaset.net,  hoangdv@tiaset.net -->
- <!--************************************************************-->
- */
 
-// Config route (giaphv@tiaset.net)
 angularBolt.config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider
 
+        // .when('/', {
+        //     redirectTo: '/index.html'
+        // })
         .when('/', {
-            redirectTo: '/access'
-        })
-        /*.when('/bolt', {
             title: 'Trang chủ',
+            templateUrl: 'index.html', 
             controller: ['$location', function($location){
                 window.location = '/index.html';
             }]
-        })*/
+        })
 
         .when('/access', {
             title: 'Truy cập hệ thống',
