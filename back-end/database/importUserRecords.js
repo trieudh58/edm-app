@@ -5,13 +5,15 @@ var async = require('async');
 var bcrypt = require('bcrypt');
 
 //var scoreStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_2012.csv');
-var scoreStream = fs.createReadStream(__dirname + '/raw/devMode_out_DIEM.csv');
+// var scoreStream = fs.createReadStream(__dirname + '/raw/devMode_out_DIEM.csv');
+var scoreStream = fs.createReadStream(__dirname + '/raw/out_DIEM.csv');
 var studentRecords = [];
 var csvScoreStream = csv.parse({delimiter: ';'}).on('data', function (data) {
     studentRecords.push(data);
 }).on('finish', function () {
     //var whenStream = fs.createReadStream(__dirname + '/raw/devMode_out_Students_When.csv');
-    var whenStream = fs.createReadStream(__dirname + '/raw/devMode_out_TIME.csv');
+    // var whenStream = fs.createReadStream(__dirname + '/raw/devMode_out_TIME.csv');
+    var whenStream = fs.createReadStream(__dirname + '/raw/out_TIME.csv');
     var whenRecords = [];
     var csvWhenRecord = csv.parse({delimiter: ';'}).on('data', function (data) {
         whenRecords.push(data);
@@ -131,11 +133,19 @@ var csvScoreStream = csv.parse({delimiter: ';'}).on('data', function (data) {
                     }
                     var computeAttempt = function (whenArray, scoreArray, studentRecords, i, j, callback) {
                         var attempt = [];
+                        var startYear = Number(studentRecords[i][2].split('-')[1])
                         for (var m = 0; m < whenArray.length; m++) {
-                            attempt.push({
-                                score: scoreArray[m],
-                                semester: whenArray[m]
-                            });
+                            try {
+                                let semNum = Number(whenArray[m].split('.')[0])
+                                let yearDiff = Number(whenArray[m].split('.')[1].split('-')[0]) - startYear
+                                let semester = semNum + yearDiff * 2;
+                                if (semester <= 4) {
+                                    attempt.push({
+                                        score: scoreArray[m],
+                                        semester: semester
+                                    });
+                                }
+                            } catch (e) { }
                         }
                         callback(null, attempt, studentRecords, i, j);
                     };
