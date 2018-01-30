@@ -40,6 +40,7 @@ angularBolt.controller('StudentSchoolNewsController', ['NgTableParams','$locatio
             if (response.data.success == true) {
 
                 $scope.responsePostData = response.data.data;
+                $scope.responsePostData.body =$scope.responsePostData.body.replace(/\n/g, '<br/>');
 
             }else {
 

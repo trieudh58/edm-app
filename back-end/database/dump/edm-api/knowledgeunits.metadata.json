@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"edm-api.knowledgeunits"},{"v":1,"unique":true,"key":{"kuCode":1},"name":"kuCode_1","ns":"edm-api.knowledgeunits","background":true}]}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"edm-api.knowledgeunits"},{"v":2,"unique":true,"key":{"kuCode":1},"name":"kuCode_1","ns":"edm-api.knowledgeunits","background":true}],"uuid":"eac4876d2e87465d806f4d352360cd58"}

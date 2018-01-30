@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"edm-api.studentsurveyanswers"},{"v":2,"unique":true,"key":{"userId":1},"name":"userId_1","ns":"edm-api.studentsurveyanswers","background":true}],"uuid":"8daed2291f2e48b08061caee3eca52e2"}

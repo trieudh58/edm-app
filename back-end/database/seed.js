@@ -18,7 +18,8 @@ seeder.connect(config.mongodb.host, function () {
         'models/BlackListToken.js',
         'models/Notification.js',
         'models/UserToken.js',
-        'models/SRDirection.js'
+        'models/SRDirection.js',
+        'models/StudentSurveyQuestion.js'
     ]);
     /* Clear models' data */
     seeder.clearModels([
@@ -33,7 +34,8 @@ seeder.connect(config.mongodb.host, function () {
         'Notification',
         'BlackListToken',
         'UserToken',
-        'SRDirection'
+        'SRDirection',
+        'StudentSurveyQuestion'
     ], function () {
         var queue = [
             function (callback) {
@@ -77,6 +79,11 @@ seeder.connect(config.mongodb.host, function () {
             require('./importUserRecords');
             callback(null);
         });
+        queue.push(function (callback) {
+            /**/
+            require('./importServeyQuestion');
+            callback(null);
+        });
         async.waterfall(queue, function (err) {
             if (err)
                 throw err;
@@ -90,7 +97,7 @@ var data = [
         model: 'User',
         documents: [
             {
-                email: 'admin@gmail.com',
+                email: 'admin@vnu.edu.vn',
                 password: bcrypt.hashSync('123456', config.bcrypt.saltRounds),
                 isAdmin: true
             }

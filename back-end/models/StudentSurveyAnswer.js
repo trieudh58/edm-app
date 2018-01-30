@@ -15,7 +15,10 @@ var StudentSurveyAnswerSchema = new mongoose.Schema(
 					ref:'StudentSurveyQuestion',
 					require:true
 				},
-				chosenAnswers:[String]
+				questionCode:{
+					type: String
+				},
+				chosenAnswers:String
 			}
 		]
 	},

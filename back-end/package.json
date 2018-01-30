@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "import": "mongorestore database/dump"
+    "import": "mongorestore --db edm-api  database\\dump\\edm-api"
   },
   "author": "mdn-edm team",
   "license": "ISC",

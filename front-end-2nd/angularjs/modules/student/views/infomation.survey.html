@@ -28,6 +28,11 @@
 						</label>
 					</div>
 
+					<div class="form-group" ng-if="item.choices.length==0 && item.questionType == 'rating'">
+						<label class="control-label display-block text-bold">{{item.question}}</label>
+	                    <div star-rating ng-model="formData.rating[item._id]" max="5" on-rating-select="rateFunction()"></div>
+					</div>
+
 					<div class="form-group" ng-if="item.choices.length == 0 && item.questionType == 'textBox'">
 						<label class="control-label display-block text-bold">{{item.question}}</label>
 						<div class="row">

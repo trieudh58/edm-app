@@ -11,6 +11,6 @@ router.get('/get-all', authentication, notificationController.getAll);
 router.get('/get-all-headers', authentication, notificationController.getAllNotificationHeaders);
 
 /* Get one post by id */
-router.get('/get-one-by-id', validation.getOneById, authentication, notificationController.getOneById);
+router.get('/get-one-by-id', authentication, notificationController.getOneById);
 
 module.exports = router;

@@ -1,1 +1,1 @@
-{"options":{},"indexes":[{"v":1,"key":{"_id":1},"name":"_id_","ns":"edm-api.subjects"},{"v":1,"unique":true,"key":{"code":1},"name":"code_1","ns":"edm-api.subjects","background":true}]}
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"edm-api.subjects"},{"v":2,"unique":true,"key":{"code":1},"name":"code_1","ns":"edm-api.subjects","background":true}],"uuid":"b40c32fd93824f05b1013413d92a1093"}

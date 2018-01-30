@@ -35,10 +35,21 @@ module.exports = {
                 });
             }
             else {
-                return res.json({
-                    success: true,
-                    questions: questions
-                });
+                StudentServeyAnswer.findOne({userId:req.user.id}, function(err, answers){
+                    if(err){
+                        return res.status(500).json({
+                            success:false,
+                            message:err
+                        })
+                    }
+                    else{
+                        res.json({
+                            success: true,
+                            questions: questions,
+                            answers: answers
+                        });
+                    }
+                })
             }
         });
     },
@@ -69,7 +80,7 @@ module.exports = {
  		try {
             var answerList = JSON.parse(req.body.answerList);
             var StudentAnswer={userId:req.user.id,answerList:answerList};
-            StudentServeyAnswer.find({userId:req.user.id},function(err,object){
+            StudentServeyAnswer.findOne({userId:req.user.id},function(err,object){
                 if(err){
                     return res.status(500).json({
                         success:false,
@@ -78,8 +89,7 @@ module.exports = {
                 }
                 else{
                         if(object){
-                            console.log(object);
-                            StudentServeyAnswer.update(StudentAnswer,{upset:true},function(err){
+                            StudentServeyAnswer.update({userId:req.user.id},{$set:{answerList:answerList}},function(err){
                                 if(err){
                                     return res.status(500).json({
                                         success:false,

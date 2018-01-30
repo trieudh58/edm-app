@@ -1,5 +1,32 @@
 var models = require('../models');
+var http = require('http');
+var StudentServeyAnswer=require('../models').StudentSurveyAnswer;
 
+function surveyFeatureExtraction(answersList){
+    var interests = [3,3,3,3];
+    var questionCodeListForInterest = ['1','2','3','4'];
+    var target = 1;
+    var faculty = 1;
+    if(answersList){
+        for(i=0;i<answersList.length;i++){
+            if(answersList[i].questionCode == 10) faculty = answersList[i].chosenAnswers;
+            if(answersList[i].questionCode == 12) target = answersList[i].chosenAnswers;
+            if(questionCodeListForInterest.includes(answersList[i].questionCode)){
+                interests[answersList[i].questionCode-1]=answersList[i].chosenAnswers;
+            }
+        }
+    }
+    return [interests,target,faculty];
+}
+function maxSemester(records){
+    var max = 0;
+    var attempt ={};
+    for(i=0;i<records.length;i++){
+        attempt = records[i].attempt;
+        if(attempt[attempt.length-1].semester > max) max = attempt[attempt.length-1].semester;
+    }
+    return max;
+}
 module.exports = {
     /**
      * @swagger
@@ -26,46 +53,55 @@ module.exports = {
      */
     /* Return study path */
     getStudyPath: function (req, res) {
-        // Hard-coded. Need to be enhanced
-        models.EPDetail.find({
-            epCode: 1
-        }).sort({
-            kuCode: 'asc'
-        }).exec(function (err, epDetail) {
-            if (err) {
+        StudentServeyAnswer.findOne({userId:req.user.id}, function(err, answers){
+            if(err){
                 return res.status(500).json({
-                    success: false,
-                    message: err
+                    success:false,
+                    message:err
+                })
+            }
+            else{
+                var [interests,target,faculty] =surveyFeatureExtraction((answers||{}).answerList);
+                models.StudentRecord.findOne({
+                    studentCode: req.user.studentCode
+                }, function (err, studentRecord) {
+                    if (err) {
+                        return res.status(500).json({ 
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else{
+                        var gender = req.user.personalInfo.gender? 'Nam':'Nữ';
+                        var currendSemester = maxSemester(studentRecord.record);
+                        var studentId = parseInt(req.user.studentCode);
+                        studentId = isNaN(studentId) ? 1402000:studentId;
+                        var url = 'http://localhost:8081/webservices/study-recommend/study-stragy?faculty='+ faculty + '&target='+ target+'&studentId='+studentId+'&interests='+JSON.stringify(interests)+'&gender='+gender+'&semester='+currendSemester+'&records='+JSON.stringify(studentRecord.record);     
+                        http.get(url, r => {
+                            r.setEncoding("utf8");
+                            let body = "";
+                            r.on("data", data => {
+                                body += data;
+                            });
+                            r.on("end", () => {
+                                try{
+                                    body = JSON.parse(body);
+                                    res.json({
+                                            success: true,
+                                            data: body.data  
+                                        });
+                                    }
+                                catch(err){
+                                    res.json({
+                                        success: false
+                                    })
+                                }
+                            });
+                        });
+                    }
                 });
             }
-            else if (!epDetail || !epDetail.length) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid code.'
-                });
-            }
-            else {
-                var allSubjects = [];
-                for (var i = 0; i < epDetail.length; i++) {
-                    allSubjects = allSubjects.concat(epDetail[i].subjects);
-                }
-                var semesters = [];
-                for (var j = 0; j < allSubjects.length; j++) {
-                    if (allSubjects[j] === 'PES')
-                        continue;
-                    semesters.push({
-                        subject: allSubjects[j],
-                        name: 'Tín hiệu và hệ thống',
-                        credit: 3,
-                        semester: j%8 + 1
-                    });
-                }
-                return res.json({
-                    success: true,
-                    data: semesters
-                });
-            }
-        });
+        })
     },
 
     /**
@@ -87,30 +123,69 @@ module.exports = {
      */
     /* Return next semester subjects */
     getNextSemesterSubjects: function (req, res) {
-        // Hard-coded. Need to be enhanced
-        models.Subject.find({}, '-createdAt -updatedAt').limit(7).exec(function (err, subjects) {
-            if (err) {
+        StudentServeyAnswer.findOne({userId:req.user.id}, function(err, answers){
+            if(err){
                 return res.status(500).json({
-                    success: false,
-                    message: err
-                });
+                    success:false,
+                    message:err
+                })
             }
-            else {
-                let subjectList = [];
-                subjects.forEach(function (subject, idx) {
-                    subjectList.push({
-                        subjectCode: subject.code,
-                        subjectName: subject.name,
-                        subjectDetails: subject.details,
-                        prediction: {
-                            score: 8.5,
-                            confidence: 0.99
-                        }
-                    });
-                });
-                return res.json({
-                    success: true,
-                    data: subjectList
+            else{
+                var [interests,target,faculty] =surveyFeatureExtraction((answers||{}).answerList);
+                models.StudentRecord.findOne({
+                    studentCode: req.user.studentCode
+                }, function (err, studentRecord) {
+                    if (err) {
+                        return res.status(500).json({
+                            success: false,
+                            message: err
+                        });
+                    }
+                    else{
+                        var gender = req.user.personalInfo.gender? 'Nam':'Nữ';
+                        var currendSemester = maxSemester(studentRecord.record);
+                        var studentId = parseInt(req.user.studentCode);
+                        studentId = isNaN(studentId) ? 1402000:studentId;
+                        var url = 'http://localhost:8081/webservices/study-recommend/next-semester-subjects?faculty='+faculty+'&target='+target+'&studentId='+studentId+'&interests='+JSON.stringify(interests)+'&gender='+gender+'&semester='+currendSemester+'&records='+JSON.stringify(studentRecord.record);
+                         
+                        http.get(url, r => {
+                          r.setEncoding("utf8");
+                          let body = "";
+                          r.on("data", data => {
+                            body += data;
+                          });
+                          r.on("end", () => {
+                            try{
+                                body = JSON.parse(body);
+                                models.Subject.find({code: {$in :body.subjects}}).exec(function (err, subjects) {
+                                        if (err) {
+                                            return res.status(500).json({
+                                                success: false,
+                                                message: err
+                                            });
+                                        }
+                                        else {
+                                            let subjectList = [];
+                                            subjects.forEach(function (subject, idx) {
+                                                subjectList.push({
+                                                    subjectCode: subject.code,
+                                                    subjectName: subject.name,
+                                                    subjectDetails: subject.details
+                                                });
+                                            });
+                                            return res.json({
+                                                success: true,
+                                                data: subjectList
+                                            });
+                                        }
+                                    });
+                                }
+                                catch(err){
+                                    res.json({success: false});
+                                }
+                            });
+                        });
+                    }
                 });
             }
         });

@@ -5,9 +5,9 @@ angularBolt.controller('SiteAccessController', ['$location', '$http', '$scope', 
     // Initial
     $rootScope.access = true;
     $scope.formData = {};
-    $scope.accessIndex = $location.search().action == 'register' ? 1 : 0;
-
-    if ($localStorage.isAdmin == true) {
+    $scope.accessIndex = $location.search().action == 'register' ? 1 : 0; 
+      
+    if ($localStorage.isAdmin == true&&$localStorage.accessToken != undefined) {
         $rootScope.access = false;
         if ($window.boltLoading) {
             $timeout(function () {
@@ -19,7 +19,7 @@ angularBolt.controller('SiteAccessController', ['$location', '$http', '$scope', 
 
     }
 
-    if ($localStorage.isAdmin == false) {
+    if ($localStorage.isAdmin == false&&$localStorage.accessToken != undefined) {
         $rootScope.access = false;
         if ($window.boltLoading) {
             $timeout(function () {
@@ -107,7 +107,8 @@ angularBolt.controller('SiteAccessController', ['$location', '$http', '$scope', 
                             $location.path('/admin/account');
 
                         } else {
-                            $location.path('/student/dashboard');
+                            if($rootScope.isAdmin == false)
+                                $location.path('/student/dashboard');
 
                         }
 

@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"edm-api.suggestionandwarnings"},{"v":2,"unique":true,"key":{"user":1},"name":"user_1","ns":"edm-api.suggestionandwarnings","background":true}],"uuid":"a38549ca707f4c76839270843229c8f6"}

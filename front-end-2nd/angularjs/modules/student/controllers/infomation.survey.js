@@ -9,7 +9,7 @@ angularBolt.controller('StudentInfomationSurveyController', ['$location', '$loca
     $scope.$on('$viewContentLoaded', function () {
         boltScript();
     });
-
+    $scope.formData.rating = {};
     // Call api
     rest.path = 'student-survey/get-student-survey-question-list';
     rest.get().then(function boltSuccess(response) {
@@ -17,7 +17,14 @@ angularBolt.controller('StudentInfomationSurveyController', ['$location', '$loca
         if (response.data.success == true) {
 
             $scope.dataQuestions = response.data.questions;
-
+            if(response.data.answers){
+                $scope.formData = surveyAnswers(response.data.answers.answerList,$scope.dataQuestions);
+            }
+            for(i=0;i< $scope.dataQuestions.length;i++){
+                if($scope.dataQuestions[i].questionType == 'rating'&&!$scope.formData.rating[$scope.dataQuestions[i]._id]){
+                    $scope.formData.rating[$scope.dataQuestions[i]._id]= 1;
+                }
+            }
         } else {
 
             // Response error
@@ -25,7 +32,6 @@ angularBolt.controller('StudentInfomationSurveyController', ['$location', '$loca
         }
 
     }, function boltError(response) {
-
         // Response error
         apiError(response);
 
@@ -35,7 +41,7 @@ angularBolt.controller('StudentInfomationSurveyController', ['$location', '$loca
     $scope.submitForm = function (formData) {
         //
         var answerList = JSON.stringify(surveySubmitAnswer(formData, $scope.dataQuestions))
-        console.log(answerList);
+
         var data = {"answerList": answerList};
         rest.path = "student-survey/submit-student-survey";
         rest.postModel(data).then(function boltSuccess(response) {

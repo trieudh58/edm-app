@@ -27,10 +27,9 @@ angularBolt.controller('StudentDashboardController', ['$timeout', '$location', '
                 rest.path = 'student-records/get';
                 rest.get().then(function boltSuccess(response) {
                     if (response.data.success) {
-
                         $scope.records = response.data.data.record;
                         $scope.semesterRecords = studentRecordInSenmester(response.data.data.record);
-                        $scope.labelsLine = listSemester($scope.semesterRecords);
+                        $rootScope.labelsLine = listSemester($scope.semesterRecords);
                         $rootScope.dataLine = GPASemesterList($scope.semesterRecords, $scope.subjectCredits);
 
                         rest.path = 'education-programs/get-ep-detail-by-code';
@@ -59,8 +58,8 @@ angularBolt.controller('StudentDashboardController', ['$timeout', '$location', '
                         })
 
                         var suggestions = getStudyQualitySuggestion($scope.records,$scope.semesterRecords,$scope.subjectCredits);
-                        $scope.suggestionList =suggestions[0];
-                        $scope.conditionList = suggestions[1];
+                        $rootScope.suggestionList =suggestions[0];
+                        $rootScope.conditionList = suggestions[1];
                     }
                     else {
                         apiError(response)

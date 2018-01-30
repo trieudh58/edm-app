@@ -5,8 +5,9 @@ var StudentSurveyQuestionSchema = new mongoose.Schema(
 		choices:[String],
 		questionType:{
 			type: String,
-			enum : ['multipleChoices','checkboxes','textBox','date','time']
-		}
+			enum : ['multipleChoices','checkboxes','textBox','date','time','rating']
+		},
+		questionCode: String
 	},
 	{
 		timeStamp:true

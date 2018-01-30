@@ -23,6 +23,7 @@ function subjectDictEng(subjectJsonData) {
     // console.log(result);
     return result;
 }
+
 function subjectCredit(subjectJsonData) {
     result = {}
     for (i = 0; i < subjectJsonData.length; i++) {
@@ -30,6 +31,17 @@ function subjectCredit(subjectJsonData) {
     }
     return result;
 }
+
+function subjectInfo(subjectJsonData) {
+    result = {}
+    for (i = 0; i < subjectJsonData.length; i++) {
+        result[subjectJsonData[i].code]={};
+        result[subjectJsonData[i].code]['credits'] = subjectJsonData[i].details.credits;
+        result[subjectJsonData[i].code]['name'] = subjectJsonData[i].name;
+    }
+    return result;
+}
+
 function studentRecordInSenmester(records) {
     result = {};
     for (i = 0; i < records.length; i++) {
@@ -350,7 +362,7 @@ function convertTagsObject(array) {
 }
 
 function apiError(response) {
-    console.log(response);
+    // console.log(response);
     if (response.data.message == 'TokenExpiredError') {
         location.reload();
         $.jGrowl('Phiên làm việc đã hết hạn', {
@@ -493,29 +505,45 @@ function convertWeekday(weekday){
 
 function surveySubmitAnswer(formdata,dataQuestions){
     result=[]
-    formType=["checkboxes","date","multipleChoices","tags","time"];
+    formType=["checkboxes","date","multipleChoices","tags","time","rating"];
     for(key in formdata){
         if(key=="checkboxes"){
             for(key2 in formdata["checkboxes"]){
                 var answers=[]
                 for(key3 in formdata["checkboxes"][key2]){
-                    answers.push(dataQuestions.find(x => x._id === key2).choices[key3]);
+                    if(formdata["checkboxes"][key2][key3]&&dataQuestions.find(x => x._id === key2).choices[key3]){
+                        answers.push(key3);
+                    }
+
                 }
                 result.push({
                     "questionId":key2,
-                    "chosenAnswers":answers
+                    "questionCode":dataQuestions.find(x => x._id === key2).questionCode,
+                    "chosenAnswers":answers.join('|')
                 })
             }
         }
 
-        if(key=="multipleChoices" || key=="time"|| key=="date"){
+        if(key=="time"|| key=="date"){
             for(key2 in formdata[key]){
                 result.push({
                     "questionId":key2,
-                    "chosenAnswers":[formdata[key][key2]]
+                    "questionCode":dataQuestions.find(x => x._id === key2).questionCode,
+                    "chosenAnswers":formdata[key][key2]
                 })
             }
         }
+
+        if(key=="multipleChoices"){
+            for(key2 in formdata[key]){
+                result.push({
+                    "questionId":key2,
+                    "questionCode":dataQuestions.find(x => x._id === key2).questionCode,
+                    "chosenAnswers":dataQuestions.find(x => x._id === key2).choices.indexOf(formdata[key][key2])
+                })
+            }
+        } 
+
         if(key=="tags"){
             for(key2 in formdata[key]){
                 var answers=[]
@@ -525,12 +553,66 @@ function surveySubmitAnswer(formdata,dataQuestions){
 
                 result.push({
                     "questionId":key2,
-                    "chosenAnswers":answers
+                    "questionCode":dataQuestions.find(x => x._id === key2).questionCode,
+                    "chosenAnswers":answers.join('|')
+                })
+            }
+        }
+        if(key =="rating"){
+            for(key2 in formdata[key]){
+                result.push({
+                    "questionId": key2,
+                    "questionCode":dataQuestions.find(x => x._id === key2).questionCode,
+                    "chosenAnswers": formdata[key][key2]
                 })
             }
         }
     }
     return result
+}
+function surveyAnswers(answers, dataQuestions){
+    var formdata = {
+        "checkboxes":{},
+        "date":{},
+        "time":{},
+        "tags":{},
+        "rating":{},
+        "multipleChoices":{}
+    };
+    var question={};
+    for(key in answers){
+        question = dataQuestions.find(x => x._id === answers[key].questionId);
+        if(question.questionType=="checkboxes"){
+            var ans =[];
+            var chosen = answers[key].chosenAnswers.split("|");
+            for(i in question.choices){
+               ans.push(chosen.includes(i));
+            }
+            formdata["checkboxes"][answers[key].questionId] = ans;      
+        }
+
+        if(question.questionType=="time"){
+            formdata["time"][answers[key].questionId] = answers[key].chosenAnswers;           
+        }
+        if(question.questionType=="date"){
+            formdata["time"][answers[key].questionId] = answers[key].chosenAnswers;
+        }
+        if(question.questionType=="multipleChoices"){
+            formdata["multipleChoices"][answers[key].questionId] = question.choices[answers[key].chosenAnswers];
+        } 
+        if(question.questionType=="textBox"){
+            var ans = [];
+            var chosen = answers[key].chosenAnswers.split('|');
+            for(i in chosen){
+                ans.push({text: chosen[i]});
+            }
+            formdata["tags"][answers[key].questionId] = ans;
+        }
+        if(question.questionType =="rating"){
+            formdata["rating"][answers[key].questionId] = answers[key].chosenAnswers;
+        }
+    }
+    return formdata;
 }
 
 function assessmentData(rating,questionList){
@@ -586,12 +668,12 @@ function getCourseQuestionListData(listData,newSection,newSectionQuestions){
 
 function convertSectionNameIdArray(sections) {
     var result = []
-    console.log(sections);
-    console.log(sections.length);
+    // console.log(sections);
+    // console.log(sections.length);
     for (i = 0; i < sections.length; i++) {
         result.push({'value': sections[i]._id, 'label': sections[i].name});
     }
-    console.log(result);
+    // console.log(result);
     return result;
 }
 /*END---Duyen Ha*/

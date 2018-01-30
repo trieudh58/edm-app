@@ -2,6 +2,10 @@
 angularBolt.controller('StudentRecommendationScoreController', ['NgTableParams', '$location', '$localStorage', '$scope', '$rootScope', 'rest', 'toastr', '$window', 'cfpLoadingBar', function (NgTableParams, $location, $localStorage, $scope, $rootScope, rest, toastr, $window, cfpLoadingBar) {
 
     // Initial
+    function precisionRound(number, precision) {
+      var factor = Math.pow(10, precision);
+      return Math.round(number * factor) / factor;
+    }
     $rootScope.nosb = true;
     if ($window.boltLoading) $window.boltLoading.finish();
     $scope.$on('$viewContentLoaded', function () {
@@ -36,7 +40,7 @@ angularBolt.controller('StudentRecommendationScoreController', ['NgTableParams',
         rest.getWithParams({'subjectCode': subjectCode}).then(function boltSuccess(response) {
 
             if (response.data.success == true) {
-                $scope.scorePrediction = response.data.data.prediction.score;
+                $scope.scorePrediction = precisionRound(response.data.data.prediction.score,1);
 
             }
             else {

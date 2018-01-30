@@ -41,19 +41,12 @@ public class scorePrediction {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response scorePredict(@QueryParam("subjectCode") String subjectCode, @QueryParam("gender") String gender, @QueryParam("semester") Integer semester, @QueryParam("records") String records) throws IOException, JSONException {
-        System.out.println(0);
         ObjectMapper mapper = new ObjectMapper();
-        System.out.println(1);
         JsonNode root = mapper.readTree(records);
-        System.out.println(2);
         Double result = predictor.predictAStudent(predictFormat.predictInput(root, semester, gender, subjectCode));
-        System.out.println(3);
         JSONObject score = new JSONObject();
-        System.out.println(4);
         score.put("score", result);
-        System.out.println(5);
         String rep = new JSONObject().put("predictScore", score).toString();
-        System.out.println(6);
         return Response.ok().entity(rep).build();
     }
 

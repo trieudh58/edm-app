@@ -8,7 +8,7 @@ angularBolt.config(['$routeProvider', function ($routeProvider) {
         // })
         .when('/', {
             title: 'Trang chủ',
-            templateUrl: 'index.html', 
+            templateUrl: 'bolt/layout/sidebar.html', 
             controller: ['$location', function($location){
                 window.location = '/index.html';
             }]

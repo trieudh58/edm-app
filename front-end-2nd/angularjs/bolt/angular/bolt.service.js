@@ -3,7 +3,7 @@ angularBolt.service('rest', function ($http, $location, $routeParams) {
 
     return {
 
-        baseUrl: 'http://13.59.253.132:2052/api/v1/',
+        baseUrl: 'http://localhost:2052/api/v1/',
         path: undefined,
 
         models: function () {

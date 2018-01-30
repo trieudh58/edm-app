@@ -1,5 +1,21 @@
 var models = require('../models');
+var http = require('http');
 
+var optionsget = {
+    host : 'localhost',
+    port : 8081,
+    path : '/',
+    method : 'GET'
+};
+function maxSemester(records){
+    var max = 0;
+    var attempt ={};
+    for(i=0;i<records.length;i++){
+        attempt = records[i].attempt;
+        if(attempt[attempt.length-1].semester > max) max = attempt[attempt.length-1].semester;
+    }
+    return parseInt(max)+1;
+}
 module.exports = {
     /**
      * @swagger
@@ -31,30 +47,44 @@ module.exports = {
      */
     /* Predict score of one subject */
     predictOneSubject: function predictOneSubject (req, res) {
-        models.Subject.findOne({
-            code: req.query.subjectCode
-        }, function (err, subject) {
+        models.StudentRecord.findOne({
+            studentCode: req.user.studentCode
+        }, function (err, studentRecord) {
             if (err) {
-                return res.status(400).json({
+                return res.status(500).json({
                     success: false,
                     message: err
                 });
-            } else if (!subject) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid subject code.'
-                });
-            } else {
-                return res.json({
-                    success: true,
-                    data: {
-                        subjectCode: subject.code,
-                        subjectName: subject.name,
-                        prediction: {
-                            score: 8.5,
-                            confidence: 0.99
-                        }
+            }
+            else{
+                var gender = req.user.personalInfo.gender? 'Nam':'Nữ';
+                var currendSemester = maxSemester(studentRecord.record);
+                var url = 'http://localhost:8081/webservices/score/predict?subjectCode='+req.query.subjectCode+'&gender='+gender+'&semester='+currendSemester+'&records='+JSON.stringify(studentRecord.record);
+                 
+                http.get(url, r => {
+                  r.setEncoding("utf8");
+                  let body = "";
+                  r.on("data", data => {
+                    body += data;
+                  });
+                  r.on("end", () => {
+                    try{
+                        body = JSON.parse(body);
+                        // console.log(body);
+                        res.json({
+                            success: true,
+                            data: {
+                                prediction: body.predictScore
+                            }
+                        });
                     }
+                    catch(err){
+                        res.json({
+                            success: false
+                        });
+                    }
+
+                  });
                 });
             }
         });

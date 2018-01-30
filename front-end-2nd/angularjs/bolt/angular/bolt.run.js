@@ -37,10 +37,7 @@ angularBolt.run(['NgTableParams', '$localStorage', '$http', '$window', '$locatio
             }
 
         }, function boltError(response) {
-
-            // Response error
-            console.log(response);
-            if (response.data.message == 'TokenExpiredError') $location.path('/logout');
+            if (!response.data||response.data.message == 'TokenExpiredError') $location.path('/logout');
 
         });
 

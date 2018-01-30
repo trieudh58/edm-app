@@ -222,7 +222,7 @@ module.exports = {
      */
     /* Delete questions */
     deleteStudentSurveyQuestion: function(req,res){
-    	question.findOne({_id:req.query.questionId},function (err,object) {
+    	question.findOne({_id:req.query.questionId,questionCode: null},function (err,object) {
     		if(err){
     			return res.status(500).json({
     				success:false,
