@@ -149,7 +149,7 @@ public final class faculty {
 	{
 		//System.out.println("______________--->  "+ numberOfCourse);
 		 double[][] target = new double[15][numberOfCourse];
-		 Scanner input_target = new Scanner(new FileReader("Data/faculty/DinhHuongNgheNghiep.csv"));
+		 Scanner input_target = new Scanner(new FileReader("data/faculty/DinhHuongNgheNghiep.csv"));
 		 // Array 'STT' dung de luu thong tin STT cua course 
 		 //--- duoc doc tu dong dau tien trong file
 		 //--- ( co the khong theo thu tu nhu 1--->n)  
@@ -194,7 +194,7 @@ public final class faculty {
 	public double[][] get_interest () throws FileNotFoundException
 	{
 		 double[][] interest = new double[4][numberOfCourse];
-		 Scanner input_inter = new Scanner(new FileReader("Data/faculty/NhomCacMonTheoSoThichKhaNang.csv"));
+		 Scanner input_inter = new Scanner(new FileReader("data/faculty/NhomCacMonTheoSoThichKhaNang.csv"));
 		 // tuong tu get_target 
 		 // Array 'STT' dung de luu thong tin STT cua course 
 		 //--- duoc doc tu dong dau tien trong file

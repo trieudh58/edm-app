@@ -137,7 +137,7 @@ public class student {
 				cap[require_index][cap.length-1]-=credit;
 			}
 			catch (Exception e) {
-				System.out.println("Something is wrong with subject : "+ ID_learnt_course + " ( Mã môn học không có trong danh sách môn học của chuyên ngành " + fal.name + " !)");
+				// System.out.println("Something is wrong with subject : "+ ID_learnt_course + " ( Mã môn học không có trong danh sách môn học của chuyên ngành " + fal.name + " !)");
 			}
 //			Cập nhật môn học vào danh sách các môn đã học của từng sinh viên.
 			StudiedCourses.add(ID_learnt_course); 
@@ -175,7 +175,7 @@ public class student {
 				cap[require_index][cap.length-1]-=credit;
 			}
 			catch (Exception e) {
-				System.out.println("Something is wrong with subject : "+ id_course + " ( Mã môn học không có trong danh sách môn học của chuyên ngành " + fal.name + " !)");
+				// System.out.println("Something is wrong with subject : "+ id_course + " ( Mã môn học không có trong danh sách môn học của chuyên ngành " + fal.name + " !)");
 			}
 			// neu ma mon ( Id ) = null -> mon nay khong nam trong khung chuong
 			// trinh cua khoa fal --> bo qua
@@ -234,7 +234,7 @@ public class student {
 				CF_score[index] = CF_node.getScore();
 
 			} catch (Exception e) {
-				System.out.println("CF_SCORE : Something is wrong with subject : "+ CF_node.getID_course() + " ( Mã môn học không có trong danh sách môn học tự chọn của chuyên ngành " + fal.name + " !)");
+				// System.out.println("CF_SCORE : Something is wrong with subject : "+ CF_node.getID_course() + " ( Mã môn học không có trong danh sách môn học tự chọn của chuyên ngành " + fal.name + " !)");
 			}
 		}
 		return CF_score;
@@ -279,7 +279,7 @@ public class student {
 				Pre_score[STT] = predict_score_formatted;
 			} catch (Exception e) {
 				// TODO: handle exception
-				System.out.println("PREDICT_SCORE : Something is wrong with subject : "+ ID_course + " ( Mã môn học không có trong danh sách môn học tự chọn của chuyên ngành " + fal.name + " !)");
+				// System.out.println("PREDICT_SCORE : Something is wrong with subject : "+ ID_course + " ( Mã môn học không có trong danh sách môn học tự chọn của chuyên ngành " + fal.name + " !)");
 				continue;
 			}
 		}

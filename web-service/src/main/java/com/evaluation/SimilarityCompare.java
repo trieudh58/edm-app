@@ -20,8 +20,8 @@ public class SimilarityCompare {
 	private List<String> realStudiedCourses = new ArrayList<String>();
 
 	public double Caculation(int number, String result) throws IOException {
-		BufferedReader br_Real = new BufferedReader(new FileReader("Data/student_info/real_data/#" + number + ".csv"));
-		BufferedReader br_Result = new BufferedReader(new FileReader("Data/" + result + "/#" + number + ".csv"));
+		BufferedReader br_Real = new BufferedReader(new FileReader("data/student_info/real_data/#" + number + ".csv"));
+		BufferedReader br_Result = new BufferedReader(new FileReader("data/" + result + "/#" + number + ".csv"));
 
 		String line_Real;
 		String line_Result;
