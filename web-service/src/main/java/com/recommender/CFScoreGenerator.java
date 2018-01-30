@@ -20,7 +20,7 @@ public class CFScoreGenerator {
     private static List<String> selectiveSubjects;
 
     CFScoreGenerator() throws IOException {
-        readSubjectList("data/CF/subjectlist.txt");
+        readSubjectList("data/CF/subjectList.txt");
         readStudentList("data/CF/studentList.txt");
         loadSelectiveSubject("data/faculty/danh_sach_mon_tu_chon.txt");
         this.ratingPredictor.loadModel("data/CF/CF_model.txt");
